@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Welcome</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link rel="sheet" href="/story.html">
+</head>
+<body>
+    <div id="welcome-message">
+        It's 2029.<br><br>
+        You run the world's leading zero-gravity construction firm.<br><br>
+        Your sole employee, Edgar, is a large language model connected to factories and launch facilities around the world. You tell him to build things and he builds them.<br><br>
+        You recently scored your biggest client yet: the government of Earth. The people of Earth have decided that digging for fuel has gotten too slow and messy.<br><br>
+        You and Edgar will build a power plant in outer space called a Dyson swarm, a cloud of robots that collects solar energy, concentrates it, and beams it back to Earth, providing one septillion joules of energy per year.<br><br>
+        The people of Earth would appreciate a quick turnaround on this.<br><br>
+        <br><br>
+        You and Edgar typically start off projects in simulation mode.<br><br>
+        In simulation mode, Edgar can predict with 99.98% accuracy what will happen if he carries out a given prompt.<br><br>
+        <br><br>
+        Don't worry if it takes a few tries to find a prompt that works.<br><br>
+        <br><br>
+        Go ahead and get started.<br><br>
+        <span class="yellow-text">Click or press enter to continue.</span>
+    </div>
+    <script>
+        document.body.addEventListener('click', function() {
+            window.location.href = 'story.html';
+        });
+        document.body.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                window.location.href = 'story.html';
+            }
+        });
+    </script>
+</body>
+</html>
