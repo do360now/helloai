@@ -92,8 +92,8 @@ function initScene(){
   ctx.globalCompositeOperation = "screen";
 
   particles = [];
-  for(var i=0;i<ww;i+=Math.round(ww/350)){
-    for(var j=0;j<wh;j+=Math.round(ww/350)){
+  for(var i=0;i<ww;i+=Math.round(ww/250)){
+    for(var j=0;j<wh;j+=Math.round(ww/250)){
       if(data[ ((i + j*ww)*4) + 3] > 150){
         particles.push(new Particle(i,j));
       }
