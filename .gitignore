@@ -1,0 +1,17 @@
+# Ignore all .pyc files
+.pyc
+.venv/
+__pycache__/
+
+# Ignore all .zip files
+*.zip
+*.bak
+
+# Ignore all .log files
+*.log
+logs/*.log
+
+logs/*.*
+pong/logs/evaluations.npz
+Breakout-v4/logs/evaluations.npz
+X/.env

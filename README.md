@@ -1,2 +1,0 @@
-# helloai
-HelloAi.com Repo
