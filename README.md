@@ -1,3 +1,4 @@
-![Screenshot of the app](calculating.gif)
 # HelloAi
-- Automated post gener
+- Automated post generation for X.com
+![Screenshot of the app](calculating.gif)
+
