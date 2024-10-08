@@ -68,7 +68,17 @@ def generate_tweet():
         },
     ])
     tweet = response['message']['content']
-    return tweet
+    return tweet, post_topic
+
+def find_image_for_topic(topic: str):
+    """
+    Find an image that matches the topic from the images folder.
+    """
+    images_folder = "images/"
+    for filename in os.listdir(images_folder):
+        if topic.lower() in filename.lower():
+            return os.path.join(images_folder, filename)
+    return None
 
 # Authenticate with Twitter API v2
 logger.info("Starting authentication for Twitter API v2...")
@@ -79,11 +89,21 @@ POST_INTERVAL = random.randint(3600, 7200)
 
 # Post a tweet every configured interval
 while True:
-    tweet_v2 = generate_tweet()
+    tweet_v2, topic = generate_tweet()
+    image_path = find_image_for_topic(topic)
+
     logger.info(f"Attempting to post tweet using v2 API: '{tweet_v2}'")
     try:
-        response = client.create_tweet(text=tweet_v2)
-        logger.info(f"Tweeted successfully using v2 API: {response.data['id']}")
+        if image_path:
+            # Upload the media first
+            media = client.media_upload(filename=image_path)
+            # Then post the tweet with the image
+            response = client.create_tweet(text=tweet_v2, media_ids=[media.media_id])
+            logger.info(f"Tweeted successfully with image using v2 API: {response.data['id']}")
+        else:
+            # Post the tweet without an image
+            response = client.create_tweet(text=tweet_v2)
+            logger.info(f"Tweeted successfully without image using v2 API: {response.data['id']}")
     except tweepy.TweepyException as e:
         if '403' in str(e):
             logger.error("Your client app is not configured with the appropriate permissions for this endpoint. Please check your app settings on the Twitter Developer Portal and make sure it has 'Read and Write' permissions. If permissions were updated, regenerate the Access Tokens and update your .env file.")
