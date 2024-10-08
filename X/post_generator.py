@@ -2,6 +2,7 @@ import tweepy
 import os
 import logging
 import time
+import random
 from dotenv import load_dotenv
 import ollama
 
@@ -34,15 +35,36 @@ def authenticate_v2():
                            access_token_secret=ACCESS_SECRET)
     return client
 
+def generate_post_topic():
+    """
+    Generate a random topic for a tweet from a predefined list of topics.
+    """
+    topics = [
+        "DevOps",
+        "CI/CD",
+        "Python",
+        "Azure DevOps (ADO)",
+        "Docker",
+        "Kubernetes (K8S)",
+        "Semiconductors",
+        "Artificial Intelligence (AI)",
+        "Machine Learning",
+        "Robots"
+    ]
+    topic = random.choice(topics)
+    logger.info(f"Selected random topic: {topic}")
+    return topic
+
 def generate_tweet():
     """
-    Generate a tweet using ollama related to semiconductors.
+    Generate a post based on a dynamically generated topic using Ollama.
     """
-    logger.info("Generating a tweet related to semiconductors using ollama...")
+    post_topic = generate_post_topic()
+    logger.info(f"Generating a post based on the following topic: {post_topic}...")
     response = ollama.chat(model='llama3.2', messages=[
         {
             'role': 'user',
-            'content': 'Generate a tweet about semiconductors.',
+            'content': f'Generate a concise post with tips, news, or shortcuts for {post_topic}. Ensure it is under 250 characters.',
         },
     ])
     tweet = response['message']['content']
@@ -52,7 +74,10 @@ def generate_tweet():
 logger.info("Starting authentication for Twitter API v2...")
 client = authenticate_v2()
 
-# Post a tweet every hour
+# Configurable frequency for posting (random between 1 to 2 hours)
+POST_INTERVAL = random.randint(3600, 7200)
+
+# Post a tweet every configured interval
 while True:
     tweet_v2 = generate_tweet()
     logger.info(f"Attempting to post tweet using v2 API: '{tweet_v2}'")
@@ -63,7 +88,6 @@ while True:
         if '403' in str(e):
             logger.error("Your client app is not configured with the appropriate permissions for this endpoint. Please check your app settings on the Twitter Developer Portal and make sure it has 'Read and Write' permissions. If permissions were updated, regenerate the Access Tokens and update your .env file.")
         logger.error(f"Failed to post tweet using v2 API: {e}")
-    
-    # Wait for an hour before posting the next tweet
-    time.sleep(3600)
 
+    # Wait for the configured interval before posting the next tweet
+    time.sleep(POST_INTERVAL)
