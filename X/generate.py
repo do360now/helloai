@@ -5,7 +5,7 @@ import time
 import random
 from dotenv import load_dotenv
 import ollama
-from authenticate import authenticate_v2, authenticate_v1
+
 
 # Configure logger
 logging.basicConfig(level=logging.INFO)
@@ -71,5 +71,19 @@ def find_image_for_topic(topic: str):
     logger.info(f"No image found for topic: {topic}")
     return None
 
-def generate_image():
-    pass
+def find_ai_generated_image(topic: str):
+    """
+    Find an image that matches the topic from the images folder.
+    """
+    image_path = "images/ai_gen_image.png"
+    logger.info(f"Loading image for topic: {topic}")
+    if not os.path.exists(image_path):
+        logger.error(f"Image file '{image_path}' does not exist.")
+        return None
+
+    if not os.path.isfile(image_path):
+        logger.error(f"Found file '{image_path}' is not a valid image file.")
+        return None
+
+    logger.info(f"Found image for topic '{topic}': {image_path}")
+    return image_path, topic
