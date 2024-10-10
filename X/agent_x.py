@@ -6,7 +6,8 @@ import random
 from dotenv import load_dotenv
 import ollama
 from authenticate import authenticate_v2, authenticate_v1
-from generate import generate_tweet, find_image_for_topic, generate_post_topic
+from generate import generate_tweet, find_ai_generated_image, generate_post_topic
+from image_generator import generate_image
 
 
 # Configure logger
@@ -19,6 +20,8 @@ def main():
     logger.info("Starting authentication for Twitter API v2...")
     client = authenticate_v2()
     topic = generate_post_topic()
+    logger.info(f"Generated topic for the post: {topic}")
+    generate_image(topic)
 
     # Configurable frequency for posting (random between 1 to 2 hours)
     POST_INTERVAL = random.randint(3600, 7200)
@@ -27,7 +30,7 @@ def main():
     # Post a tweet every configured interval
     while True:
         logger.info("Starting tweet generation process...")
-        image_path = find_image_for_topic(topic)
+        image_path = find_ai_generated_image(topic)
 
         if not image_path:
             logger.info("No valid image found, skipping image upload and proceeding with text-only post.")
@@ -42,7 +45,7 @@ def main():
                 logger.info(f"Image found for topic '{topic}', attempting to upload image...")
                 api_v1 = authenticate_v1()
                 with open(image_path, 'rb') as media_file:
-                    media = api_v1.media_upload(filename=image_path)
+                    media = api_v1.media_upload(filename=media_file)
                 logger.info(f"Image uploaded successfully: media_id = {media.media_id}")
                 # Then post the tweet with the image
                 response = client.create_tweet(text=tweet_v1, media_ids=[media.media_id])
