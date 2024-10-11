@@ -30,23 +30,28 @@ def main():
     # Post a tweet every configured interval
     while True:
         logger.info("Starting tweet generation process...")
-        image_path = find_ai_generated_image(topic)
+        image_path = str(find_ai_generated_image(topic))
+        print(f'Image path: {image_path}')
+        print(type(image_path))
 
         if not image_path:
             logger.info("No valid image found, skipping image upload and proceeding with text-only post.")
         else:
             logger.info(f"Valid image found: {image_path}")
 
-        tweet_v1 = generate_tweet(topic)
+        tweet_v1 = str(generate_tweet(topic))
+        print(f'Tweet: {tweet_v1}')
+        print(type(tweet_v1))
         logger.info(f"Attempting to post tweet using v2 API: '{tweet_v1}'")
         try:
             if image_path:
                 # Upload the media first using Tweepy API v1.1 client
                 logger.info(f"Image found for topic '{topic}', attempting to upload image...")
                 api_v1 = authenticate_v1()
-                with open(image_path, 'rb') as media_file:
-                    media = api_v1.media_upload(filename=media_file)
+                                
+                media = api_v1.media_upload(filename=image_path)
                 logger.info(f"Image uploaded successfully: media_id = {media.media_id}")
+                
                 # Then post the tweet with the image
                 response = client.create_tweet(text=tweet_v1, media_ids=[media.media_id])
                 logger.info(f"Tweeted successfully with image using v2 API: {response.data['id']}")
