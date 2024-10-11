@@ -48,7 +48,7 @@ def generate_tweet(topic):
     logger.info(f"Received response from Ollama for topic '{topic}': {response}")
     tweet = response['message']['content']
     logger.info(f"Generated tweet: {tweet}")
-    return tweet, topic
+    return tweet
 
 def find_image_for_topic(topic: str):
     """
@@ -86,4 +86,4 @@ def find_ai_generated_image(topic: str):
         return None
 
     logger.info(f"Found image for topic '{topic}': {image_path}")
-    return image_path, topic
+    return image_path

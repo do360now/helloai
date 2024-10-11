@@ -20,7 +20,7 @@ def generate_image(topic):
     else:
         print("CUDA is not available. Using CPU instead.")
 
-    prompt = f"Create an image of {topic} for social media sharing."
+    prompt = f"Create an isometric pixel art scene of a busy {topic} data center. Include elements such as stacks of servers, cables, and networking equipment."
     print(f"Generated prompt: {prompt}")
     try:
         image = pipe(prompt).images[0]
