@@ -1,11 +1,7 @@
-
 import tweepy
 import os
 import logging
-import time
-import random
 from dotenv import load_dotenv
-import ollama
 
 # Configure logger
 logging.basicConfig(level=logging.INFO)
@@ -17,27 +13,33 @@ logger.info("Loading environment variables from .env file...")
 load_dotenv()
 
 # Get Twitter API credentials from environment variables with error handling
-API_KEY = os.getenv('API_KEY')
-API_SECRET = os.getenv('API_SECRET')
-ACCESS_TOKEN = os.getenv('ACCESS_TOKEN')
-ACCESS_SECRET = os.getenv('ACCESS_SECRET')
+API_KEY = os.getenv("API_KEY")
+API_SECRET = os.getenv("API_SECRET")
+ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
+ACCESS_SECRET = os.getenv("ACCESS_SECRET")
 
 
 logger.info("Checking if all Twitter API credentials are available...")
 if not all([API_KEY, API_SECRET, ACCESS_TOKEN, ACCESS_SECRET]):
-    raise ValueError("One or more Twitter API credentials are missing. Please check your environment variables.")
+    raise ValueError(
+        "One or more Twitter API credentials are missing. Please check your environment variables."
+    )
+
 
 def authenticate_v2():
     """
     Authenticate with Twitter API v2 using OAuth 1.0a User Context and return the Client object.
     """
     logger.info("Authenticating with Twitter API v2 using OAuth 1.0a User Context...")
-    client = tweepy.Client(consumer_key=API_KEY,
-                           consumer_secret=API_SECRET,
-                           access_token=ACCESS_TOKEN,
-                           access_token_secret=ACCESS_SECRET)
+    client = tweepy.Client(
+        consumer_key=API_KEY,
+        consumer_secret=API_SECRET,
+        access_token=ACCESS_TOKEN,
+        access_token_secret=ACCESS_SECRET,
+    )
     logger.info("Successfully authenticated with Twitter API v2.")
     return client
+
 
 def authenticate_v1():
     """
