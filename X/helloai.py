@@ -1,7 +1,8 @@
-from fastapi import FastAPI, Depends, HTTPException, status, Request, Form
-from fastapi.responses import RedirectResponse
+from fastapi import FastAPI, Depends, HTTPException, status, Request, Form, Cookie
+from fastapi.responses import RedirectResponse, Response
 from fastapi.templating import Jinja2Templates
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+
 from pydantic import BaseModel
 from sqlalchemy import Column, Integer, String, create_engine
 from sqlalchemy.ext.declarative import declarative_base
@@ -96,27 +97,6 @@ async def register_post(request: Request, db: Session = Depends(get_db), email: 
 async def login_get(request: Request):
     return templates.TemplateResponse("login.html", {"request": request})
 
-from fastapi.responses import RedirectResponse, Response
-
-@app.post("/token")
-async def login_for_access_token(response: Response, db: Session = Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()):
-    user = get_user_by_email(db, form_data.username)
-    if not user or not verify_password(form_data.password, user.hashed_password):
-        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
-    
-    access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token = create_access_token(data={"sub": user.email}, expires_delta=access_token_expires)
-    
-    # Set the token as a cookie in the response
-    response.set_cookie(key="access_token", value=f"Bearer {access_token}", httponly=True)
-    
-    # Redirect the user to the dashboard
-    return RedirectResponse(url="/dashboard", status_code=status.HTTP_302_FOUND)
-
-
-from fastapi import Cookie
-
-# In the /token route
 @app.post("/token")
 async def login_for_access_token(response: Response, db: Session = Depends(get_db), form_data: OAuth2PasswordRequestForm = Depends()):
     user = get_user_by_email(db, form_data.username)
@@ -138,6 +118,21 @@ async def login_for_access_token(response: Response, db: Session = Depends(get_d
     # Redirect the user to the dashboard
     return RedirectResponse(url="/dashboard", status_code=status.HTTP_302_FOUND)
 
+@app.get("/dashboard")
+async def dashboard(request: Request, access_token: str = Cookie(None)):
+    if access_token is None:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Not authenticated")
+    
+    try:
+        token_data = access_token.split(" ")[1]  # Remove "Bearer" prefix
+        payload = pyjwt.decode(token_data, SECRET_KEY, algorithms=[ALGORITHM])
+        email = payload.get("sub")
+        if email is None:
+            raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
+    except pyjwt.PyJWTError:
+        raise HTTPException(status_code=status.HTTP_401_UNAUTHORIZED, detail="Invalid credentials")
+    
+    return templates.TemplateResponse("dashboard.html", {"request": request, "email": email})
 
 # Run using Uvicorn
 if __name__ == "__main__":
