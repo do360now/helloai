@@ -55,12 +55,12 @@ This project is an automated bot that generates and posts content to Twitter, us
 ## Docker Deployment
 1. **Build Docker Image**
    ```sh
-   docker build -t twitter-bot .
+   docker build -t do360now/agent-x:1.0.0 .
    ```
 
 2. **Run the Docker Container**
    ```sh
-   docker run -d --env-file .env twitter-bot
+   docker run -d --env-file .env do360now/agent-x:1.0.0
    ```
 
 ## File Structure

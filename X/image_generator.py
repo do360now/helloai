@@ -8,6 +8,7 @@ def main(topic):
     generate_image(topic)
     print("Main function finished.")
 
+
 def generate_image(topic):
     print(f"Generating image for topic: {topic}")
     model_id = "runwayml/stable-diffusion-v1-5"
@@ -20,7 +21,7 @@ def generate_image(topic):
     else:
         print("CUDA is not available. Using CPU instead.")
 
-    prompt = f"Create an isometric pixel art scene of a busy {topic} data center. Include elements such as stacks of servers, cables, and networking equipment."
+    prompt = f"Create a random isometric pixel art scene of a busy data center. Include elements such as stacks of servers, {topic}, cables, and networking equipment."
     print(f"Generated prompt: {prompt}")
     try:
         image = pipe(prompt).images[0]
@@ -34,8 +35,9 @@ def generate_image(topic):
         os.makedirs("images")
         print("Created 'images' directory.")
 
-    image.save(f"images/ai_gen_image.png")
+    image.save("images/ai_gen_image.png")
     print("Image saved to images/ai_gen_image.png")
+
 
 if __name__ == "__main__":
     topic = "DevOps"  # Replace with desired topic or use input()

@@ -1,15 +1,13 @@
-import tweepy
 import os
 import logging
-import time
 import random
-from dotenv import load_dotenv
 import ollama
 
 
 # Configure logger
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+
 
 def generate_post_topic():
     """
@@ -25,7 +23,7 @@ def generate_post_topic():
         "Semiconductors",
         "Artificial Intelligence (AI)",
         "Machine Learning ( ml )",
-        "Robots"
+        "Robots",
     ]
     topic = random.choice(topics)
     logger.info(f"Selected random topic:{topic}")
@@ -33,22 +31,25 @@ def generate_post_topic():
 
 
 def generate_tweet(topic):
-    
     """
     Generate a post based on a dynamically generated topic using Ollama.
     """
     # post_topic = generate_post_topic()
     logger.info(f"Generating a post based on the following topic: {topic}...")
-    response = ollama.chat(model='llama3.2', messages=[
-        {
-            'role': 'user',
-            'content': f'Generate a concise post with tips, news, or shortcuts for {topic}. Ensure it is under 250 characters and includes hashtags.',
-        },
-    ])
+    response = ollama.chat(
+        model="llama3.2",
+        messages=[
+            {
+                "role": "user",
+                "content": f"Generate a concise post with tips, news, or shortcuts for {topic}. Ensure it is under 250 characters and includes hashtags.",
+            },
+        ],
+    )
     logger.info(f"Received response from Ollama for topic '{topic}': {response}")
-    tweet = response['message']['content']
+    tweet = response["message"]["content"]
     logger.info(f"Generated tweet: {tweet}")
     return tweet
+
 
 def find_image_for_topic(topic: str):
     """
@@ -70,6 +71,7 @@ def find_image_for_topic(topic: str):
             return image_path, topic
     logger.info(f"No image found for topic: {topic}")
     return None
+
 
 def find_ai_generated_image(topic: str):
     """
