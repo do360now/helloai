@@ -15,25 +15,31 @@ logger.info("Loading environment variables from .env file...")
 load_dotenv()
 
 # Get Twitter API credentials from environment variables with error handling
-API_KEY = os.getenv('API_KEY')
-API_SECRET = os.getenv('API_SECRET')
-ACCESS_TOKEN = os.getenv('ACCESS_TOKEN')
-ACCESS_SECRET = os.getenv('ACCESS_SECRET')
+API_KEY = os.getenv("API_KEY")
+API_SECRET = os.getenv("API_SECRET")
+ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
+ACCESS_SECRET = os.getenv("ACCESS_SECRET")
 
 logger.info("Checking if all Twitter API credentials are available...")
 if not all([API_KEY, API_SECRET, ACCESS_TOKEN, ACCESS_SECRET]):
-    raise ValueError("One or more Twitter API credentials are missing. Please check your environment variables.")
+    raise ValueError(
+        "One or more Twitter API credentials are missing. Please check your environment variables."
+    )
+
 
 def authenticate_v2():
     """
     Authenticate with Twitter API v2 using OAuth 1.0a User Context and return the Client object.
     """
     logger.info("Authenticating with Twitter API v2 using OAuth 1.0a User Context...")
-    client = tweepy.Client(consumer_key=API_KEY,
-                           consumer_secret=API_SECRET,
-                           access_token=ACCESS_TOKEN,
-                           access_token_secret=ACCESS_SECRET)
+    client = tweepy.Client(
+        consumer_key=API_KEY,
+        consumer_secret=API_SECRET,
+        access_token=ACCESS_TOKEN,
+        access_token_secret=ACCESS_SECRET,
+    )
     return client
+
 
 def generate_post_topic():
     """
@@ -49,11 +55,12 @@ def generate_post_topic():
         "Semiconductors",
         "Artificial Intelligence (AI)",
         "Machine Learning",
-        "Robots"
+        "Robots",
     ]
     topic = random.choice(topics)
     logger.info(f"Selected random topic: {topic}")
     return topic
+
 
 def generate_tweet():
     """
@@ -61,14 +68,18 @@ def generate_tweet():
     """
     post_topic = generate_post_topic()
     logger.info(f"Generating a post based on the following topic: {post_topic}...")
-    response = ollama.chat(model='llama3.2', messages=[
-        {
-            'role': 'user',
-            'content': f'Generate a concise post with tips, news, or shortcuts for {post_topic}. Ensure it is under 250 characters.',
-        },
-    ])
-    tweet = response['message']['content']
+    response = ollama.chat(
+        model="llama3.2",
+        messages=[
+            {
+                "role": "user",
+                "content": f"Generate a concise post with tips, news, or shortcuts for {post_topic}. Ensure it is under 250 characters.",
+            },
+        ],
+    )
+    tweet = response["message"]["content"]
     return tweet, post_topic
+
 
 def find_image_for_topic(topic: str):
     """
@@ -79,6 +90,7 @@ def find_image_for_topic(topic: str):
         if topic.lower() in filename.lower():
             return os.path.join(images_folder, filename)
     return None
+
 
 # Authenticate with Twitter API v2
 logger.info("Starting authentication for Twitter API v2...")
@@ -99,14 +111,20 @@ while True:
             media = client.media_upload(filename=image_path)
             # Then post the tweet with the image
             response = client.create_tweet(text=tweet_v2, media_ids=[media.media_id])
-            logger.info(f"Tweeted successfully with image using v2 API: {response.data['id']}")
+            logger.info(
+                f"Tweeted successfully with image using v2 API: {response.data['id']}"
+            )
         else:
             # Post the tweet without an image
             response = client.create_tweet(text=tweet_v2)
-            logger.info(f"Tweeted successfully without image using v2 API: {response.data['id']}")
+            logger.info(
+                f"Tweeted successfully without image using v2 API: {response.data['id']}"
+            )
     except tweepy.TweepyException as e:
-        if '403' in str(e):
-            logger.error("Your client app is not configured with the appropriate permissions for this endpoint. Please check your app settings on the Twitter Developer Portal and make sure it has 'Read and Write' permissions. If permissions were updated, regenerate the Access Tokens and update your .env file.")
+        if "403" in str(e):
+            logger.error(
+                "Your client app is not configured with the appropriate permissions for this endpoint. Please check your app settings on the Twitter Developer Portal and make sure it has 'Read and Write' permissions. If permissions were updated, regenerate the Access Tokens and update your .env file."
+            )
         logger.error(f"Failed to post tweet using v2 API: {e}")
 
     # Wait for the configured interval before posting the next tweet
