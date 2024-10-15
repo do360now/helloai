@@ -1,3 +1,9 @@
 tweepy
 openai
 python-dotenv
+fastapi
+sqlalchemy
+passlib
+jwt
+python-multipart
+uvicorn
