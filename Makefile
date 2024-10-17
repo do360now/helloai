@@ -8,3 +8,6 @@ docker-run:
 docker-stop:
 	docker stop agent-x
 
+docker-push:
+	docker push do360now/chatgpt-agent-x:1.0.0
+
