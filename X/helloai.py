@@ -172,4 +172,4 @@ async def dashboard(request: Request, access_token: str = Cookie(None)):
 if __name__ == "__main__":
     import uvicorn
     logger.info("Starting Uvicorn server")
-    uvicorn.run("helloai:app", host="127.0.0.1", port=8000, reload=True)
+    uvicorn.run("helloai:app", host="0.0.0.0", port=80, reload=True)
