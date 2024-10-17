@@ -19,4 +19,5 @@ RUN pip-compile requirements.in --upgrade && pip install -r requirements.txt
 COPY ./X /app/
 
 # Run the bot
-CMD ["python", "chatgpt_agent_x.py"]
+# CMD ["python", "chatgpt_agent_x.py"]
+CMD ["python", "helloai.py"]
