@@ -7,4 +7,4 @@ passlib
 pyjwt
 python-multipart
 uvicorn
-jinja2
+fastapi-chameleon
