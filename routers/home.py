@@ -1,24 +1,22 @@
 import fastapi
 from fastapi_chameleon import template
+from starlette.requests import Request
+
+from viewmodels.home.indexviewmodel import IndexViewModel
+from viewmodels.shared.viewmodel import ViewModelBase
 
 router = fastapi.APIRouter()
 
 
-router.get("/")
-@template(template_file="index.pt")
-def index():
-    return {
-        "post_count": 271,
-        "followers_count": 1000,
-        "latest_post": [
-            {'id': 1, 'title': 'First post', 'content': 'This is the first post'},
-            {'id': 2, 'title': 'Second post', 'content': 'This is the second post'},
+@router.get('/')
+@template()
+def index(request: Request):
+    vm = IndexViewModel(request)
+    return vm.to_dict()
 
-    ],
-    }
 
-router.get("/about")
-def about():
-    return {
-        "message": "This is the about page"
-    }
+@router.get('/about')
+@template()
+def about(request: Request):
+    vm = ViewModelBase(request)
+    return vm.to_dict()
