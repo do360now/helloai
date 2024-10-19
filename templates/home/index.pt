@@ -6,7 +6,7 @@
             <div class="hero">
                 <div class="hero-inner">
                     <h1>
-                        Generate Posts with Images Using AI Agents...
+                        AI that generates personalized tweets on any topic and posts them directly on your X account.
                     </h1>
 
                     <input type="text" class="form-control"
@@ -15,7 +15,7 @@
                     <br>
                     <br>
                     <br>
-                    <a href="#">Get started now by choosing your plan and automating your posts!</a>
+                    <a href="#">Get started now by choosing your plan and start automating your posts!</a>
                 </div>
             </div>
 
