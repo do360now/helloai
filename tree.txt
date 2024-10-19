@@ -1,0 +1,67 @@
+.
+├── calculating.gif
+├── CHANGELOG.md
+├── Dockerfile
+├── main.py
+├── Makefile
+├── poetry.lock
+├── __pycache__
+│   ├── main.cpython-310.pyc
+│   └── main.cpython-311.pyc
+├── pyproject.toml
+├── README.md
+├── requirements.in
+├── requirements.txt
+├── routers
+│   ├── account.py
+│   ├── home.py
+│   └── __pycache__
+│       ├── account.cpython-310.pyc
+│       └── home.cpython-310.pyc
+├── static
+│   ├── css
+│   │   ├── account.css
+│   │   ├── nav.css
+│   │   ├── package.css
+│   │   └── site.css
+│   ├── external
+│   │   ├── css
+│   │   │   └── bootstrap.min.css
+│   │   └── js
+│   │       ├── bootstrap.min.js
+│   │       ├── jquery-3.3.1.slim.min.js
+│   │       └── popper.min.js
+│   └── img
+│       ├── blue-cube.svg
+│       ├── pypi-logo.svg
+│       └── white-cube.svg
+├── templates
+│   ├── home
+│   │   ├── about.pt
+│   │   └── index.pt
+│   └── shared
+│       └── _layout.pt
+├── tree.txt
+└── X
+    ├── agent_x.py
+    ├── authenticate.py
+    ├── chatgpt_agent_x.py
+    ├── generate.py
+    ├── get_user_id.py
+    ├── image_generator.py
+    ├── images
+    │   ├── ai_gen_image.png
+    │   └── image.png
+    ├── post_bot.py
+    ├── post_generator.py
+    ├── __pycache__
+    │   ├── authenticate.cpython-310.pyc
+    │   ├── generate.cpython-310.pyc
+    │   ├── helloai.cpython-310.pyc
+    │   ├── helloai.cpython-311.pyc
+    │   └── image_generator.cpython-310.pyc
+    ├── README.md
+    ├── user_admin_bot.py
+    └── users.db
+
+15 directories, 49 files

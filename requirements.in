@@ -8,3 +8,6 @@ pyjwt
 python-multipart
 uvicorn
 fastapi-chameleon
+aiofiles
+fastapi-chameleon
+starlette
