@@ -24,6 +24,22 @@ def generate_post_topic():
         "Artificial Intelligence (AI)",
         "Machine Learning ( ml )",
         "Robots",
+        "Data Science",
+        "Cybersecurity",
+        "Cloud Computing",
+        "Internet of Things (IoT)",
+        "Big Data",
+        "Blockchain",
+        "Web Development",
+        "ThrowbackThursday (TBT)",
+        "TechTrends (2024)",
+        "Programming Humor",
+        "Tech News",
+        "Tech Tips",
+        "Tech Gadgets",
+        "Tech Reviews",
+        
+
     ]
     topic = random.choice(topics)
     logger.info(f"Selected random topic:{topic}")

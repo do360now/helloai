@@ -15,7 +15,6 @@ import logging
 import secrets
 
 
-
 # Initialize FastAPI app
 app = FastAPI()
 
