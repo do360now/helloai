@@ -1,4 +1,4 @@
-<div metal:use-macro="load: ../shared/_layout.pt">
+<div metal:use-macro="load: ../shared/_layout.pt"> 
     <div metal:fill-slot="content" tal:omit-tag="True">
 
         <div class="content">
@@ -9,8 +9,39 @@
                        Automatically Generate Posts Using AI Agents...
                     </h1>
 
-                    <input type="text" class="form-control"
-                           placeholder=" Search for Agents">
+                    <!-- Pricing Table Section -->
+                        <div class="pricing-table">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="pricing-box">
+                                        <h3>Standard Plan</h3>
+                                        <p>500 posts per month</p>
+                                        <p>€12/month</p>
+                                        <a href="#" class="btn btn-primary">Get Started</a>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="pricing-box">
+                                        <h3>Basic Plan</h3>
+                                        <p>250 posts per month</p>
+                                        <p>€5/month</p>
+                                        <a href="#" class="btn btn-primary">Get Started</a>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="pricing-box">
+                                        <h3>Premium Plan</h3>
+                                        <p>1500 posts per month</p>
+                                        <p>€25/month</p>
+                                        <a href="#" class="btn btn-primary">Get Started</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End of Pricing Table Section -->
+
+                    <!-- <input type="text" class="form-control"
+                           placeholder=" Search for Agents"> -->
 
                     <br>
                     <br>
@@ -20,7 +51,7 @@
             </div>
 
             <div class="pypi-stats">
-                <div class="stat">${'{:,}'.format(agents)} Agents</div>
+                <div class="stat">${'{:,}'.format(agents)} Agent</div>
                 <div class="stat">${'{:,}'.format(users)} User</div>
             </div>
 
@@ -29,19 +60,19 @@
                     <div class="col-md-3"></div>
                     <div class="col-md-6">
 
-                        <h2>Agents</h2>
-                        <span class="subtitle">"Latest Updates: Our greatest Agents</span>
-
+                        <h2>What users already automating their tweets with Agent_X are saying...</h2>
+                        <span class="subtitle">Join the growing community of professionals automating their social media presence.</span>
 
                         <div class="project" tal:repeat="p agent_list">
-                            <div class="title"><a href="/project/${p.id}">${p.id}</a></div>
+                            <div class="title"><a href="https://x.com/${p.id}">${p.id}</a></div>
                             <div class="desc">${p.summary}</div>
                         </div>
+
+                        
                     </div>
                     <div class="col-md-3"></div>
                 </div>
             </div>
-
 
         </div>
 

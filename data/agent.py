@@ -1,7 +1,7 @@
-class Package:
+class Agent:
     def __init__(
         self,
-        package_name: str,
+        agent_name: str,
         summary: str,
         description: str,
         home_page: str,
@@ -17,5 +17,5 @@ class Package:
         self.home_page = home_page
         self.description = description
         self.summary = summary
-        self.package_name = package_name
-        self.id = package_name
+        self.agent_name = agent_name
+        self.id = agent_name

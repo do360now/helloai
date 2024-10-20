@@ -116,3 +116,71 @@ footer a {
 .page-core {
     padding: 20px;
 }
+
+/* Basic styling for the pricing table container */
+.pricing-table {
+    margin-top: 50px;
+    text-align: center;
+}
+
+/* Styling for each individual pricing box */
+.pricing-box {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    transition: transform 0.3s ease;
+}
+
+/* Hover effect for pricing boxes */
+.pricing-box:hover {
+    transform: translateY(-5px);
+}
+
+/* Title of each plan */
+.pricing-box h3 {
+    font-size: 24px;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+/* Text inside the pricing box */
+.pricing-box p {
+    font-size: 18px;
+    color: #666;
+    margin-bottom: 15px;
+}
+
+/* Get Started button */
+.pricing-box .btn {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    border-radius: 5px;
+    text-transform: uppercase;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.3s ease;
+}
+
+/* Hover effect for the button */
+.pricing-box .btn:hover {
+    background-color: #0056b3;
+}
+
+/* Responsive styling */
+@media (max-width: 768px) {
+    .pricing-table .col-md-4 {
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .pricing-table .col-md-4 {
+        width: 100%;
+    }
+}

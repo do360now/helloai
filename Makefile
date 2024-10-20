@@ -11,3 +11,8 @@ docker-push:
 docker-stop:
 	docker stop agent-x
 
+ollama-serve:
+	ollama serve
+
+agent-x-run:
+	python3 X/agent_x.py
