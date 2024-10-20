@@ -17,5 +17,5 @@ Breakout-v4/logs/evaluations.npz
 X/.env
 
 X/images/ai_gen_image.pong
-
+X/images/*.*
 *.pem

@@ -14,37 +14,33 @@ def generate_post_topic():
     Generate a random topic for a tweet from a predefined list of topics.
     """
     topics = [
-        "DevOps",
-        "Continuous Integration/Continuous Deployment (CI/CD)",
-        "Python",
-        "Azure DevOps (ADO)",
-        "Docker",
-        "Kubernetes (K8S)",
-        "Semiconductors",
-        "Artificial Intelligence (AI)",
-        "Machine Learning ( ml )",
-        "Robots",
-        "Data Science",
-        "Cybersecurity",
-        "Cloud Computing",
-        "Internet of Things (IoT)",
-        "Big Data",
-        "Blockchain",
-        "Web Development",
-        "ThrowbackThursday (TBT)",
-        "TechTrends (2024)",
-        "Programming Humor",
-        "Tech News",
-        "Tech Tips",
-        "Tech Gadgets",
-        "Tech Reviews",
-        
+    "Artificial Intelligence (AI)",
+    "Machine Learning (ML)",
+    "Cybersecurity",
+    "Cloud Computing",
+    "Blockchain & Cryptocurrency",
+    "DevOps & CI/CD",
+    "Artificial Neural Networks (ANN) & Deep Learning",
+    "Data Science & Data Analytics",
+    "Python (Programming Language)",
+    "Tech Trends (2024)",
+    "Robots & Automation",
+    "Natural Language Processing (NLP)"        
 
     ]
     topic = random.choice(topics)
     logger.info(f"Selected random topic:{topic}")
     return topic
 
+
+def post_process_tweet(tweet):
+    # Ensure it’s within 250 characters
+    tweet = tweet[:250]
+    
+    # Ensure there’s at least one hashtag
+    if "#" not in tweet:
+        tweet += " #news"  # Add a fallback hashtag
+    return tweet
 
 def generate_tweet(topic):
     """
@@ -57,12 +53,13 @@ def generate_tweet(topic):
         messages=[
             {
                 "role": "user",
-                "content": f"Generate a concise post with tips, news, or shortcuts for {topic}. Ensure it is under 250 characters and includes hashtags.",
+                "content": f"Create a snappy and engaging post on {topic}, offering tips or news under 250 characters. Add relevant hashtags like #TechTips or #Shortcuts.",
             },
         ],
     )
     logger.info(f"Received response from Ollama for topic '{topic}': {response}")
     tweet = response["message"]["content"]
+    tweet = post_process_tweet(tweet)
     logger.info(f"Generated tweet: {tweet}")
     return tweet
 

@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <title>Python Package Index (demo)</title>
 
+    <link rel="icon" href="/static/img/favicon.ico">
+
     <link rel="stylesheet"
           href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,400italic,600,600italic,700,700italic|Source+Code+Pro:500">
 
@@ -46,8 +48,9 @@
 
 <footer>
     <div class="copyright">
-        Take control of your social media with Agent_X.<br><br>
-        Set up your agent in minutes and start automating your tweets effortlessly. Maximize engagement while saving time — it’s that easy!
+        Take control of your social media with Agent_X.<br>
+        Maximize engagement while saving time — it’s that easy!<br>
+        Set up your agent in minutes and start automating your tweets effortlessly.
     </div>
 </footer>
 
