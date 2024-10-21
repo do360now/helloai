@@ -40,13 +40,12 @@
                         </div>
                         <!-- End of Pricing Table Section -->
 
-                    <!-- <input type="text" class="form-control"
-                           placeholder=" Search for Agents"> -->
-
+                     <input type="text" class="form-control"
+                           placeholder=" Search agents">
                     <br>
+                    <br>Or 
                     <br>
-                    <br>
-                    <a href="#">Get started now by choosing your plan and start automating your posts!</a>
+                    <a href="#">Get started now by choosing your Agent and start automating your posts!</a>
                 </div>
             </div>
 
@@ -63,7 +62,7 @@
                         
 
                         <div class="project" tal:repeat="p user_comments">
-                            <div class="title"><a href="https://x.com/${p.id}">${p.id}</a></div>
+                            <div class="title"><a href="https://x.com/${p.id}" target="_blank" >${p.id}</a></div>
                             <div class="desc">${p.summary}</div>
                         </div>
 

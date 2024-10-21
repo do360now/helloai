@@ -1,50 +1,68 @@
-import datetime
 from typing import List, Optional
 
+import sqlalchemy.orm
 from data.agent import Agent
 from data.release import Release
 
-
+from data import db_session
 
 
 def release_count() -> int:
-    return 2_234_847
+    session = db_session.create_session()
+
+    try:
+        return session.query(Release).count()
+    finally:
+        session.close()
 
 
+def agent_count() -> int:
+    session = db_session.create_session()
 
-def package_count() -> int:
-    return 274_000
-
-
-def agents() -> int:
-    return 1
-
-
-def users() -> int:
-    return 1
+    try:
+        return session.query(Agent).count()
+    finally:
+        session.close()
 
 
-def latest_agents(limit: int = 5) -> List:
-    return [
-        {'id': 'fastapi', 'summary': 'A great web framework'},
-        {'id': 'uvicorn', 'summary': 'Your favorite ASGI server'},
-        {'id': 'httpx', 'summary': 'Requests for an async world'},
-    ][:limit]
+def latest_agents(limit: int = 5) -> List[Agent]:
+    session = db_session.create_session()
 
+    try:
+        releases = (
+            session.query(Release)
+            .options(sqlalchemy.orm.joinedload(Release.agent))
+            .order_by(Release.created_date.desc())
+            .limit(limit)
+            .all()
+        )
+    finally:
+        session.close()
+
+    return list({r.agent for r in releases})
 
 
 def get_agent_by_id(agent_name: str) -> Optional[Agent]:
-    agent = Agent(
-        agent_name,
-        'This is the summary',
-        'Full details here!',
-        'https://fastapi.tiangolo.com/',
-        'MIT',
-        'Sebastián Ramírez',
-    )
-    return agent
+    session = db_session.create_session()
+
+    try:
+        agent = session.query(Agent).filter(Agent.id == agent).first()
+        return agent
+    finally:
+        session.close()
 
 
 def get_latest_release_for_agent(agent_name: str) -> Optional[Release]:
-    return Release('1.2.0', datetime.datetime.now())
+    session = db_session.create_session()
 
+    try:
+        release = (
+            session.query(Release)
+            .filter(Release.agent_id == agent_name)
+            .order_by(Release.created_date.desc())
+            .first()
+        )
+
+        return release
+    finally:
+        session.close()

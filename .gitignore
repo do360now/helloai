@@ -19,3 +19,6 @@ X/.env
 X/images/ai_gen_image.pong
 X/images/*.*
 *.pem
+
+# sql light db
+db/*.sqlite
