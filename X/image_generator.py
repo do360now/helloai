@@ -54,6 +54,8 @@ def generate_image(topic):
         prompt = f"An isometric scene of a futuristic tech expo, showcasing the latest gadgets, AI robots, and smart devices. Include {topic} elements."
     elif "Robots & Automation" in topic:
         prompt = f"An isometric scene of a robotics lab, with autonomous robots, drones, and automation equipment. Highlight {topic} with futuristic tech."
+    elif "HelloAI" in topic:
+        prompt = f"An isometric scene of an AI-powered agent, posting messages on X.com. Include {topic} elements."
     else:
         prompt = f"Create a random isometric pixel art scene of a busy data center. Include elements such as stacks of servers, {topic}, cables, and networking equipment."
     

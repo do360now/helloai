@@ -25,7 +25,8 @@ def generate_post_topic():
     "Python (Programming Language)",
     "Tech Trends (2024)",
     "Robots & Automation",
-    "Natural Language Processing (NLP)"        
+    "Natural Language Processing (NLP)",
+    "HelloAI"       
 
     ]
     topic = random.choice(topics)
@@ -48,15 +49,26 @@ def generate_tweet(topic):
     """
     # post_topic = generate_post_topic()
     logger.info(f"Generating a post based on the following topic: {topic}...")
-    response = ollama.chat(
-        model="llama3.2",
-        messages=[
-            {
-                "role": "user",
-                "content": f"Create a snappy and engaging post on {topic}, offering tips or news under 250 characters. Add relevant hashtags like #TechTips or #Shortcuts.",
-            },
-        ],
-    )
+    if topic == "HelloAI":
+        response = ollama.chat(
+            model="llama3.2",
+            messages=[
+                {
+                    "role": "user",
+                    "content": f"Create a snappy and engaging post promoting https://helloai.com, keep it under 250 characters. highlight the bennefits of Automatically Generating Posts Using AI Agents... Include the URL https://helloai.com and relevant hashtags like #AIAutomation and #SmartPosting",
+                },
+            ],
+        )
+    else:
+        response = ollama.chat(
+            model="llama3.2",
+            messages=[
+                {
+                    "role": "user",
+                    "content": f"Create a snappy and engaging post on {topic}, offering tips or news under 250 characters. Add relevant hashtags like #TechTips or #Shortcuts.",
+                },
+            ],
+        )
     logger.info(f"Received response from Ollama for topic '{topic}': {response}")
     tweet = response["message"]["content"]
     tweet = post_process_tweet(tweet)
