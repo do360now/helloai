@@ -3,8 +3,8 @@ import fastapi_chameleon
 import uvicorn
 from starlette.staticfiles import StaticFiles
 
-from routers import account
-from routers import home
+from routers import account, home, agent
+
 
 
 app = fastapi.FastAPI()
@@ -28,6 +28,7 @@ def configure_routes():
     app.mount('/static', StaticFiles(directory='static'), name='static')
     app.include_router(home.router)
     app.include_router(account.router)
+    app.include_router(agent.router)
 
 
 if __name__ == '__main__':
