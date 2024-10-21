@@ -22,3 +22,5 @@ X/images/*.*
 
 # sql light db
 db/*.sqlite
+
+node_modules/
