@@ -4,9 +4,16 @@
             <h1>Your HelloAI Account</h1>
 
             <div>
-                Welcome to your account ${ user.name }!
+                Welcome to your account, ${ user.name }!
+
+                <p>
+                    Due to the high demand, we are currently in the process of adding additional resources to support all new users. As soon as everything is ready, we will notify you, and you will be able to choose your preferred plan and start generating posts with your AI agents.
+                </p>
+
+                <p>
+                    Thank you for your patience and understanding during this brief delay. We look forward to helping you automate your content creation soon!
+                </p>
             </div>
         </div>
     </div>
 </div>
-
