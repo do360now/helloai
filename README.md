@@ -57,3 +57,4 @@ The application uses Llama3.2 to generate tweets about semiconductors and automa
 - The script will run indefinitely, posting a tweet every hour. You can stop it anytime by pressing `Ctrl + C`.
 
 Let me know if you need more information or encounter any issues!
+
