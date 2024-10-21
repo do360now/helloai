@@ -1,3 +1,13 @@
 tweepy
 openai
 python-dotenv
+fastapi
+sqlalchemy
+passlib
+pyjwt
+python-multipart
+uvicorn
+fastapi-chameleon
+aiofiles
+fastapi-chameleon
+starlette

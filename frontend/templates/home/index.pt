@@ -1,0 +1,82 @@
+<div metal:use-macro="load: ../shared/_layout.pt"> 
+    <div metal:fill-slot="content" tal:omit-tag="True">
+
+        <div class="content">
+
+            <div class="hero">
+                <div class="hero-inner">
+                    <h1>
+                       Automatically Generate Posts Using AI Agents...
+                    </h1>
+
+                    <!-- Pricing Table Section -->
+                        <div class="pricing-table">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="pricing-box">
+                                        <h3>Standard Plan</h3>
+                                        <p>500 posts per month</p>
+                                        <p>€12/month</p>
+                                        <a href="#" class="btn btn-primary">Get Started</a>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="pricing-box">
+                                        <h3>Basic Plan</h3>
+                                        <p>250 posts per month</p>
+                                        <p>€5/month</p>
+                                        <a href="#" class="btn btn-primary">Get Started</a>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="pricing-box">
+                                        <h3>Premium Plan</h3>
+                                        <p>1500 posts per month</p>
+                                        <p>€25/month</p>
+                                        <a href="#" class="btn btn-primary">Get Started</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- End of Pricing Table Section -->
+
+                     <input type="text" class="form-control"
+                           placeholder=" Search agents">
+                    <br>
+                    <br>Or 
+                    <br>
+                    <a href="#">Get started now by choosing your Agent and start automating your posts!</a>
+                </div>
+            </div>
+
+            <div class="helloai-stats">
+                <h2>What users already automating their tweets with Agent_X are saying...</h2>
+                        <span class="subtitle">Join the growing community of professionals automating their social media presence.</span>
+            </div>
+
+            <div class="container project-list">
+                <div class="row">
+                    <div class="col-md-3"></div>
+                    <div class="col-md-6">
+
+                        
+
+                        <div class="project" tal:repeat="p user_comments">
+                            <div class="title"><a href="https://x.com/${p.id}" target="_blank" >${p.id}</a></div>
+                            <div class="desc">${p.summary}</div>
+                        </div>
+
+                        
+                    </div>
+                    <div class="col-md-3"></div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    <div metal:fill-slot="additional-css" tal:omit-tag="True">
+        <!-- additional css from the page -->
+    </div>
+</div>

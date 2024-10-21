@@ -24,7 +24,7 @@ def main():
         logger.info(f"Generated topic for the post: {topic}")
         generate_image(topic)
 
-        POST_INTERVAL = random.randint(6000, 12000)
+        POST_INTERVAL = random.randint(1800, 43200)
         logger.info(f"Configured posting interval: {POST_INTERVAL} seconds")
 
         # Start the tweet generation process
