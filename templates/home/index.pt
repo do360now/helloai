@@ -50,7 +50,7 @@
                 </div>
             </div>
 
-            <div class="pypi-stats">
+            <div class="helloai-stats">
                 <h2>What users already automating their tweets with Agent_X are saying...</h2>
                         <span class="subtitle">Join the growing community of professionals automating their social media presence.</span>
             </div>
@@ -62,7 +62,7 @@
 
                         
 
-                        <div class="project" tal:repeat="p agent_list">
+                        <div class="project" tal:repeat="p user_comments">
                             <div class="title"><a href="https://x.com/${p.id}">${p.id}</a></div>
                             <div class="desc">${p.summary}</div>
                         </div>

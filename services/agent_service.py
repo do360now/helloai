@@ -5,6 +5,17 @@ from data.agent import Agent
 from data.release import Release
 
 
+
+
+def release_count() -> int:
+    return 2_234_847
+
+
+
+def package_count() -> int:
+    return 274_000
+
+
 def agents() -> int:
     return 1
 
@@ -15,9 +26,11 @@ def users() -> int:
 
 def latest_agents(limit: int = 5) -> List:
     return [
-        {'id': '@MachadoClement', 'summary': 'I love it! It saves me time and increases engagement with personalized, AI-generated posts!'},
-            
+        {'id': 'fastapi', 'summary': 'A great web framework'},
+        {'id': 'uvicorn', 'summary': 'Your favorite ASGI server'},
+        {'id': 'httpx', 'summary': 'Requests for an async world'},
     ][:limit]
+
 
 
 def get_agent_by_id(agent_name: str) -> Optional[Agent]:
@@ -34,3 +47,4 @@ def get_agent_by_id(agent_name: str) -> Optional[Agent]:
 
 def get_latest_release_for_agent(agent_name: str) -> Optional[Release]:
     return Release('1.2.0', datetime.datetime.now())
+

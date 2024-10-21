@@ -9,6 +9,8 @@ class IndexViewModel(ViewModelBase):
     def __init__(self, request: Request):
         super().__init__(request)
 
-        self.agents: int = agent_service.agents()
-        self.users: int = user_service.users()
-        self.agent_list: List = agent_service.latest_agents(limit=5)
+        self.release_count: int = agent_service.release_count()
+        self.user_count: int = user_service.user_count()
+        self.agent_count: int = agent_service.package_count()
+        self.agents: List = agent_service.latest_agents(limit=5)
+        self.user_comments: List = user_service.latest_user_comments(limit=5)
