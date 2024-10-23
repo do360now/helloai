@@ -2,6 +2,7 @@
 VERSION=2.0.0
 IMAGE_NAME=do360now/agent_x_frontend
 
+
 # Build the Docker image
 docker-build:
 	docker build -t $(IMAGE_NAME):$(VERSION) .

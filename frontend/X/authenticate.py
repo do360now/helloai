@@ -1,6 +1,7 @@
 import tweepy
 import os
 import logging
+import openai
 from dotenv import load_dotenv
 
 # Configure logger
@@ -17,6 +18,7 @@ API_KEY = os.getenv("API_KEY")
 API_SECRET = os.getenv("API_SECRET")
 ACCESS_TOKEN = os.getenv("ACCESS_TOKEN")
 ACCESS_SECRET = os.getenv("ACCESS_SECRET")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
 
 
 logger.info("Checking if all Twitter API credentials are available...")
@@ -24,6 +26,22 @@ if not all([API_KEY, API_SECRET, ACCESS_TOKEN, ACCESS_SECRET]):
     raise ValueError(
         "One or more Twitter API credentials are missing. Please check your environment variables."
     )
+
+if not OPENAI_API_KEY:
+    raise ValueError(
+        "OpenAI API key is missing. Please set the OPENAI_API_KEY environment variable."
+    )
+
+
+def authenticate_v1():
+    """
+    Authenticate with Twitter API v1.1 using OAuth 1.0a User Context and return the API object.
+    """
+    logger.info("Authenticating with Twitter API v1.1 using OAuth 1.0a User Context...")
+    auth = tweepy.OAuth1UserHandler(API_KEY, API_SECRET, ACCESS_TOKEN, ACCESS_SECRET)
+    api = tweepy.API(auth)
+    logger.info("Successfully authenticated with Twitter API v1.1.")
+    return api
 
 
 def authenticate_v2():
@@ -41,12 +59,12 @@ def authenticate_v2():
     return client
 
 
-def authenticate_v1():
+def open_ai_auth():
     """
-    Authenticate with Twitter API v1.1 using OAuth 1.0a User Context and return the API object.
+    Authenticate with OpenAI API using the provided API key.
     """
-    logger.info("Authenticating with Twitter API v1.1 using OAuth 1.0a User Context...")
-    auth = tweepy.OAuth1UserHandler(API_KEY, API_SECRET, ACCESS_TOKEN, ACCESS_SECRET)
-    api = tweepy.API(auth)
-    logger.info("Successfully authenticated with Twitter API v1.1.")
-    return api
+    logger.info("Authenticating with OpenAI API...")
+
+    ai_client = openai.OpenAI(api_key=OPENAI_API_KEY)
+    logger.info("Successfully authenticated with OpenAI API.")
+    return ai_client

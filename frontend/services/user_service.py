@@ -1,8 +1,6 @@
 from typing import List, Optional
-
 from data.user import User
 from passlib.handlers.sha2_crypt import sha512_crypt as crypto
-
 from data import db_session
 
 
@@ -69,5 +67,37 @@ def get_user_by_email(email: str) -> Optional[User]:
 def latest_user_comments(limit: int = 5) -> List:
     return [
         {'id': '@MachadoClement', 'summary': 'I love it! It saves me time and increases engagement with personalized, AI-generated posts!'},
-            
     ][:limit]
+
+
+def update_api_keys(user_id: int, api_key: str, api_secret: str, access_token: str, access_secret: str) -> bool:
+    session = db_session.create_session()
+
+    try:
+        # Find the user by ID
+        user = session.query(User).filter(User.id == user_id).first()
+
+        if not user:
+            return False  # User not found
+        
+        # Log the keys for debugging (remove this in production)
+        print(f"API Key: {api_key}, API Secret: {api_secret}, Access Token: {access_token}, Access Secret: {access_secret}")
+
+
+        # Update the user's API keys
+        user.api_key = api_key
+        user.api_secret = api_secret
+        user.access_token = access_token
+        user.access_secret = access_secret
+
+        # Commit the changes
+        session.commit()
+        return True
+
+    except Exception as e:
+        print(f"Error updating API keys: {e}")
+        session.rollback()
+        return False
+
+    finally:
+        session.close()
