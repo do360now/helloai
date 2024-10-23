@@ -1,0 +1,15 @@
+<form method="POST" action="/account/api-keys">
+    <label for="api_key">Twitter API Key:</label>
+    <input type="text" id="api_key" name="api_key" required><br>
+
+    <label for="api_secret">Twitter API Secret:</label>
+    <input type="text" id="api_secret" name="api_secret" required><br>
+
+    <label for="access_token">Twitter Access Token:</label>
+    <input type="text" id="access_token" name="access_token" required><br>
+
+    <label for="access_secret">Twitter Access Token Secret:</label>
+    <input type="text" id="access_secret" name="access_secret" required><br>
+
+    <button type="submit">Save API Keys</button>
+</form>

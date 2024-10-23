@@ -66,3 +66,5 @@ def get_latest_release_for_agent(agent_name: str) -> Optional[Release]:
         return release
     finally:
         session.close()
+
+

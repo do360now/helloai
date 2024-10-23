@@ -1,19 +1,59 @@
-<div metal:use-macro="load: ../shared/_layout.pt">
-    <div metal:fill-slot="content" tal:omit-tag="True">
-        <div class="page-core">
-            <h1>Your HelloAI Account</h1>
+<h1>Your HelloAI Account</h1>
 
-            <div>
-                Welcome to your account, ${ user.name }!
+<div>
+    Welcome to your account, ${ user.name }!
 
-                <p>
-                    Due to the high demand, we are currently in the process of adding additional resources to support all new users. As soon as everything is ready, we will notify you, and you will be able to choose your preferred plan and start generating posts with your AI agents.
-                </p>
+    <p>
+        Due to the high demand, we are currently in the process of adding additional resources to support all new users. As soon as everything is ready, we will notify you, and you will be able to choose your preferred plan and start generating posts with your AI agents.
+    </p>
 
-                <p>
-                    Thank you for your patience and understanding during this brief delay. We look forward to helping you automate your content creation soon!
-                </p>
-            </div>
-        </div>
-    </div>
+    <p>
+        Thank you for your patience and understanding during this brief delay. We look forward to helping you automate your content creation soon!
+    </p>
+
+    <form method="POST" action="/account/api-keys">
+        <label for="api_key">Twitter API Key:</label>
+        <input type="password" id="api_key" name="api_key" value="${ user.api_key or '' }" required><br>
+
+        <label for="api_secret">Twitter API Secret:</label>
+        <input type="password" id="api_secret" name="api_secret" value="${ user.api_secret or '' }" required><br>
+
+        <label for="access_token">Twitter Access Token:</label>
+        <input type="password" id="access_token" name="access_token" value="${ user.access_token or '' }" required><br>
+
+        <label for="access_secret">Twitter Access Token Secret:</label>
+        <input type="password" id="access_secret" name="access_secret" value="${ user.access_secret or '' }" required><br>
+
+        <button type="submit">Save API Keys</button>
+    </form>
+
+    <button id="toggle-keys">Toggle Keys</button>
+
 </div>
+<h2>Your Agent</h2>
+<form method="POST" action="/account/agent/start">
+    <button type="submit">Start Agent</button>
+</form>
+
+<h2>Your Agent Logs</h2>
+
+{% if logs %}
+    <ul>
+        {% for log in logs %}
+            <li>{{ log.timestamp }}: {{ log.log_data }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No logs available yet. Once your agent starts running, logs will appear here.</p>
+{% endif %}
+
+
+<script>
+    const toggleButton = document.getElementById('toggle-keys');
+    toggleButton.addEventListener('click', () => {
+        const inputs = document.querySelectorAll('input[type="password"]');
+        inputs.forEach(input => {
+            input.type = input.type === 'password' ? 'text' : 'password';
+        });
+    });
+</script>
