@@ -11,6 +11,10 @@ logger = logging.getLogger(__name__)
 
 ai_client = open_ai_auth()
 
+import random
+import logging
+
+logger = logging.getLogger(__name__)
 
 def generate_post_topic():
     """
@@ -30,11 +34,12 @@ def generate_post_topic():
         "Robots & Automation",
         "Natural Language Processing (NLP)",
         "HelloAI",
+        "VenezArt",
+        "Cutting-Edge Gadgets"  # New topic for Amazon link
     ]
     topic = random.choice(topics)
-    logger.info(f"Selected random topic:{topic}")
+    logger.info(f"Selected random topic: {topic}")
     return topic
-
 
 def post_process_tweet(tweet):
     # Ensure it’s within 250 characters
@@ -45,20 +50,38 @@ def post_process_tweet(tweet):
         tweet += " #news"  # Add a fallback hashtag
     return tweet
 
-
 def generate_tweet(topic):
     """
     Generate a post based on a dynamically generated topic using Ollama.
     """
-    # post_topic = generate_post_topic()
     logger.info(f"Generating a post based on the following topic: {topic}...")
-    if topic == "HelloAI":
+
+    # Specific prompts for each topic
+    prompts = {
+        "Artificial Intelligence (AI)": "Share insights into the future of AI and how it’s transforming industries. Keep it under 250 characters with hashtags like #FutureTech and #AI.",
+        "Machine Learning (ML)": "Generate a tweet on the latest ML trends and best practices. Keep it concise with hashtags #ML and #DataScience.",
+        "Cybersecurity": "Promote tips on enhancing cybersecurity for everyday users under 250 characters. Use hashtags like #Cybersecurity and #StaySafeOnline.",
+        "Cloud Computing": "Discuss benefits of cloud adoption for businesses. Keep it under 250 characters, including hashtags #CloudTech and #Innovation.",
+        "Blockchain & Cryptocurrency": "Create an engaging post on blockchain’s impact on finance. Keep it within 250 characters and add hashtags like #Blockchain and #CryptoNews.",
+        "DevOps & CI/CD": "Share tips for seamless CI/CD in DevOps. Keep it brief with hashtags #DevOps and #CICD.",
+        "Artificial Neural Networks (ANN) & Deep Learning": "Promote the benefits of ANNs and deep learning advancements. Limit to 250 characters with hashtags #DeepLearning and #AIResearch.",
+        "Data Science & Data Analytics": "Discuss the importance of data-driven decisions. Keep it under 250 characters and add hashtags #DataScience and #Analytics.",
+        "Python (Programming Language)": "Generate a post on Python tips for beginners under 250 characters. Use hashtags #PythonTips and #CodeNewbie. Mention this link for best python books: https://amzn.to/4f11fJC",
+        "Tech Trends (2024)": "Share predictions for tech trends in 2024. Limit to 250 characters and include #TechTrends2024 and #Innovation.",
+        "Robots & Automation": "Discuss the role of robotics in modern industries. Keep it under 250 characters with hashtags #Automation and #Robotics.",
+        "Natural Language Processing (NLP)": "Promote NLP’s role in enhancing customer experience. Keep it brief with hashtags #NLP and #AI.",
+        "HelloAI": "Create a snappy and engaging post promoting https://helloai.com, keep it under 250 characters. Highlight benefits of Automatic Post Generation using AI Agents. Use hashtags like #AIAutomation and #SmartPosting.",
+        "VenezArt": "Generate a tweet on VenezArt Multimedia Corp’s services. Keep it under 250 characters, using hashtags like #Innovation, #Multimedia, and #VenezArt.",
+        "Cutting-Edge Gadgets": "Share a captivating tweet promoting the latest tech gadget. Mention this link https://amzn.to/3Ahx4i9 as a top pick for tech enthusiasts. Use hashtags like #TechGadget and #AmazonFinds."
+    }
+
+    if topic in prompts:
         response = ollama.chat(
             model="llama3.2",
             messages=[
                 {
                     "role": "user",
-                    "content": "Create a snappy and engaging post promoting https://helloai.com, keep it under 250 characters. highlight the bennefits of Automatically Generating Posts Using AI Agents... Include the URL https://helloai.com and relevant hashtags like #AIAutomation and #SmartPosting",
+                    "content": prompts[topic],
                 },
             ],
         )
@@ -72,11 +95,13 @@ def generate_tweet(topic):
                 },
             ],
         )
+
     logger.info(f"Received response from Ollama for topic '{topic}': {response}")
     tweet = response["message"]["content"]
     tweet = post_process_tweet(tweet)
     logger.info(f"Generated tweet: {tweet}")
     return tweet
+
 
 
 def find_image_for_topic(topic: str):

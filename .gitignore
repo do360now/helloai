@@ -24,3 +24,4 @@ X/images/*.*
 db/*.sqlite
 
 node_modules/
+accounts/

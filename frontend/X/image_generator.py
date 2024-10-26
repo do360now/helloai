@@ -45,13 +45,13 @@ def generate_image(topic):
         print("CUDA is not available. Using CPU instead.")
 
     if "DevOps" in topic:
-        prompt = f"A Lego scene of a DevOps engineer working in a data center, surrounded by servers, code, and CI/CD pipelines. Include {topic} elements."
+        prompt = f"A photorealistic scene of a DevOps engineer working in a data center, surrounded by servers, code, and CI/CD pipelines. Include {topic} elements."
     elif "Artificial Intelligence" in topic:
-        prompt = f"A Lego scene of an AI lab, with neural networks, robots, and computers analyzing data. Highlight {topic} with futuristic tech."
+        prompt = f"A photorealistic scene of an AI lab, with neural networks, robots, and computers analyzing data. Highlight {topic} with futuristic tech."
     elif "Blockchain" in topic:
-        prompt = "A futuristic isometric scene showcasing blockchain technology, with digital ledgers, nodes, and cryptocurrency symbols like Bitcoin."
+        prompt = "A futuristic photorealistic scene showcasing blockchain technology, with digital ledgers, nodes, and cryptocurrency symbols like Bitcoin."
     elif "Machine Learning" in topic:
-        prompt = f"A Lego scene of a machine learning lab, with data scientists, algorithms, and deep learning models. Include {topic} elements."
+        prompt = f"A photorealistic scene of a machine learning lab, with data scientists, algorithms, and deep learning models. Include {topic} elements."
     elif "Cybersecurity" in topic:
         prompt = f"A Lego scene of a cybersecurity operations center, with analysts, firewalls, and threat detection systems. Include {topic} elements."
     elif "Cloud Computing" in topic:
@@ -65,9 +65,11 @@ def generate_image(topic):
     elif "Tech Trends (2024)" in topic:
         prompt = f"A Lego scene of a futuristic tech expo, showcasing the latest gadgets, AI robots, and smart devices. Include {topic} elements."
     elif "Robots & Automation" in topic:
-        prompt = f"A Lego scene of a robotics lab, with autonomous robots, drones, and automation equipment. Highlight {topic} with futuristic tech."
+        prompt = f"A photorealistic scene of a robotics lab, with autonomous robots, drones, and automation equipment. Highlight {topic} with futuristic tech."
     elif "HelloAI" in topic:
         prompt = f"A Lego scene of an AI-powered agent, posting messages on X.com. Include {topic} elements."
+    elif "VenezArt" in topic:
+        prompt = f"A dynamic and visually rich image showcasing a blend of animations, immersive gaming, graphic design, and custom apparel creation. The scene features elements like a digital artist's workstation with a tablet, gaming controllers, 3D animation characters, and apparel with unique designs, all set in a vibrant, futuristic studio. The background hints at a creative workspace with a subtle mix of technology and art, with glowing screens and colorful sketches, embodying the theme 'where tech meets art."
     else:
         prompt = f"Create a random isometric pixel art scene of a busy data center. Include elements such as stacks of servers, {topic}, cables, and networking equipment."
 
