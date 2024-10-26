@@ -1,6 +1,7 @@
 # Variables
-VERSION=2.0.0
-IMAGE_NAME=do360now/agent_x_frontend
+VERSION=0.1.0
+IMAGE_NAME=do360now/ollama-server
+
 
 
 # Build the Docker image
@@ -9,7 +10,7 @@ docker-build:
 
 # Run the Docker container
 docker-run:
-	docker run --rm --name agent_x_frontend -p 8000:8000 $(IMAGE_NAME):$(VERSION)
+	docker run --rm --name ollama-server -p 11434:11434 $(IMAGE_NAME):$(VERSION)
 
 # Push the Docker image to the registry
 docker-push:
@@ -31,9 +32,6 @@ ollama-serve:
 # Run Agent_X locally (without Docker)
 agent-x-run:
 	python3 X/agent_x.py
-
-deploy-agents:
-	. ./deploy-agents.sh
 
 # Help target to display available commands
 help:
