@@ -30,7 +30,7 @@ def main():
         client = authenticate_v2()
 
         # Configurable frequency for posting (from environment variable or default to random between 1 to 2 hours)
-        POST_INTERVAL = int(os.getenv("POST_INTERVAL", random.randint(6000, 12000)))
+        POST_INTERVAL = int(os.getenv("POST_INTERVAL", random.randint(600, 7200)))
         logger.info(f"Configured posting interval: {POST_INTERVAL} seconds")
 
         while True:
