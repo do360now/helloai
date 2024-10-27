@@ -32,6 +32,7 @@ frontend/X/.env
 frontend/X/users.db
 frontend/dump.rdb
 frontend/tree.txt
+ frontend/X/images/
 
 
 tree.txt
