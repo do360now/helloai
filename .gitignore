@@ -22,8 +22,17 @@ X/images/*.*
 
 # sql light db
 db/*.sqlite
+frontend/db/*.sqlite
+
 
 node_modules/
 
 accounts/
 frontend/X/.env
+frontend/X/users.db
+frontend/dump.rdb
+frontend/tree.txt
+
+
+tree.txt
+

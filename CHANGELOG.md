@@ -2,6 +2,9 @@
 
 
 
+### Unreleased
+- clear .env file from history
+
 ### **[21-Oct-2024]**
 - **Updated Footer Text:**
   - Improved the wording of the footer for better user engagement and removed mention of "paid" plans.

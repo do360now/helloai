@@ -1,9 +1,10 @@
 import hashlib
 from typing import Optional
-
-from fastapi import Request
-from fastapi import Response
+from fastapi import Request, Response
 from infrastructure.num_convert import try_int
+from services import user_service
+from starlette.exceptions import HTTPException
+from starlette.status import HTTP_401_UNAUTHORIZED
 
 auth_cookie_name = 'helloai_account'
 
@@ -36,6 +37,20 @@ def get_user_id_via_auth_cookie(request: Request) -> Optional[int]:
         return None
 
     return try_int(user_id)
+
+
+def get_current_user(request: Request):
+    user_id = get_user_id_via_auth_cookie(request)
+    
+    if not user_id:
+        raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail="Not authenticated")
+
+    user = user_service.get_user_by_id(user_id)
+
+    if not user:
+        raise HTTPException(status_code=HTTP_401_UNAUTHORIZED, detail="User not found")
+
+    return user
 
 
 def logout(response: Response):

@@ -11,3 +11,5 @@ fastapi-chameleon
 aiofiles
 fastapi-chameleon
 starlette
+celery
+redis
