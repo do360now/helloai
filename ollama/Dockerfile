@@ -7,17 +7,9 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 
 # Set working directory
-WORKDIR /app
+WORKDIR /ollama
 
 RUN apt-get update && apt-get install -y curl
-#   gcc \
-#   git \
-#   libpq-dev \
-#   musl-dev \
-#   postgresql-client \
-#   && rm -rf /var/lib/apt/lists/*
-# Install the compiled dependencies
-
 
 # Stage 2 - Final image
 FROM python:3.10-slim
@@ -27,9 +19,12 @@ ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ENV PYTHONOPTIMIZE=1
 
-RUN apt-get update && apt-get install -y curl
+# Set working directory
+WORKDIR /ollama
 
-RUN curl -fsSL https://ollama.com/install.sh
+
+RUN curl -fsSL https://ollama.com/install.sh -o install.sh
+RUN chmod +x install.sh
 RUN ./install.sh
 
 # Add a non-root user

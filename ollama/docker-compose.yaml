@@ -1,0 +1,9 @@
+version: '3.8'
+
+services:
+  ollama:
+    image: do360now/ollama-server:0.1.0
+    container_name: ollama-server
+    restart: unless-stopped
+    ports:
+      - "11434:11434"
