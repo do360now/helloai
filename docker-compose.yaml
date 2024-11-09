@@ -1,26 +1,29 @@
 version: '3.8'
-
 services:
-  do360now_agent_x:
-    image: do360now/do360now_agent_x:0.1.0
-    container_name: do360now-agent-x
-    restart: unless-stopped
-
-
-  medicalnetworks_agent_x:
-    image: do360now/medicalnetworks_agent_x:0.1.0
-    container_name: medicalnetworks-agent-x
+  fastapi-app:
+    build: .
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env  # This will load environment variables from your .env file
     depends_on:
-      - do360now_agent_x
-    restart: unless-stopped
-    entrypoint: ["sh", "-c", "sleep 300 && python chatgpt_agent_x.py"]
+      - sql-server
+    networks:
+      - app-network
 
+  sql-server:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sql-server
+    environment:
+      SA_PASSWORD: "IyJmXF52C11CJk1OEzc1va"  # Referencing the password from the .env file
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433:1433"
+    networks:
+      - app-network
+    volumes:
+      - ./init-sql-script.sql:/docker-entrypoint-initdb.d/init-sql-script.sql  # Add this line
 
-  machadoclement_agent_x:
-    image: do360now/machadoclement_agent_x:0.1.0
-    container_name: machadoclement-agent-x
-    depends_on:
-      - medicalnetworks_agent_x
-    restart: unless-stopped
-    entrypoint: ["sh", "-c", "sleep 300 && python chatgpt_agent_x.py"]
-
+networks:
+  app-network:
+    driver: bridge

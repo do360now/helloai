@@ -2,3 +2,4 @@ Dockerfile
 .env
 X/.env
 images/*
+.ruff_cache/

@@ -13,3 +13,4 @@ fastapi-chameleon
 starlette
 celery
 redis
+pyodbc

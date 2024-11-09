@@ -1,4 +1,3 @@
-from pathlib import Path
 from typing import Callable, Optional
 
 import sqlalchemy as sa
@@ -8,35 +7,28 @@ from sqlalchemy.orm import Session
 
 __factory: Optional[Callable[[], Session]] = None
 
-
-def global_init(db_file: str):
+def global_init(connection_str: str):
+    """Initialize the database connection using a connection string."""
     global __factory
 
     if __factory:
         return
 
-    if not db_file or not db_file.strip():
-        raise Exception('You must specify a db file.')
+    if not connection_str or not connection_str.strip():
+        raise Exception('You must specify a valid database connection string.')
 
-    folder = Path(db_file).parent
-    folder.mkdir(parents=True, exist_ok=True)
+    print('Connecting to DB with {}'.format(connection_str))
 
-    conn_str = 'sqlite:///' + db_file.strip()
-    print('Connecting to DB with {}'.format(conn_str))
-
-    # Adding check_same_thread = False after the recording. This can be an issue about
-    # creating / owner thread when cleaning up sessions, etc. This is a sqlite restriction
-    # that we probably don't care about in this example.
-    engine = sa.create_engine(conn_str, echo=False, connect_args={'check_same_thread': False})
+    # Create the SQLAlchemy engine
+    engine = sa.create_engine(connection_str, echo=False)
     __factory = orm.sessionmaker(bind=engine)
 
-    # noinspection PyUnresolvedReferences
-    import data.__all_models
-
+    # Import all models and create tables
+    import data.__all_models  # Ensure all models are imported
     SqlAlchemyBase.metadata.create_all(engine)
 
-
 def create_session() -> Session:
+    """Create and return a new session."""
     global __factory
 
     if not __factory:

@@ -1,7 +1,16 @@
+ifneq (,$(wildcard ./.env))
+	include .env
+	export
+endif
 # Variables
 VERSION=2.0.0
 IMAGE_NAME=do360now/agent_x_frontend
 
+uvicorn:
+	uvicorn frontend/main:app --reload
+
+docker-compose-up:
+	docker-compose up --build
 
 # Build the Docker image
 docker-build:
@@ -9,7 +18,7 @@ docker-build:
 
 # Run the Docker container
 docker-run:
-	docker run --rm --name agent_x_frontend -p 8000:8000 $(IMAGE_NAME):$(VERSION)
+	docker run --network helloai_app-network --rm --name agent_x_frontend -p 8000:8000 $(IMAGE_NAME):$(VERSION)
 
 # Push the Docker image to the registry
 docker-push:
@@ -45,3 +54,4 @@ help:
 	@echo "  docker-clean    - Remove stopped containers and unused images"
 	@echo "  ollama-serve    - Serve Ollama"
 	@echo "  agent-x-run     - Run Agent_X locally"
+

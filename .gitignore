@@ -28,12 +28,17 @@ frontend/db/*.sqlite
 node_modules/
 
 accounts/
+agents/
 frontend/X/.env
 frontend/X/users.db
 frontend/dump.rdb
 frontend/tree.txt
- frontend/X/images/
+frontend/X/images/
+frontend/.env
 
 
 tree.txt
 
+.env
+init-sql-script.sql
+init-sql-script-frontend.sql
