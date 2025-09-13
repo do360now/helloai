@@ -2,7 +2,7 @@
 
 Automated post generation for X.com
 
-![Screenshot of the app](images/ai_gen_image.png)
+
 
 ## Prerequisites
 
