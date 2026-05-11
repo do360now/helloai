@@ -1,0 +1,43 @@
+# Dependencies
+node_modules
+npm-debug.log
+
+# Virtual environments
+.venv
+venv
+env
+__pycache__
+
+# Python
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info
+.eggs
+dist
+build
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# Git
+.git
+.gitignore
+
+# Test/Coverage
+.coverage
+htmlcov
+.tox
+.jest
+
+# Docs
+docs/_build
+*.md
+
+# Misc
+.DS_Store
+Thumbs.db

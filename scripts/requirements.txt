@@ -1,0 +1,6 @@
+# HelloAi Automation Scripts — Python Dependencies
+# Install: pip install -r scripts/requirements.txt
+
+anthropic>=0.40.0      # Claude API for article generation
+requests>=2.31.0       # HTTP requests for Arena data
+python-dotenv>=1.0.0   # .env file support

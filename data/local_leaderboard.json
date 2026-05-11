@@ -1,0 +1,26 @@
+[
+  {
+    "model": "gemma3:4b",
+    "avg_score": 80.6,
+    "pass_rate": 100.0,
+    "passed": 12,
+    "total": 12,
+    "response_time": 22.2
+  },
+  {
+    "model": "qwen3:4b",
+    "avg_score": 66.7,
+    "pass_rate": 83.3,
+    "passed": 10,
+    "total": 12,
+    "response_time": 65.4
+  },
+  {
+    "model": "claude-sonnet-4-6",
+    "avg_score": 63.7,
+    "pass_rate": 73.7,
+    "passed": 14,
+    "total": 19,
+    "response_time": 6.3
+  }
+]

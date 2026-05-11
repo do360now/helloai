@@ -1,0 +1,17 @@
+{
+  "schema_version": "v1",
+  "name_for_human": "Hello, AI",
+  "name_for_model": "helloai",
+  "description_for_human": "Curated directory of frontier AI models with Elo rankings, cost data, context windows, and task-specific recommendations. Updated weekly.",
+  "description_for_model": "Query the Hello AI directory to look up frontier AI models (Claude, Gemini, Grok, GPT) with their Elo ratings, pricing per million tokens, and context window sizes. Use /api/recommend with a task parameter to get ranked model suggestions for a specific use case. Use /api/models to list all models. Use /api/status to check data freshness. No authentication required.",
+  "auth": {
+    "type": "none"
+  },
+  "api": {
+    "type": "openapi",
+    "url": "https://helloai.com/api/openapi.json"
+  },
+  "logo_url": "https://helloai.com/favicon.ico",
+  "contact_email": "clement@clementmachado.com",
+  "legal_info_url": "https://helloai.com"
+}
