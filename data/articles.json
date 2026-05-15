@@ -1,5 +1,35 @@
 [
   {
+    "slug": "deepseek-v4-open-source-frontier-parity",
+    "title": "DeepSeek V4: The Open-Source Model Frontier Labs Feared",
+    "excerpt": "DeepSeek V4 ships under MIT with $0.30/M output tokens — 83x cheaper than Claude Opus 4.7 — while scoring 80.6% on SWE-bench Verified. The agentic-coding price floor just moved an order of magnitude.",
+    "date": "2026-05-15",
+    "category": "Discovery",
+    "readTime": "3 min",
+    "content": [
+      "DeepSeek V4-Pro charges $0.30 per million output tokens. Claude Opus 4.7 charges $25. GPT-5.5 charges $30. That is an 83-to-100x gap, and the model on the cheap end of it just scored 80.6% on SWE-bench Verified — 0.2 points behind Claude Opus 4.6. The weights shipped April 24 on Hugging Face under an MIT license with no commercial restrictions.",
+      "The architecture is what makes the pricing defensible rather than promotional. V4-Pro is a 1.6-trillion-parameter MoE that activates only 49 billion parameters per token, and DeepSeek cut single-token inference FLOPs to 27% of V3.2 while shrinking KV cache occupancy at 1M-token context to 10% of the previous generation. The cost structure isn't a loss-leader subsidy — it reflects an inference profile that a competent infra team can roughly replicate on their own hardware. Self-hosting a 1.6T MoE is still not trivial, but the per-token economics finally make sense for teams that already run GPU fleets.",
+      "The coding numbers are the part frontier labs will find hardest to spin. V4-Pro posts the highest LiveCodeBench Pass@1 of any model at 93.5, a Codeforces rating of 3206 that edges out GPT-5.4 xHigh's 3168 and Gemini 3.1 Pro's 3052, and the SWE-bench Verified result lands inside the closed-frontier band. Agentic coding — the workload that has justified $25-per-million pricing for the last two years — is no longer a closed-model moat. It is a tier where an open-weight Chinese model is competitive on quality and roughly two orders of magnitude cheaper on API.",
+      "The caveats are real and worth stating plainly. DeepSeek's benchmark transparency is thinner than Anthropic's or Google's — the reports are credible but less audited, and independent replications are still arriving. The lab is Chinese, which carries data-governance implications some buyers cannot ignore regardless of license terms. And 1.6T parameters means self-hosting requires multi-node inference; the $0.30 API price assumes you accept DeepSeek's hosted endpoint, with whatever logging and jurisdictional exposure that entails. Teams with sensitive code will weigh those costs against the savings differently than a startup burning runway on Claude bills.",
+      "What this resets is the price floor for frontier-grade coding intelligence. When the cheapest credible option for 80%+ SWE-bench was $15 per million output tokens, closed labs could hold the line. With $0.30 weights sitting on Hugging Face under MIT, every procurement conversation between now and Q4 starts from a different anchor. Expect Anthropic and OpenAI to either compress output pricing on their next tier or sharpen the agentic and tool-use capabilities that benchmarks still don't capture — because parity on SWE-bench at one-hundredth the cost is the kind of pressure that ends a pricing regime."
+    ]
+  },
+  {
+    "slug": "gemini-3-1-pro-arc-agi-reasoning-review",
+    "title": "Gemini 3.1 Pro Review: The Reasoning Leader You Haven't Tested",
+    "excerpt": "Gemini 3.1 Pro scores 77.1% on ARC-AGI-2 — 24 points above GPT-5.5 — yet Arena Elo places it in a three-way tie. Here's what the leaderboard hides, and when the reasoning gap actually changes your routing decision.",
+    "date": "2026-05-11",
+    "category": "Review",
+    "readTime": "3 min",
+    "content": [
+      "Gemini 3.1 Pro just scored 77.1% on ARC-AGI-2 — more than double its predecessor, and 24 percentage points above GPT-5.5's 52.9% on the same benchmark. ARC Prize confirmed the result in February 2026, and on the benchmark designed specifically to resist memorization and reward fluid reasoning, no other frontier model is close. If you have been picking models off the LMArena board, you have been making this decision without that number in front of you.",
+      "The Elo is the reason. Gemini 3.1 Pro sits at 1493 on Arena, sandwiched between Claude Opus 4.7 at 1503 and GPT-5.5 at 1484. That ten-point spread looks like a near-tie, and on the workloads Arena actually measures — open-ended chat, coding turns, single-shot tasks judged by humans — it more or less is. The problem is that Arena aggregates preference votes across millions of casual prompts, which compresses the signal on the long-tail reasoning problems where a model either gets it right or doesn't. A 24-point ARC-AGI-2 gap and a 9-point Elo gap can coexist because they are measuring different things, and the leaderboard most readers anchor on hides the larger of the two.",
+      "GPQA Diamond tells the same story from a different angle. Gemini 3.1 Pro leads at 94.3% — the highest score recorded on the graduate-level science benchmark — edging out Claude Mythos Preview's 93.9% on a different eval set. Together with ARC-AGI-2, that is two independent reasoning evals where Gemini is the unambiguous leader, not the third-place model the Arena ranking implies. For research workloads, multi-step scientific question answering, and any task where the bottleneck is deduction rather than fluency, the case for Gemini is no longer a tie-breaker. It is the default.",
+      "The honest counterweight is that reasoning benchmarks do not automatically translate into production coding wins. Claude Opus 4.7's Arena lead is real for the workloads it reflects — agentic coding loops, repo-scale refactors, long-running tool use — and developers running those flows have been consistent about why they pay the premium. Gemini at $2 input and $12 output per million tokens is the cheapest of the four tracked frontier models on input and 58% cheaper on output than Opus, but price comparisons stop mattering when a model abandons branches or edits the wrong file. Until the SWE-Bench and agentic coding numbers move, Opus stays the right call for those workloads.",
+      "What the ARC-AGI-2 result actually signals is the direction of travel. Released in preview on February 19 with a 1M context window matching the field, Gemini 3.1 Pro has reasoning headroom that the other frontier models do not. If Google closes even half the agentic-coding gap in the next release — and a reasoning leader usually does — the price advantage and the benchmark spread compound into the obvious default for mixed workloads. The model worth testing this quarter is the one most teams have not gotten around to."
+    ]
+  },
+  {
     "slug": "google-40b-anthropic-bet",
     "title": "Google Just Bet $40B on Anthropic — What That Means for Your Stack",
     "excerpt": "Google committed up to $40B in Anthropic on April 24 — the same week OpenAI launched a separate enterprise JV and GPT-5.5 doubled in price. The frontier market is hardening into two distribution channels, and the model is becoming the cheap part of the stack.",

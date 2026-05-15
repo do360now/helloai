@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "fp=$(jq -r '.tool_input.file_path // empty' 2>/dev/null); if echo \"$fp\" | grep -qE 'data/(articles|models)\\.json$'; then date_str=$(date +%Y-%m-%d); jq --arg d \"$date_str\" '.lastUpdated = $d' /home/cmc/git/grok/helloai/data/site.json > /tmp/_site_tmp.json && mv /tmp/_site_tmp.json /home/cmc/git/grok/helloai/data/site.json; fi 2>/dev/null || true",
+            "statusMessage": "Updating site lastUpdated..."
+          }
+        ]
+      }
+    ]
+  }
+}

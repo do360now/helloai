@@ -32,7 +32,7 @@ log = logging.getLogger("arena")
 # The HTML contains <a title="model-name"> followed by <td><span>SCORE</span>
 # in subsequent cells. Multiple leaderboards appear (Text, Code, Vision, etc.);
 # we take the first occurrence of each model (Text = the top section).
-_LEADERBOARD_URL = "https://lmarena.ai/leaderboard"
+_LEADERBOARD_URL = "https://arena.ai/leaderboard"
 
 # Fallback: community-maintained CSV releases on GitHub.
 _FALLBACK_CSV_URL = (
@@ -80,6 +80,7 @@ _NAME_MAP: dict[str, list[str]] = {
     ],
     "gpt": [
         "gpt-5.5",
+        "gpt-5.5-instant",
         "gpt-5.5-pro",
         "gpt-5.4-high",
         "gpt-5.4",
