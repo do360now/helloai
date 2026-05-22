@@ -44,6 +44,16 @@ const MAX_HISTORY = 10000;
 const HISTORY_WINDOW_MS = 60 * 1000; // 1 minute
 
 /**
+ * Append a request log entry, capping history to MAX_HISTORY entries.
+ */
+export function logRequest(entry: RequestLog): void {
+  requestHistory.push(entry);
+  if (requestHistory.length > MAX_HISTORY) {
+    requestHistory.splice(0, requestHistory.length - MAX_HISTORY);
+  }
+}
+
+/**
  * Check if User-Agent indicates an AI/agent
  */
 export function isAIUserAgent(userAgent: string): boolean {

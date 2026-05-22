@@ -2,10 +2,18 @@
 arena.py — Deep module for LMArena leaderboard data.
 
 This module owns ALL knowledge about LMArena:
-  - Where the data lives (URLs, page structure)
-  - How to scrape it (HTML parsing, CSV fallback)
+  - Where the data lives (URLs)
+  - How to fetch it (nakasyou JSON primary, CSV fallback)
   - How their model names map to our model IDs
-  - How to resolve ambiguity when multiple matches exist
+  - How to resolve names (exact name-map only — no fuzzy matching)
+
+Primary source: nakasyou's lmarena-history JSON snapshots on GitHub.
+  https://raw.githubusercontent.com/nakasyou/lmarena-history/main/output/scores.json
+  Keys are "YYYYMMDD" snapshot dates; we take the latest. Under each snapshot,
+  data["text"]["overall"] is a dict of {model_name: elo_float}.
+
+Fallback source: community-maintained CSV releases on GitHub.
+  https://github.com/fboulnois/llm-leaderboard-csv/releases/latest/download/lmarena_text.csv
 
 The public interface is intentionally simple:
 
@@ -17,6 +25,7 @@ Everything else is an implementation detail that callers never see.
 
 import csv
 import io
+import json
 import logging
 import re
 from dataclasses import dataclass, field
@@ -28,31 +37,21 @@ log = logging.getLogger("arena")
 
 # ─── INTERNAL: LMArena-specific knowledge ──────────────────────────────────
 
-# Primary source: lmarena.ai renders a React page with leaderboard tables.
-# The HTML contains <a title="model-name"> followed by <td><span>SCORE</span>
-# in subsequent cells. Multiple leaderboards appear (Text, Code, Vision, etc.);
-# we take the first occurrence of each model (Text = the top section).
-_LEADERBOARD_URL = "https://arena.ai/leaderboard"
+# Primary source: nakasyou's lmarena-history snapshot JSON.
+# Keys are "YYYYMMDD" strings; lexicographic sort gives the latest snapshot.
+_NAKASYOU_JSON_URL = (
+    "https://raw.githubusercontent.com/nakasyou/lmarena-history"
+    "/main/output/scores.json"
+)
 
 # Fallback: community-maintained CSV releases on GitHub.
 _FALLBACK_CSV_URL = (
     "https://github.com/fboulnois/llm-leaderboard-csv"
-    "/releases/latest/download/lmarena.csv"
+    "/releases/latest/download/lmarena_text.csv"
 )
 
 _USER_AGENT = "HelloAi-Bot/1.0 (+https://helloai.com)"
 _TIMEOUT = 20
-
-# Regex for extracting model entries from LMArena's React-rendered HTML.
-# Captures: (model_name, score, votes) from the table structure.
-_SCORE_PATTERN = re.compile(
-    r'title="([^"]+)">'
-    r"<span[^>]*>[^<]*</span>"   # model name span
-    r".*?"                        # svg icon and closing tags
-    r'<td[^>]*><span[^>]*>(\d[\d,]*)</span></td>'   # score
-    r'\s*<td[^>]*><span[^>]*>([\d,]+)</span></td>',  # votes
-    re.DOTALL,
-)
 
 # How our model IDs map to LMArena model names.
 # Checked in order — first match wins. Keep these current when
@@ -92,11 +91,11 @@ _NAME_MAP: dict[str, list[str]] = {
 # CSV column names vary across sources. We try each in order.
 _CSV_NAME_COLUMNS = ["Model", "model", "model_name", "name", "key", "Key"]
 _CSV_SCORE_COLUMNS = [
-    "Arena Score", "Arena Elo", "rating", "elo", "score", "Rating",
+    "arena_score", "Arena Score", "Arena Elo", "rating", "elo", "score", "Rating",
 ]
 
 
-# ─── INTERNAL: Scraping implementations ───────────────────────────────────
+# ─── INTERNAL: Data source implementations ────────────────────────────────
 
 @dataclass
 class _ArenaEntry:
@@ -106,37 +105,37 @@ class _ArenaEntry:
     votes: int = 0
 
 
-def _scrape_html() -> dict[str, _ArenaEntry]:
+def _fetch_from_nakasyou() -> dict[str, "_ArenaEntry"]:
     """
-    Scrape lmarena.ai/leaderboard HTML.
-    Returns {model_name: ArenaEntry}, first occurrence only (Text leaderboard).
+    Fetch the nakasyou lmarena-history JSON snapshot.
+    Returns {model_name: _ArenaEntry} from the latest snapshot's text/overall board.
     """
     resp = requests.get(
-        _LEADERBOARD_URL,
+        _NAKASYOU_JSON_URL,
         timeout=_TIMEOUT,
         headers={"User-Agent": _USER_AGENT},
     )
     resp.raise_for_status()
 
-    entries: dict[str, _ArenaEntry] = {}
-    for match in _SCORE_PATTERN.finditer(resp.text):
-        name = match.group(1).strip()
-        try:
-            score = int(match.group(2).replace(",", ""))
-            votes = int(match.group(3).replace(",", ""))
-        except ValueError:
-            continue
-        # First occurrence = Text leaderboard (top of page)
-        if name not in entries:
-            entries[name] = _ArenaEntry(name=name, score=float(score), votes=votes)
+    data = resp.json()
+    if not data:
+        return {}
 
+    latest = max(data.keys())  # "YYYYMMDD" keys — lexicographic == chronological
+    board = data[latest].get("text", {}).get("overall") or {}
+
+    entries: dict[str, _ArenaEntry] = {
+        name: _ArenaEntry(name=name, score=float(elo))
+        for name, elo in board.items()
+    }
+    log.info(f"nakasyou: {len(entries)} models from snapshot {latest} (text/overall)")
     return entries
 
 
-def _parse_csv() -> dict[str, _ArenaEntry]:
+def _parse_csv() -> dict[str, "_ArenaEntry"]:
     """
     Parse community CSV fallback.
-    Returns {model_name: ArenaEntry}.
+    Returns {model_name: _ArenaEntry}.
     """
     resp = requests.get(
         _FALLBACK_CSV_URL,
@@ -167,19 +166,19 @@ def _parse_csv() -> dict[str, _ArenaEntry]:
     return entries
 
 
-def _fetch_all_scores() -> dict[str, _ArenaEntry]:
+def _fetch_all_scores() -> dict[str, "_ArenaEntry"]:
     """
     Try all data sources in order. Returns raw arena entries.
     """
-    # Source 1: live HTML scrape
+    # Source 1: nakasyou JSON snapshots
     try:
-        entries = _scrape_html()
+        entries = _fetch_from_nakasyou()
         if entries:
-            log.info(f"Scraped {len(entries)} models from LMArena")
+            log.info(f"Fetched {len(entries)} models from nakasyou JSON")
             return entries
-        log.warning("HTML scrape returned no data (page structure may have changed)")
+        log.warning("nakasyou JSON returned no data (structure may have changed)")
     except requests.RequestException as e:
-        log.warning(f"HTML scrape failed: {e}")
+        log.warning(f"nakasyou JSON fetch failed: {e}")
 
     # Source 2: community CSV
     try:
@@ -196,24 +195,20 @@ def _fetch_all_scores() -> dict[str, _ArenaEntry]:
 
 def _resolve_model_id(
     model_id: str,
-    arena_entries: dict[str, _ArenaEntry],
-) -> _ArenaEntry | None:
+    arena_entries: dict[str, "_ArenaEntry"],
+) -> "_ArenaEntry | None":
     """
     Match one of our model IDs to an arena entry.
-    Tries explicit name map first, then fuzzy substring match.
+    Uses exact name-map match only — no fuzzy fallback (curated Elos are authoritative).
+    Returns None if no name-map candidate is found in arena_entries.
     """
     # Normalize arena keys for case-insensitive lookup
     lower_map = {k.lower(): v for k, v in arena_entries.items()}
 
-    # 1. Explicit candidates from the name map
+    # Exact candidates from the name map only
     for candidate in _NAME_MAP.get(model_id, []):
         if candidate.lower() in lower_map:
             return lower_map[candidate.lower()]
-
-    # 2. Fuzzy: our model_id as substring of any arena name
-    for arena_name, entry in arena_entries.items():
-        if model_id.lower() in arena_name.lower():
-            return entry
 
     return None
 
@@ -257,7 +252,7 @@ def fetch_scores(
         if entry:
             scores[mid] = entry.score
         else:
-            log.info(f"  No match for '{mid}'")
+            log.info(f"  '{mid}' not on public LMArena — keeping curated Elo")
 
     return scores
 

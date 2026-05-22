@@ -62,7 +62,7 @@ export default function ParticleCanvas() {
           const y = yBase +
             Math.sin(x * 0.005 + t * 0.0004 + wave * 1.2) * 40 +
             Math.sin(x * 0.012 + t * 0.0007) * 15;
-          x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+          if (x === 0) { ctx.moveTo(x, y); } else { ctx.lineTo(x, y); }
         }
         ctx.stroke();
       }
