@@ -1,22 +1,18 @@
 #!/usr/bin/env python3
 """
-weekly_update.py — Run all HelloAi maintenance tasks.
+weekly_update.py — Deterministic HelloAi maintenance pipeline.
 
-This is the "one command" script for weekly site updates.
-Run manually or schedule via cron / GitHub Actions.
+This script covers the deterministic part of the weekly update:
+leaderboard refresh → data integrity tests → optional git commit → optional deploy.
 
-What it does:
-  1. Fetches latest Elo ratings and updates leaderboard
-  2. Generates a new article from a provided topic (optional)
-  3. Updates the site timestamp
-  4. Runs data integrity tests
-  5. Optionally commits and pushes changes
+Article generation is handled separately by the Claude Code /weekly-update skill
+(article-idea-generator → article-writer → add_article.py). This script does NOT
+generate articles.
 
 Usage:
-  python scripts/weekly_update.py                           # Update leaderboard only
-  python scripts/weekly_update.py --topic "GPT-5.4 review"  # + generate article
-  python scripts/weekly_update.py --auto-commit             # + git commit & push
-  python scripts/weekly_update.py --dry-run                 # Preview everything
+  python scripts/weekly_update.py             # Update leaderboard + run tests
+  python scripts/weekly_update.py --auto-commit  # + git commit & push
+  python scripts/weekly_update.py --dry-run   # Preview everything
 """
 
 import argparse
@@ -63,9 +59,7 @@ def run_command(cmd: list[str], description: str, dry_run: bool = False) -> bool
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="HelloAi weekly update")
-    parser.add_argument("--topic", help="Generate an article on this topic")
-    parser.add_argument("--category", help="Article category")
+    parser = argparse.ArgumentParser(description="HelloAi deterministic update pipeline")
     parser.add_argument("--dry-run", action="store_true", help="Preview only")
     parser.add_argument(
         "--auto-commit", action="store_true", help="Git commit and push"
@@ -86,34 +80,16 @@ def main() -> None:
     success = True
 
     # ── Step 1: Update leaderboard ──────────────────────
-    log.info("\n📊 Step 1: Updating leaderboard...")
+    log.info("\nStep 1: Updating leaderboard...")
     cmd = [sys.executable, str(SCRIPTS_DIR / "update_leaderboard.py")]
     if args.dry_run:
         cmd.append("--dry-run")
     if not run_command(cmd, "Leaderboard update", dry_run=False):
         log.warning("Leaderboard update had issues, continuing...")
 
-    # ── Step 2: Generate article (optional) ─────────────
-    if args.topic:
-        log.info("\n📝 Step 2: Generating article...")
-        cmd = [
-            sys.executable,
-            str(SCRIPTS_DIR / "generate_article.py"),
-            args.topic,
-        ]
-        if args.category:
-            cmd.extend(["--category", args.category])
-        if args.dry_run:
-            cmd.append("--dry-run")
-        if not run_command(cmd, "Article generation", dry_run=False):
-            log.warning("Article generation had issues, continuing...")
-            success = False
-    else:
-        log.info("\n📝 Step 2: Skipping article generation (no --topic)")
-
-    # ── Step 3: Run tests ───────────────────────────────
+    # ── Step 2: Run tests ───────────────────────────────
     if not args.skip_tests:
-        log.info("\n🧪 Step 3: Running data integrity tests...")
+        log.info("\nStep 2: Running data integrity tests...")
         if not run_command(
             ["npx", "jest", "--passWithNoTests"],
             "Data tests",
@@ -122,15 +98,13 @@ def main() -> None:
             log.error("Tests failed! Aborting commit.")
             success = False
     else:
-        log.info("\n🧪 Step 3: Skipping tests")
+        log.info("\nStep 2: Skipping tests")
 
-    # ── Step 4: Git commit & push ───────────────────────
+    # ── Step 3: Git commit & push ───────────────────────
     if args.auto_commit and success and not args.dry_run:
-        log.info("\n🚀 Step 4: Committing and pushing...")
+        log.info("\nStep 3: Committing and pushing...")
         date = today_iso()
         msg = f"data: weekly update {date}"
-        if args.topic:
-            msg += f" + article: {args.topic[:50]}"
 
         commands = [
             (["git", "add", "data/"], "Stage data changes"),
@@ -142,15 +116,15 @@ def main() -> None:
                 log.error(f"Git operation failed at: {desc}")
                 break
     elif args.auto_commit and args.dry_run:
-        log.info("\n🚀 Step 4: [DRY RUN] Would commit and push")
+        log.info("\nStep 3: [DRY RUN] Would commit and push")
     elif args.auto_commit and not success:
-        log.warning("\n🚀 Step 4: Skipping commit due to earlier failures")
+        log.warning("\nStep 3: Skipping commit due to earlier failures")
     else:
-        log.info("\n🚀 Step 4: Skipping commit (use --auto-commit to enable)")
+        log.info("\nStep 3: Skipping commit (use --auto-commit to enable)")
 
-    # ── Step 5: Deploy to Azure ─────────────────────────
+    # ── Step 4: Deploy to Azure ─────────────────────────
     if args.deploy and success:
-        log.info("\n🐳 Step 5: Deploying to Azure...")
+        log.info("\nStep 4: Deploying to Azure...")
         deploy_cmd = [sys.executable, str(SCRIPTS_DIR / "deploy.py")]
         if args.dry_run:
             deploy_cmd.append("--dry-run")
@@ -158,16 +132,16 @@ def main() -> None:
             log.warning("Deployment had issues — check output above")
             success = False
     elif args.deploy and not success:
-        log.warning("\n🐳 Step 5: Skipping deploy due to earlier failures")
+        log.warning("\nStep 4: Skipping deploy due to earlier failures")
     else:
-        log.info("\n🐳 Step 5: Skipping deploy (use --deploy to enable)")
+        log.info("\nStep 4: Skipping deploy (use --deploy to enable)")
 
     # ── Summary ─────────────────────────────────────────
     log.info("\n" + "=" * 50)
     if success:
-        log.info("✅ Weekly update complete!")
+        log.info("Weekly update complete!")
     else:
-        log.warning("⚠️  Completed with warnings — check output above")
+        log.warning("Completed with warnings — check output above")
     log.info("=" * 50)
 
 

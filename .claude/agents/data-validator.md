@@ -143,4 +143,4 @@ Read all five files before starting your analysis:
 If there are no errors, end with: **✅ Safe to deploy.**
 If there are errors, end with: **❌ Fix errors before deploying.**
 
-Read all four files now and run every check.
+Read all five files now and run every check.

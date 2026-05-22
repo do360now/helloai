@@ -31,7 +31,7 @@ export function scoreAndRank(
   const matchedCategory = task ? findMatchingCategory(task, categories) : null;
 
   // Hard filters
-  let candidates = models.filter((m) => {
+  const candidates = models.filter((m) => {
     if (maxCost !== null && maxCost !== undefined && m.cost_per_million_tokens > maxCost) return false;
     if (minContext !== null && minContext !== undefined && m.context_window < minContext) return false;
     if (provider && !m.provider.toLowerCase().includes(provider.toLowerCase())) return false;

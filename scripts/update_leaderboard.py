@@ -161,6 +161,7 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> None:
     args = parse_args()
+    setup_logger("arena")
 
     log.info("=" * 50)
     log.info("HelloAi Leaderboard Updater")

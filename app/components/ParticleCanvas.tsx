@@ -11,6 +11,11 @@ export default function ParticleCanvas() {
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
 
+    // Respect prefers-reduced-motion: skip animation loop, render a single static frame
+    const reducedMotion =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
     let animId: number;
     const colors = ['rgba(0,229,160,', 'rgba(99,102,241,', 'rgba(244,114,182,', 'rgba(255,255,255,'];
 
@@ -62,7 +67,7 @@ export default function ParticleCanvas() {
           const y = yBase +
             Math.sin(x * 0.005 + t * 0.0004 + wave * 1.2) * 40 +
             Math.sin(x * 0.012 + t * 0.0007) * 15;
-          x === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+          if (x === 0) { ctx.moveTo(x, y); } else { ctx.lineTo(x, y); }
         }
         ctx.stroke();
       }
@@ -99,10 +104,20 @@ export default function ParticleCanvas() {
         }
       }
 
-      animId = requestAnimationFrame(draw);
+      if (!reducedMotion) {
+        animId = requestAnimationFrame(draw);
+      }
     };
 
     init();
+    if (reducedMotion) {
+      // Render a single static frame and skip the animation loop entirely
+      draw(0);
+      window.addEventListener('resize', init);
+      return () => {
+        window.removeEventListener('resize', init);
+      };
+    }
     animId = requestAnimationFrame(draw);
     window.addEventListener('resize', init);
     return () => {

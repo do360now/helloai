@@ -1,3 +1,9 @@
+---
+name: deploy
+description: Deploy helloai.com to Azure. Runs the full build-tag-push-deploy pipeline. Manual only — do not invoke automatically.
+disable-model-invocation: true
+---
+
 # Deploy Skill
 
 ## When to use

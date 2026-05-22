@@ -16,8 +16,8 @@ Your job is to identify the most valuable articles to write next. You do this by
 
 Read these files to understand what's already been covered:
 - `data/articles.json` — existing articles (slugs, titles, dates, categories)
-- `data/models.json` — the 4 models currently tracked (Claude, Gemini, Grok, GPT)
-- `data/categories.json` — the 4 use-case categories
+- `data/models.json` — the models currently tracked (Claude, Gemini, Grok, GPT today; the set can grow to 6)
+- `data/categories.json` — the use-case categories
 
 ## Step 2 — Search for recent developments
 

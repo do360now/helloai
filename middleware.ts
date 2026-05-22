@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import { isAIUserAgent, detectAnomalousPattern } from '@/lib/request-logger';
+import { isAIUserAgent, detectAnomalousPattern, logRequest } from '@/lib/request-logger';
 
 const RATE_LIMIT = 100; // requests per minute
 const WINDOW_MS = 60 * 1000;
@@ -42,6 +42,16 @@ export function middleware(request: NextRequest) {
       })
     );
   }
+
+  // Log this request so detectAnomalousPattern has data to work with
+  logRequest({
+    timestamp: new Date().toISOString(),
+    ip,
+    userAgent,
+    endpoint: request.nextUrl.pathname,
+    params: Object.fromEntries(request.nextUrl.searchParams),
+    responseStatus: 0,
+  });
 
   const anomaly = detectAnomalousPattern(ip);
   if (anomaly.isAnomalous) {
