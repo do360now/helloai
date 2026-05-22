@@ -1,3 +1,8 @@
+---
+name: advisor-pattern
+description: Reference guidelines for the Sonnet+Opus advisor pattern used in article generation. Describes how executor (Sonnet) and advisor (Opus) divide responsibilities, voice guidelines to pass to the article-writer agent, and output validation rules.
+---
+
 # Advisor Pattern Skill
 
 ## When to use

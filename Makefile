@@ -69,9 +69,10 @@ deploy:
 	$(MAKE) build_helloai_app build_helloai_image push_helloai_image az_deploy
 
 # ─── Weekly Update ────────────────────────────────────────
+# Article generation is handled by the /weekly-update Claude Code skill.
 weekly_update:
-	@echo "📊 Updating leaderboard and data..."
-	python3 scripts/weekly_update.py --topic "Hidden gem of the week" --auto-commit
+	@echo "Updating leaderboard and data..."
+	python3 scripts/weekly_update.py --auto-commit
 
 # ─── Version Management ───────────────────────────────────
 bump_version:
@@ -119,7 +120,3 @@ test_azure_access:
 test_deploy: test_azure_auth test_azure_access
 	@echo "✅ All Azure credentials and access validated!"
 	@echo "   The weekly cronjob should work correctly."
-
-start_minimax2.5:
-	@which ollama > /dev/null 2>&1 || (echo "Error: ollama is not installed or not in Path"; exit 1)
-	ollama launch claude --model minimax-m2.7:cloud
