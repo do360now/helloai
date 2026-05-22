@@ -1,5 +1,20 @@
 [
   {
+    "slug": "gemini-3-5-flash-faster-cheaper-and-beating-3-1-pro",
+    "title": "Gemini 3.5 Flash: Faster, Cheaper, and Beating 3.1 Pro",
+    "excerpt": "Gemini 3.5 Flash beats its own 3.1 Pro flagship on agentic and coding benchmarks at $1.50/$9 per million tokens — the most cost-competitive frontier-class model launched this week.",
+    "date": "2026-05-22",
+    "category": "Review",
+    "readTime": "2 min",
+    "content": [
+      "Google's cheaper model just beat its expensive one where it counts. Gemini 3.5 Flash, launched at I/O on May 19, scores 76.2% on Terminal-Bench 2.1 and 83.6% on MCP Atlas — both above Gemini 3.1 Pro on the same evals. For developers picking a model for agentic and coding workloads, that inverts the usual logic: the budget tier is now the better tool, and it's generally available today, including inside GitHub Copilot.",
+      "The pricing makes the comparison harder to argue with. Flash runs $1.50 input and $9.00 output per million tokens, 25% under 3.1 Pro's $2/$12 on both sides. You pay less and get higher agentic and terminal-task scores. On Arena Elo it lands at 1503, within two points of Claude Opus 4.7 — at roughly a third of the price, per RD World Online. The cost-per-capability curve for frontier-class agents shifted this week.",
+      "The crown does not transfer cleanly, though. Gemini 3.1 Pro still leads on pure reasoning: 77.1% on ARC-AGI-2 against Flash's 72.1%, and 44.4% on Humanity's Last Exam against 40.2%. If your workload leans on hard, multi-step abstract reasoning rather than tool use and code execution, Pro remains the stronger pick. Flash wins the benchmarks that map to building agents; it does not win the ones that map to solving novel puzzles.",
+      "That split is the whole decision. Most production agent work — running terminal commands, chaining tool calls through MCP, editing code — lives closer to Terminal-Bench and MCP Atlas than to ARC-AGI-2. For those tasks, paying the Pro premium now buys you a reasoning edge you may never exercise. The 1,048,576-token input window and 65,536-token output ceiling, with a January 2026 knowledge cutoff, hold up for long-context agent loops too.",
+      "The open question is what happens next month. Gemini 3.5 Pro is reportedly in internal testing and expected soon. If Pro follows the same arc Flash just traced — beating the previous flagship at a lower price — the reasoning advantage that still justifies 3.1 Pro could evaporate within weeks. Anyone standardizing an agent stack on a single model right now should treat that choice as a 30-day commitment, not a year-long one."
+    ]
+  },
+  {
     "slug": "glm-46-the-mit-licensed-model-closing-the-open-gap",
     "title": "GLM-4.6: The MIT-Licensed Model Closing the Open Gap",
     "excerpt": "Z.ai's GLM-4.6 lands within ~60 Elo of the closed frontier and ships under a no-strings MIT license — the best open-weight model nobody in Western dev circles is discussing.",
@@ -132,21 +147,6 @@
       "What makes this interesting isn't the benchmark lift. It's the underlying insight about where intelligence actually matters in an agentic loop. Most of the work — calling tools, reading file contents, formatting output, retrying on errors — is mechanical. A smaller model handles it fine. The moments that determine success or failure are the decision forks: which file to edit, whether to refactor or patch, how to decompose an ambiguous task. The advisor pattern surgically applies expensive reasoning exactly at those inflection points and nowhere else.",
       "The cost-control mechanism is worth noting for anyone building production systems. Developers set a max_uses parameter to cap how many times the advisor gets consulted per task, making spend predictable rather than open-ended. This is a meaningful design choice. Unpredictable API costs have been a real barrier to deploying agentic workflows at scale, and hard caps on the expensive component change the economics from hope-based budgeting to something you can actually model in a spreadsheet.",
       "The deeper implication is architectural. This isn't a new model — it's a new mental model for allocating intelligence across a system. It mirrors how effective engineering teams already work: junior engineers handle execution velocity, senior engineers weigh in at the hard calls. Expect this pattern to generalize beyond Anthropic's API. Any system that routes between models of different capability and cost will benefit from making the routing explicit rather than implicit. The competitive advantage shifts from who has the biggest model to who has the smartest routing."
-    ]
-  },
-  {
-    "slug": "claude-mythos-the-ai-too-dangerous-to-release",
-    "title": "Claude Mythos: The AI Too Dangerous to Release",
-    "excerpt": "Anthropic built a model that dominates 17 of 18 benchmarks and achieves 100% on cybersecurity tasks — then decided the world isn't ready for it. Here's what that tells us about where AI is headed.",
-    "date": "2026-04-10",
-    "category": "Analysis",
-    "readTime": "3 min",
-    "content": [
-      "Last month, a data leak forced Anthropic's hand. The existence of Claude Mythos — a model so capable it leads 17 of 18 benchmarks Anthropic measured — became public before the company was ready to announce it. The reaction from Anthropic was unusual for a lab that has released multiple frontier models: they said they won't release this one publicly. Not because it doesn't work. Because it works too well.",
-      "The numbers are striking. Mythos scores 93.9% on SWE-bench (coding), up 13 points over Claude Opus 4.6. It hits 97.6% on USAMO, the prestigious math olympiad benchmark. And on Cybench — a suite measuring an AI's ability to find and exploit real security vulnerabilities — it scored 100%. It's the first model to ever achieve that. That last number is what gave Anthropic pause.",
-      "What Anthropic found during red-teaming is that Mythos can autonomously discover zero-day vulnerabilities in major operating systems and browsers — including flaws that survived decades of human security review. This isn't a theoretical concern. In controlled tests, Mythos identified thousands of previously unknown vulnerabilities in widely deployed software. A model that can do this at scale, available to anyone, changes the threat landscape in a way that no patch cycle can keep up with.",
-      "So instead of a public release, Anthropic stood up Project Glasswing — a restricted access program with Amazon, Apple, Microsoft, Cisco, CrowdStrike, the Linux Foundation, and a handful of other infrastructure stewards. The idea is to use Mythos offensively (to find the bugs before bad actors do) rather than letting the capability diffuse into the open. It's a calculated bet: the defenders get the tool first.",
-      "What this episode reveals is that we've crossed a threshold. For years, the debate around AI safety was mostly theoretical — 'what happens when models get smart enough to cause real harm?' Mythos is the first concrete answer. It's not a hypothetical superintelligence. It's a production-ready model that Anthropic built, evaluated, and then deliberately kept off the shelf. The question for every lab now is: what's your Mythos policy? Because if Anthropic is drawing this line, others will face the same choice soon. The models are only getting more capable — and the decision about who gets access, and under what conditions, is going to define this decade."
     ]
   }
 ]
