@@ -67,7 +67,8 @@ export default async function ArticlePage({
             headline: article.title,
             description: article.excerpt,
             datePublished: article.date,
-            url: `https://helloai.com/articles/${article.slug}`,
+            dateModified: article.date,
+            mainEntityOfPage: `https://helloai.com/articles/${slug}`,
             author: {
               '@type': 'Person',
               name: 'Clement Machado',
