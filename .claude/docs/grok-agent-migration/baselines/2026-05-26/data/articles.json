@@ -1,20 +1,5 @@
 [
   {
-    "slug": "agentic-ai-is-failing-in-production",
-    "title": "Most Agentic AI Projects Are Already Failing",
-    "excerpt": "Only 15% of organizations are production-ready for agents, yet 41% are running them anyway. The bottleneck isn't model intelligence — it's the data and ops layer underneath.",
-    "date": "2026-05-26",
-    "category": "Analysis",
-    "readTime": "2 min",
-    "content": [
-      "Gartner expects more than 40% of agentic AI projects to be canceled by the end of 2027, and the May 2026 Fivetran Agentic AI Readiness Index suggests we are already watching that prediction play out. Only 15% of the 400 data leaders Fivetran surveyed said their organizations are fully prepared to run agentic systems in production. Meanwhile, 41% are running them anyway. The gap between those two numbers is where most of the cancellations will come from.",
-      "The failure mode here is not what the discourse keeps insisting it is. It is not that the models are too dumb, the context windows too short, or the reasoning too shallow. The bottleneck is the layer underneath: the pipelines, lineage, and governance that an autonomous agent depends on to do anything useful with a real business. When only 15% of surveyed companies have the automated data infrastructure required for reliable autonomy, the other 85% are essentially wiring frontier models into plumbing that was barely good enough for dashboards.",
-      "Datadog's 2026 State of AI Engineering report makes the operational picture concrete. 2% of LLM spans errored in March, and 32% of those failures were plain rate-limit errors — agents being throttled by the very APIs they orchestrate. A 2% error rate is tolerable for a chatbot. For an agent that chains ten or twenty tool calls per task, it compounds into double-digit task failure rates before any reasoning quality issue enters the picture. Most teams have not budgeted for that math, let alone the retries, idempotency keys, and circuit breakers it implies.",
-      "The counterargument is real and worth taking seriously. Some of the 41% running agents in production are doing it deliberately — narrow scope, human-in-the-loop, tight blast radius — and learning faster than peers waiting for a clean data warehouse. Gartner's 40% cancellation figure also implies a 60% survival rate, which would be a remarkable hit rate for any new enterprise technology category. The question is not whether agentic AI works. It is whether the specific project in front of you has the data lineage, observability, and governance to survive contact with production traffic.",
-      "The next eighteen months will sort companies into two groups: those that treated agentic AI as a model problem and those that treated it as a data and reliability problem. The winners will look less like AI labs and more like SRE teams that happen to call LLMs. Expect the budget conversation in 2027 to shift accordingly — away from token spend and toward the pipelines, evals, and incident tooling that decide whether an agent ships or gets quietly killed in Q3 review."
-    ]
-  },
-  {
     "slug": "mythos-too-dangerous-to-ship",
     "title": "Mythos: The First Frontier Model Too Dangerous to Ship",
     "excerpt": "Anthropic built Claude Mythos to autonomously find zero-day vulnerabilities, then refused to ship it publicly, gating access through the Project Glasswing consortium.",
@@ -147,6 +132,21 @@
       "The more interesting question is what 4.7 does inside an Advisor Strategy loop. The executor-advisor split published last month showed Haiku-plus-Opus-advisor more than doubling BrowseComp performance at 85% less cost than Sonnet running solo. Swap the 4.6 advisor for 4.7 and the math compounds — the advisor's marginal judgment lift gets amplified by every fork it touches across the trajectory. For teams that restructured around that pattern in the last thirty days, 4.7 isn't a model upgrade. It is a system-wide capability lift without a single line of application code changing.",
       "The counterargument is version fatigue, and it is fair. 4.6 dropped in price two weeks ago. The Mythos story broke a month before that. Developers have been re-running evaluation suites more or less continuously since February. Shipping 4.7 into that cadence risks the reasonable response of deferring the evaluation until Q3. That would be a mistake on pure-coding workloads, where the delta over 4.6 appears large enough to justify a re-run, but it is probably the right call for chat, extraction, or any workload where 4.6 was already saturating your rubric.",
       "What this release actually signals is the end of the cost-war phase of the frontier. The pricing has converged: Opus, Gemini Pro, and GPT-5.4 sit within a few dollars of each other on input. The context windows are all a million tokens or better. The batch discounts are roughly equivalent. From here the differentiation is capability and the shape of a model's failure modes under agentic workloads. 4.7 is the first release that leans entirely on that and doesn't hide behind a price cut. Expect the next year of frontier releases to look the same."
+    ]
+  },
+  {
+    "slug": "claude-opus-4-6-price-cut-what-it-means-for-your-stack",
+    "title": "Claude Opus 4.6 Is Now 67% Cheaper — What Changes for Your Stack",
+    "excerpt": "Anthropic cut Opus 4.6 input pricing from $15 to $5 per million tokens. At that price it now undercuts Gemini and GPT-5.4 on input — and breaks the conventional cost-justification for tiered routing.",
+    "date": "2026-04-15",
+    "category": "Analysis",
+    "readTime": "3 min",
+    "content": [
+      "Anthropic cut Claude Opus 4.6 input pricing from $15 to $5 per million tokens this month, and output from $75 to $25. That's a 67% drop on the input side for what is still arguably the strongest general-purpose model on the market. The move lands alongside the Advisor Strategy release, and together they force a rethink of routing logic that most production stacks have been quietly accreting for the past year.",
+      "The comparison table tells the story faster than any analyst note. Opus 4.6 at $5 input is now undercutting Gemini 3.1 Pro at $7 and GPT-5.4 standard at $12. On output, $25 sits below GPT-5.4's $60 and roughly matches Gemini. A year ago, routing a user query to Opus meant eating a 5x premium over the mid-tier; today that premium is gone, and on some workloads Opus is the cheapest frontier option you can call. Layer in the Batch API's 50% discount for async workloads and Opus input drops to $2.50 per million — territory that used to belong to Haiku-class models.",
+      "This breaks the conventional cost-justification for tiered routing. The standard playbook was a classifier or cheap model upfront, escalating to Opus only when confidence dropped or the task demanded it. That architecture paid for itself when Opus was 5-10x the price of your fallback. At 3x or less, the routing logic, the evaluation harness, the drift monitoring, and the two-model cognitive overhead start costing more in engineering time than they save in inference. For most teams below a certain scale, the honest answer is now to delete the router and send everything to Opus.",
+      "The Advisor Strategy complicates that conclusion in an interesting direction. Our own BrowseComp numbers showed a Haiku-plus-Opus advisor configuration doubling task performance at 85% less cost than Sonnet solo. At the new pricing, the cost side of that equation compresses further, but the performance multiplier still holds — because the advisor pattern is about capability composition, not just cheap-model offloading. The interesting routing question is no longer \"can I avoid Opus\" but \"how many Opus calls should I chain together.\"",
+      "None of this touches the sub-cent tier. OpenAI's Nano models at $0.10 to $0.20 per million remain the right call for classification, extraction, and anything you're running at millions of requests per day. What's ending is the middle-tier cost war as a meaningful architectural constraint. When frontier models converge around $5 to $15 input, the decisions that matter shift from price-per-token to latency budgets, tool-calling fidelity, and which model's failure modes your product can actually tolerate in production."
     ]
   }
 ]

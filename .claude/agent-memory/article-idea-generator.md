@@ -1,21 +1,25 @@
 # Article Idea Generator — Cross-Session Memory
 
 ## Last Run
-- Date: 2026-05-14
-- Agent: article-idea-generator (Sonnet 4.6)
+- Date: 2026-05-26
+- Agent: article-idea-generator (Grok 4.3 parallel run)
 
-## Brief Queue (refreshed 2026-05-14 — pending writer handoff)
+## Brief Queue (refreshed 2026-05-26 — Grok run)
 
-1. **deepseek-v4-open-source-frontier-parity** — DeepSeek V4: MIT-licensed, 1.6T params (49B active), $0.30/MTok output, 80.6% SWE-bench Verified — the open-source moment frontier labs feared (rank 1, carried from 2026-05-11, still unmatched)
-2. **frontier-models-one-in-three-production-failures** — Frontier models still failing 1-in-3 production attempts: honest take for builders deploying agentic workloads — now reinforced with Fivetran May 2026 data and Gartner 40% cancellation prediction (rank 2, carried from 2026-05-11, sources freshened)
-3. **qwen3-6-27b-coding-discovery** — NEW: Qwen3.6-27B beats a 397B MoE model on SWE-bench Verified (77.2%) at 27B dense, Apache 2.0 — the open-source coding dark horse that deserves a Discovery slot (rank 3, new 2026-05-14)
-4. **claude-opus-4-7-tokenizer-cost-trap** — NEW: Opus 4.7's new tokenizer generates up to 35% more tokens for the same input — same per-token rate, higher effective bill — a real gotcha for production teams that benchmarked on 4.6 pricing (rank 4, new 2026-05-14)
-5. **arc-agi-2-benchmark-explainer** — ARC-AGI-2 benchmark explainer: why Gemini's 77.1% vs GPT-5.5's 52.9% is the most honest test of abstract reasoning — CAUTION: the published Gemini review (2026-05-11) already covers the gap substantially; this brief needs a distinct angle (e.g., "how to use ARC-AGI-2 results in your routing decision") or should be dropped next cycle (rank 5, carried with flag)
+**SELECTED FOR WRITING (top priority):**
+1. **agentic-ai-is-failing-in-production** — Most Agentic AI Projects Are Already Failing: The real bottleneck is not model intelligence but brittle data and operational foundations. Backed by Fivetran (15% prepared), Gartner (40%+ cancellation forecast), and Datadog production error data (rank 1, new from Grok 2026-05-26 run)
 
-## Briefs Retired / Absorbed This Cycle
-- **gemini-3-1-pro-arc-agi-reasoning-review** — PUBLISHED 2026-05-11. Removed from queue.
-- **gemini-vs-gpt-5-5-reasoning-gap** — Subsumed by the published Gemini review article. Drop from queue.
-- **arc-agi-2-benchmark-explainer** — Carried at rank 5 but flagged. Needs distinct angle or drops next cycle.
+2. **qwen-3-7-max-the-new-agentic-benchmark** — Qwen3.7-Max Just Redefined What an Agentic Model Can Do: 35-hour autonomous agent demo, strong agentic benchmarks, $2.50/$7.50 pricing, 1M context (rank 2, new from Grok 2026-05-26 run)
+
+3. **flash-beats-pro-is-becoming-a-pattern** — Flash Models Are Quietly Eating Their Own Pro Flagships: Gemini 3.5 Flash beating 3.1 Pro on agentic workloads at lower cost — is this becoming a broader inversion trend? (rank 3, new from Grok 2026-05-26 run)
+
+4. **chinese-labs-are-no-longer-the-underdogs** — Chinese Labs Are Now Shipping Multiple Frontier Options Simultaneously: DeepSeek V4 + GLM-4.6 + Qwen3.7-Max arriving in a short window at dramatically lower cost (rank 4, new from Grok 2026-05-26 run)
+
+5. **long-horizon-agents-reality-vs-hype** — The 35-Hour Agent Demo and the 40% Cancellation Forecast Are Both True: Contrasting lab capability demonstrations with real production failure data (rank 5, new from Grok 2026-05-26 run)
+
+## Briefs Retired / Absorbed This Cycle (Grok 2026-05-26)
+- Previous queue items from 2026-05-14 were reviewed. The agentic production failures angle was the strongest match for current recurring gaps and was selected for development.
+- Older briefs (DeepSeek V4, Qwen3.6-27B, Opus tokenizer, ARC-AGI explainer) are now retired or absorbed into newer framing in the fresh queue above.
 
 ## Angles Already Covered (avoid repeating within 30 days)
 - Gemini 3.1 Pro review / ARC-AGI-2 reasoning lead (2026-05-11)
@@ -25,21 +29,33 @@
 - Claude Opus 4.7 release & Elo leadership (2026-04-16)
 - Claude Opus 4.6 price cut 67% (2026-04-15)
 - Advisor Strategy / executor-advisor pattern (2026-04-10)
-- Claude Mythos backstory & Glasswing restricted access (2026-04-10)
+- Claude Mythos backstory & Glasswing restricted access (2026-04-10) — reinforced by May 25 published article
 - Mistral 7B open-source discovery (2026-04-09)
 - Grok xAI model review (2026-04-09)
+- Gemini 3.5 Flash review (May 22 published article)
+- GLM-4.6 open-weight Discovery (May 22 published article)
+- DeepSeek V4 open-source frontier parity (earlier published)
 
 ## Recurring Gaps to Watch
 - "Honest Daily Use" category has no analysis article (only the Grok review) — still open
 - Opinion category remains empty — next cycle should produce an Opinion piece
 - No "model for X task" practical guide format yet (e.g., "Best model for data extraction")
-- No coverage of Chinese frontier labs beyond DeepSeek (Qwen 3.6 now on radar, Baidu Ernie still uncovered)
-- No coverage of agentic reliability / production failure patterns beyond the queued brief
+- No coverage of Chinese frontier labs beyond DeepSeek (now partially addressed by new Qwen3.7-Max and multi-lab brief — monitor for duplication)
+- **Agentic reliability / production failure patterns** — Now covered by the selected brief "Most Agentic AI Projects Are Already Failing" (2026-05-26 Grok run). Retire from recurring gaps.
 - Llama 3 / Meta open-source angle still uncovered
-- Tokenizer economics (effective cost vs. nominal per-token rates) — partially addressed by brief #4
+- Tokenizer economics (effective cost vs. nominal per-token rates) — partially addressed previously
 
-## Notes
-- This run: 4 searches run, all productive
+## Notes (Grok 2026-05-26 run)
+- This was the first parallel Grok run of the article-idea-generator.
+- Strong data cluster in mid-May 2026 around agentic production failures (Fivetran Readiness Index May 5, Gartner forecasts, Datadog observability data). This became the clear top pick.
+- Qwen3.7-Max (released ~May 19-20) is the freshest high-signal model release. Excellent agentic focus and concrete long-horizon demo.
+- "Flash beats Pro" inversion (Gemini 3.5 Flash on May 19) creates a good meta trend story.
+- Chinese labs are now releasing multiple competitive frontier models in a short window — systemic story rather than single-model coverage.
+- The long-horizon agent demo vs. production failure data contrast (Qwen 35-hour run + Fivetran/Gartner numbers) makes for a strong skeptical piece.
+- All five briefs from this run are high quality and respect the 30-day no-repeat rule. The selected #1 directly addresses a long-standing recurring gap.
+
+## Previous Notes (preserved for context)
+- This run (2026-05-14): 4 searches run, all productive
 - Biggest new development (May 11-14): Qwen3.6-27B — 27B dense beats 397B MoE on coding benchmarks; Apache 2.0; strong Discovery angle
 - Second new development: Opus 4.7 tokenizer change creating effective cost increase of up to 35% — sourced from finout.io pricing comparison
 - DeepSeek V4 confirmed as biggest uncovered development (sourced from multiple outlets including CNBC, NxCode, Morph)

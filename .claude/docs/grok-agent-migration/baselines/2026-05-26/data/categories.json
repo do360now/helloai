@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Overall Preference",
+    "leader": "Claude Opus 4.7",
+    "insight": "Currently #1 in blind user votes on LMArena with 1503 Elo. Gemini 3.1 Pro close behind at 1493.",
+    "icon": "trophy",
+    "color": "#FBBF24"
+  },
+  {
+    "name": "Coding & Engineering",
+    "leader": "Claude Opus 4.7",
+    "insight": "Crushes it on planning, debugging, and self-correction. Many devs have switched and aren't looking back.",
+    "icon": "code",
+    "color": "#00E5A0"
+  },
+  {
+    "name": "Hard Reasoning & Science",
+    "leader": "Gemini 3.1 Pro",
+    "insight": "Leads on PhD-level benchmarks like GPQA and ARC-AGI subsets. Claude and Grok are strong contenders.",
+    "icon": "science",
+    "color": "#6366F1"
+  },
+  {
+    "name": "Honest Daily Use",
+    "leader": "Grok 4.3",
+    "insight": "Shines for maximally truthful, witty conversation. Great for brainstorming without corporate polish.",
+    "icon": "chat",
+    "color": "#F472B6"
+  }
+]

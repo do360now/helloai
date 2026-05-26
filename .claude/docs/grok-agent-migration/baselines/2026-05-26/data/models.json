@@ -1,0 +1,65 @@
+[
+  {
+    "id": "claude",
+    "name": "Claude Opus 4.7",
+    "provider": "Anthropic",
+    "url": "https://claude.ai",
+    "tag": "Coding King",
+    "desc": "Best planning, debugging, and self-correction in the game. The AI coworker developers actually trust.",
+    "color": "#D97706",
+    "elo": 1503,
+    "cost_per_million_tokens": 5,
+    "cost_per_million_tokens_output": 25,
+    "context_window": 1000000,
+    "strengths": [
+      "Coding & Engineering",
+      "Overall Preference"
+    ]
+  },
+  {
+    "id": "gemini",
+    "name": "Gemini 3.1 Pro",
+    "provider": "Google",
+    "url": "https://gemini.google.com",
+    "tag": "Multimodal Leader",
+    "desc": "Dominates reasoning and multimodal tasks. Scored 77% on ARC-AGI-2 — double its predecessor — and leads on graduate-level science benchmarks.",
+    "color": "#4285F4",
+    "elo": 1493,
+    "cost_per_million_tokens": 2,
+    "cost_per_million_tokens_output": 12,
+    "context_window": 1000000,
+    "strengths": [
+      "Hard Reasoning & Science"
+    ]
+  },
+  {
+    "id": "grok",
+    "name": "Grok 4.3",
+    "provider": "xAI",
+    "url": "https://grok.x.ai",
+    "tag": "Truth Machine",
+    "desc": "Multi-agent architecture with 1M context and built-in reasoning on every query. Now the cheapest frontier-quality option in the set — best for high-stakes research without the sugarcoating.",
+    "color": "#EF4444",
+    "elo": 1490,
+    "cost_per_million_tokens": 1.25,
+    "cost_per_million_tokens_output": 2.5,
+    "context_window": 1000000,
+    "strengths": [
+      "Honest Daily Use"
+    ]
+  },
+  {
+    "id": "gpt",
+    "name": "GPT-5.5",
+    "provider": "OpenAI",
+    "url": "https://chatgpt.com",
+    "tag": "Agentic Leap",
+    "desc": "First fully retrained base since GPT-4.5. Leads agentic coding benchmarks with 82.7% on Terminal-Bench 2.0 and 73.1% on Expert-SWE. The enterprise default for autonomous multi-step work.",
+    "color": "#10B981",
+    "elo": 1484,
+    "cost_per_million_tokens": 5,
+    "cost_per_million_tokens_output": 30,
+    "context_window": 1000000,
+    "strengths": []
+  }
+]

@@ -1,0 +1,29 @@
+{
+  "slug": "agentic-ai-is-failing-in-production",
+  "title": "Most Agentic AI Projects Are Already Failing",
+  "category": "Analysis",
+  "angle": "The real bottleneck for agentic AI is not model intelligence but the brittle data and operational foundations companies are building on top of it.",
+  "news_hook": "Fivetran’s May 5 2026 Agentic AI Readiness Index revealed only 15% of organizations consider themselves fully prepared for production agentic systems.",
+  "key_facts": [
+    "Fivetran survey of 400 data leaders found only 15% of organizations are fully prepared for agentic AI in production despite heavy investment.",
+    "Gartner predicts more than 40% of agentic AI projects will be canceled by the end of 2027, primarily due to cost overruns, unclear ROI, and governance failures.",
+    "Datadog’s 2026 State of AI Engineering report showed 2% of LLM spans errored in March, with rate-limit errors accounting for 32% of those failures.",
+    "41% of organizations in the Fivetran index are already running agentic systems in production despite major data quality and lineage gaps.",
+    "Only 15% of surveyed companies have the automated pipelines, lineage, and governance required for reliable autonomous agents."
+  ],
+  "sources": [
+    "https://www.fivetran.com/press/fivetran-launches-2026-agentic-ai-readiness-index",
+    "https://www.gartner.com/en/newsroom/press-releases/2025-06-25-gartner-predicts-over-40-percent-of-agentic-ai-projects-will-be-canceled-by-end-of-2027",
+    "https://www.datadoghq.com/state-of-ai-engineering/"
+  ],
+  "target_word_count": 400,
+  "voice_guidelines": [
+    "Lead with a strong claim or surprising fact",
+    "Short paragraphs, no bullet points in body",
+    "Acknowledge trade-offs — readers distrust hype",
+    "End with a forward-looking implication, not a summary",
+    "4–5 paragraphs, 350–500 words"
+  ],
+  "why_now": "The gap between pilot hype and production reality is now measurable with fresh May 2026 data from multiple independent sources, making this the right moment for an honest assessment before more capital is wasted.",
+  "rank": 1
+}
