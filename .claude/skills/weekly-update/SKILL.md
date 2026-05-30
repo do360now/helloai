@@ -8,16 +8,27 @@ allowed-tools: Bash(/home/cmc/git/grok/helloai/.venv/bin/python3 *) Bash(npx jes
 
 Runs the full weekly maintenance cycle for helloai.com. Article PROSE is produced ONLY by the `article-writer` agent — no local/Ollama models.
 
+**Default path (as of 2026-05):**  
+`leaderboard-updater` and `article-idea-generator` are now executed by **Grok** (following the original agent specifications + accumulated learnings from parallel runs). The original Claude Code agent definitions are retained as fallback.
+
+Full practical instructions: `.claude/docs/grok-agent-migration/grok-default-weekly-intelligence.md`
+
+See the "Grok Execution" notes in each relevant step below.
+
 ## Steps
 
 ### 1. Leaderboard drift (judgment)
 
-Invoke the `leaderboard-updater` agent. It will:
+**Default (Grok):** Ask Grok to run the `leaderboard-updater` role, following the specification in `.claude/agents/leaderboard-updater.md` (plus any refinements documented in recent Grok scoring runs and updated memory).
+
+Grok will:
 - Search for model version, pricing, and context-window changes
 - Evaluate new model candidates against the admission decision tree
-- Propose a change report
+- Produce a change report in the required format
 
-Apply only evidence-backed changes (skip anything marked "⚠️ verify manually"). The agent appends every proposal to `.claude/state/leaderboard-changes.jsonl` automatically.
+Apply only evidence-backed changes (skip anything marked "⚠️ verify manually"). Grok appends every proposal to `.claude/state/leaderboard-changes.jsonl` using the correct append-only contract.
+
+**Fallback:** Invoke the original `leaderboard-updater` Claude Code agent (Sonnet).
 
 ### 2. Elo refresh (deterministic)
 
@@ -31,7 +42,11 @@ This updates `data/models.json` Elo fields from LMArena data. Curated Elos are a
 
 ### 3. New article (advisor pattern, judgment)
 
-**3a. Generate briefs** — invoke the `article-idea-generator` agent. It dedupes against existing coverage and its cross-session memory, then returns 5 ranked JSON briefs.
+**3a. Generate briefs** — **Default (Grok):** Ask Grok to run the `article-idea-generator` role, following the specification in `.claude/agents/article-idea-generator.md` (plus refinements from recent parallel runs).
+
+Grok will read current coverage + memory, perform targeted research on the last two weeks, and return exactly 5 ranked briefs in the required JSON schema.
+
+**Fallback:** Invoke the original `article-idea-generator` Claude Code agent (Sonnet).
 
 **3b. Pick the top brief** — use `rank: 1` unless the top brief is clearly too similar to recent articles.
 

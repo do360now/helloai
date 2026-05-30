@@ -1,5 +1,20 @@
 [
   {
+    "slug": "claude-opus-4-8-the-orchestration-upgrade",
+    "title": "Claude Opus 4.8: The Upgrade Is the Workflow, Not the Model",
+    "excerpt": "Opus 4.8 ships 41 days after 4.7 at the same price, with a one-point SWE-bench bump and a new engine that fans a single task across hundreds of parallel subagents. The frontier race is moving from IQ to orchestration.",
+    "date": "2026-05-28",
+    "category": "Review",
+    "readTime": "2 min",
+    "content": [
+      "Anthropic shipped Claude Opus 4.8 on May 28, just 41 days after 4.7, at exactly the same price — $5 per million input tokens and $25 output. The headline isn't a benchmark; it's a workflow. Paired with Claude Code, Opus 4.8 can fan a single task out across hundreds of parallel subagents and run a codebase-scale migration from kickoff to merge. The model got better at the margins, but the orchestration wrapped around it got the real upgrade.",
+      "The raw capability gains are uneven, and worth reading honestly. SWE-bench Verified crept from 87.6% to 88.6% — inside the noise for most teams. But SWE-bench Pro jumped from 64.3% to 69.2%, GraphWalks long-context F1 at one million tokens nearly doubled from 40.3% to 68.1%, and USAMO 2026 math went from a middling 69.3% to a near-perfect 96.7%. The easy evals are saturating; the gains now land on the hard, long-horizon, multi-step problems that actually break in production rather than the ones that look good in a launch post.",
+      "Dynamic workflows are the bet. Instead of one model grinding sequentially through a large job, Opus 4.8 plans the work, dispatches parallel subagents each holding their own slice of context, and merges the result. For a hundred-thousand-line migration that is the difference between a week of babysitting and an afternoon. A quieter change matters just as much for agent builders: mid-task system messages on the Messages API let you steer a running job without restarting it, which is exactly the control long agent loops have lacked.",
+      "The 41-day cadence deserves a skeptical eye. Anthropic pushed 4.8 fast on the heels of a 4.7 release that landed to mixed reviews, with OpenAI and Google both shipping aggressively in the same window. A point release this quick can read as a course correction as much as a roadmap milestone. The most interesting non-benchmark claim is honesty: 4.8 is measurably more willing to flag problems in its own inputs and outputs — a genuinely useful trait for agentic work, where a confidently wrong subagent is far more dangerous than a slow one.",
+      "What 4.8 really signals is where the competition is headed. When the flagship coding model arrives at a flat price and a one-point SWE-bench bump, the contest has stopped being about who answers a single prompt best and started being about who orchestrates a hundred of them without losing the plot. Expect the next round of releases, from every lab, to be judged less on Elo and more on whether their agents can hold a coherent plan across a real codebase. The model is increasingly the cheap part; the workflow is the product."
+    ]
+  },
+  {
     "slug": "agentic-ai-is-failing-in-production",
     "title": "Most Agentic AI Projects Are Already Failing",
     "excerpt": "Only 15% of organizations are production-ready for agents, yet 41% are running them anyway. The bottleneck isn't model intelligence — it's the data and ops layer underneath.",
@@ -132,21 +147,6 @@
       "The counterargument deserves honest treatment. Agent loops are genuinely token-heavy — a single autonomous coding session can consume an order of magnitude more tokens than a chat exchange. If GPT-5.5 is actually more expensive to serve because of longer context retention, multi-modal computer use, and tighter safety guardrails (API access was delayed pending additional cybersecurity review), then $5/$30 might reflect real inference economics rather than a margin grab. And if the 88.7% SWE-Bench score translates to meaningfully fewer failed iterations in production agent pipelines, a 2× price against a 2× productivity gain is cost-neutral per task completed.",
       "The split that's emerging is harder to dismiss. Claude Opus 4.7 currently leads LMArena at 1503 Elo and ships at $5/$25 — matching GPT-5.5 on input, undercutting it on output by $5 per million tokens, without a price hike. Anthropic has spent April moving in one direction on cost. OpenAI just moved in the other. Both strategies can be rational simultaneously: Anthropic is optimizing for developer adoption volume; OpenAI is betting that enterprise buyers running autonomous agent fleets will treat per-token cost as secondary to capability and reliability at scale.",
       "The practical consequence is that the next pricing announcements from Google and Anthropic won't be read in isolation. If Gemini 2.5 Ultra or a future Opus release lands at $6+ input, it will be seen as validating OpenAI's premium tier rather than a unilateral hike. Teams budgeting agentic workloads in 2026 are now watching two frontier providers diverge on the same capability class — and the model they standardize on this quarter may be the one that dictates their infrastructure costs for the next two years."
-    ]
-  },
-  {
-    "slug": "claude-opus-4-7-end-of-the-cost-war",
-    "title": "Claude Opus 4.7 and the End of the Frontier Cost War",
-    "excerpt": "Opus 4.7 ships at the same $5 input price as 4.6, with the same 1M context window, and a 1503 Elo that tops the Arena. That nothing about pricing moved is precisely the story.",
-    "date": "2026-04-16",
-    "category": "Analysis",
-    "readTime": "3 min",
-    "content": [
-      "Claude Opus 4.7 shipped today with the same $5 input pricing as 4.6 and the same 1M context window. The only thing that changed is the model — and that is precisely the story. For two years, every frontier release has landed with a pricing narrative attached: cheaper tier, new batch discount, smaller context at lower cost. 4.7 is the first flagship in recent memory where the price sheet is a copy-paste from the last version. That shifts the evaluation question back to capability, which is exactly where Anthropic wants it.",
-      "On the current LMArena board, Opus 4.7 sits at 1503 — ten points above Gemini 3.1 Pro and nineteen above GPT-5.4 High. Internal benchmarks emphasize planning depth and self-correction on long-running coding tasks, and the \"Coding King\" tag in helloai's directory reflects what developers have been reporting in production: fewer abandoned branches, fewer wrong-file edits, and meaningfully better recovery when a plan doesn't survive contact with the repo. None of that shows up cleanly in a static eval, which is why the Arena Elo matters more than the incremental MMLU bump.",
-      "The more interesting question is what 4.7 does inside an Advisor Strategy loop. The executor-advisor split published last month showed Haiku-plus-Opus-advisor more than doubling BrowseComp performance at 85% less cost than Sonnet running solo. Swap the 4.6 advisor for 4.7 and the math compounds — the advisor's marginal judgment lift gets amplified by every fork it touches across the trajectory. For teams that restructured around that pattern in the last thirty days, 4.7 isn't a model upgrade. It is a system-wide capability lift without a single line of application code changing.",
-      "The counterargument is version fatigue, and it is fair. 4.6 dropped in price two weeks ago. The Mythos story broke a month before that. Developers have been re-running evaluation suites more or less continuously since February. Shipping 4.7 into that cadence risks the reasonable response of deferring the evaluation until Q3. That would be a mistake on pure-coding workloads, where the delta over 4.6 appears large enough to justify a re-run, but it is probably the right call for chat, extraction, or any workload where 4.6 was already saturating your rubric.",
-      "What this release actually signals is the end of the cost-war phase of the frontier. The pricing has converged: Opus, Gemini Pro, and GPT-5.4 sit within a few dollars of each other on input. The context windows are all a million tokens or better. The batch discounts are roughly equivalent. From here the differentiation is capability and the shape of a model's failure modes under agentic workloads. 4.7 is the first release that leans entirely on that and doesn't hide behind a price cut. Expect the next year of frontier releases to look the same."
     ]
   }
 ]

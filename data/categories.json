@@ -1,15 +1,15 @@
 [
   {
     "name": "Overall Preference",
-    "leader": "Claude Opus 4.7",
-    "insight": "Currently #1 in blind user votes on LMArena with 1503 Elo. Gemini 3.1 Pro close behind at 1493.",
+    "leader": "Claude Opus 4.8",
+    "insight": "Anthropic holds #1 in blind user votes on LMArena at 1503 Elo; Opus 4.8 (May 28) extends the lead. Gemini 3.1 Pro close behind at 1493.",
     "icon": "trophy",
     "color": "#FBBF24"
   },
   {
     "name": "Coding & Engineering",
-    "leader": "Claude Opus 4.7",
-    "insight": "Crushes it on planning, debugging, and self-correction. Many devs have switched and aren't looking back.",
+    "leader": "Claude Opus 4.8",
+    "insight": "Tops SWE-bench Verified at 88.6% with new parallel-subagent workflows for codebase-scale migrations. Many devs have switched and aren't looking back.",
     "icon": "code",
     "color": "#00E5A0"
   },

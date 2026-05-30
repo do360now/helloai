@@ -1,11 +1,11 @@
 [
   {
     "id": "claude",
-    "name": "Claude Opus 4.7",
+    "name": "Claude Opus 4.8",
     "provider": "Anthropic",
     "url": "https://claude.ai",
     "tag": "Coding King",
-    "desc": "Best planning, debugging, and self-correction in the game. The AI coworker developers actually trust.",
+    "desc": "Codebase-scale agentic coding: parallel-subagent dynamic workflows migrate hundreds of thousands of lines from kickoff to merge. 88.6% on SWE-bench Verified, same price as 4.7.",
     "color": "#D97706",
     "elo": 1503,
     "cost_per_million_tokens": 5,
