@@ -34,11 +34,13 @@ async function buy(task: string): Promise<number> {
 
 describe('earn → verify → fund loop', () => {
   test('buyer pays three times, ledger verifies, human approves the sweep', async () => {
-    let earned = 0;
-    earned += await buy('coding');
-    earned += await buy('reasoning');
-    earned += await buy('daily'); // 3 × 100 = 300, hits threshold
-    expect(earned).toBe(300);
+    const a = await buy('coding');
+    const b = await buy('reasoning');
+    const c = await buy('daily');
+    expect(a).toBe(100);
+    expect(b).toBe(100);
+    expect(c).toBe(100);
+    expect(a + b + c).toBe(300); // 3 × 100, hits the 300 threshold
 
     // Verification layer is intact and reflects all earnings.
     expect(verifyEarnings()).toMatchObject({ ok: true, count: 3 });
