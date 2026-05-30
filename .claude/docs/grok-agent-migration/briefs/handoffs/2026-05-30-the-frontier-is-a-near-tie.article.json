@@ -1,0 +1,14 @@
+{
+  "slug": "the-frontier-is-a-near-tie",
+  "title": "The Entire Frontier Now Fits in Nineteen Elo Points",
+  "excerpt": "The top of the leaderboard is now four flagships inside a 19-point Elo band, and Opus 4.8 added barely a point over its predecessor. Capability has converged; price and fit are the whole decision now.",
+  "date": "2026-05-30",
+  "category": "Opinion",
+  "content": [
+    "The entire frontier now fits inside nineteen Elo points. Claude Opus 4.8 sits at 1503, Gemini 3.1 Pro at 1493, Grok 4.3 at 1490, and GPT-5.5 at 1484. That is the whole top of the leaderboard — four flagships from four labs — separated by less than the margin you would expect from a single good fine-tuning pass. The smartest model in the world is barely smarter than the fourth-smartest, and the gap is closing faster than any of these labs would like to admit.",
+    "The launch that triggered this was telling. Opus 4.8 shipped on May 28, forty-one days after 4.7, at the same price, for roughly a one-point SWE-bench gain. That is the shape of diminishing returns made concrete: a flagship release that moves the frontier by a rounding error. When the marginal intelligence from a six-week development cycle is indistinguishable from noise, the headline capability number stops being the thing you optimize a procurement decision around.",
+    "Meanwhile the economics have not converged at all — they have spread out. All four leaders now offer a 1M-token context window, so the one spec that used to separate them is now table stakes. But input price varies 4x across the four, from Grok 4.3 at $1.25 per million to Opus 4.8 and GPT-5.5 at $5. Output price varies 12x: $2.50 per million for Grok against $30 for GPT-5.5. The capability gap is nineteen points; the cost gap is an order of magnitude. For any workload that runs at scale, the bill will dominate the benchmark every time.",
+    "A near-tie at the top does not mean the models are interchangeable, and that is the trap. Each still carries a distinct shape: Opus is the Coding King, Gemini the Multimodal Leader, Grok the Truth Machine, GPT-5.5 the Agentic Leap. Those profiles describe how a model behaves inside a real pipeline — how it handles tool calls, long-horizon tasks, images, refusals — and they diverge far more than the Elo spread suggests. The ranking tells you almost nothing useful; the shape tells you everything.",
+    "So the honest question for developers in mid-2026 is no longer which model is smartest. It is which one fits the price, the context economics, and the agentic shape of the job in front of you. As the capability lines keep flattening, the labs that win the next year will not be the ones that squeeze out another Elo point — they will be the ones that make their distinct shape legible enough that an engineer can pick correctly in five minutes. The leaderboard is becoming a tie. The decision is moving somewhere else."
+  ]
+}

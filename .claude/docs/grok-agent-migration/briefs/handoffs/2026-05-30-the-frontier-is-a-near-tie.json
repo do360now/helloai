@@ -1,0 +1,26 @@
+{
+  "slug": "the-frontier-is-a-near-tie",
+  "title": "The Entire Frontier Now Fits in Nineteen Elo Points",
+  "category": "Opinion",
+  "angle": "Capability at the top has converged into a near-tie, so the honest question for developers is no longer which model is smartest but which one fits the price, context economics, and agentic shape of the job.",
+  "news_hook": "With Claude Opus 4.8 shipping on May 28, the four models we track now sit inside a 19-point Elo band — and the new flagship added only about one SWE-bench point over its 41-day-old predecessor.",
+  "key_facts": [
+    "The full tracked frontier spans just 19 Elo points: Claude Opus 4.8 (1503), Gemini 3.1 Pro (1493), Grok 4.3 (1490), and GPT-5.5 (1484).",
+    "All four leaders now offer a 1M-token context window, so context size is no longer a differentiator at the top.",
+    "Input price varies 4x across the four (Grok 4.3 at $1.25/M vs Opus 4.8 and GPT-5.5 at $5/M); output price varies 12x ($2.50/M for Grok 4.3 vs $30/M for GPT-5.5) — far wider than the capability gap.",
+    "Opus 4.8 shipped 41 days after 4.7 at the same price for roughly a one-point SWE-bench gain, underscoring diminishing returns on raw intelligence.",
+    "Each model still carries a distinct shape — Opus 'Coding King', Gemini 'Multimodal Leader', Grok 'Truth Machine', GPT-5.5 'Agentic Leap' — that matters more than the Elo ranking when picking one."
+  ],
+  "sources": [],
+  "target_word_count": 430,
+  "voice_guidelines": [
+    "Lead with the strongest fact: the whole frontier fits in 19 Elo points",
+    "Direct, skeptical-but-fair, no hype; audience is developers and technical founders",
+    "Short paragraphs (~4-5 sentences), no bullet points in the body",
+    "Acknowledge the trade-off: a near-tie at the top does not mean the models are interchangeable in practice",
+    "End with a forward-looking implication, not a summary",
+    "4-5 paragraphs, 380-480 words"
+  ],
+  "why_now": "Opus 4.8 (May 28) just reset the top of the leaderboard into the tightest spread we have tracked, making this the right moment to argue that the IQ race has plateaued and selection criteria have shifted to price and fit.",
+  "rank": 1
+}

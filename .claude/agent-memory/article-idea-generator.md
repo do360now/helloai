@@ -1,27 +1,32 @@
 # Article Idea Generator — Cross-Session Memory
 
 ## Last Run
-- Date: 2026-05-26
-- Agent: article-idea-generator (Grok 4.3 parallel run)
+- Date: 2026-05-30 (Opus, in-session — Grok left no fresh handoff note; queue below was stale)
+- Prior: 2026-05-26 (Grok 4.3 parallel run)
 
-## Brief Queue (refreshed 2026-05-26 — Grok run)
+## Article WRITTEN this cycle (2026-05-30, Opus via article-writer)
+- **the-frontier-is-a-near-tie** — "The Entire Frontier Now Fits in Nineteen Elo Points" (Opinion). The full tracked set spans 19 Elo pts (Opus 4.8 1503 / Gemini 3.1 Pro 1493 / Grok 4.3 1490 / GPT-5.5 1484); capability has converged while price spreads 4x in / 12x out. Fills the long-empty Opinion category. Grounded entirely in first-party models.json data. Brief: `.claude/docs/grok-agent-migration/briefs/handoffs/2026-05-30-the-frontier-is-a-near-tie*.json`.
 
-**SELECTED FOR WRITING (top priority):**
-1. **agentic-ai-is-failing-in-production** — Most Agentic AI Projects Are Already Failing: The real bottleneck is not model intelligence but brittle data and operational foundations. Backed by Fivetran (15% prepared), Gartner (40%+ cancellation forecast), and Datadog production error data (rank 1, new from Grok 2026-05-26 run)
+## Brief Queue (reconciled 2026-05-30)
 
-2. **qwen-3-7-max-the-new-agentic-benchmark** — Qwen3.7-Max Just Redefined What an Agentic Model Can Do: 35-hour autonomous agent demo, strong agentic benchmarks, $2.50/$7.50 pricing, 1M context (rank 2, new from Grok 2026-05-26 run)
+**CONSUMED / RETIRED:**
+- ~~agentic-ai-is-failing-in-production~~ — WRITTEN & PUBLISHED 2026-05-26 (was old #1).
+- ~~flash-beats-pro-is-becoming-a-pattern~~ (old #3) — RETIRE: redundant with published `gemini-3-5-flash-faster-cheaper-and-beating-3-1-pro` (05-22).
+- ~~long-horizon-agents-reality-vs-hype~~ (old #5) — RETIRE: overlaps published `agentic-ai-is-failing-in-production` (05-26).
 
-3. **flash-beats-pro-is-becoming-a-pattern** — Flash Models Are Quietly Eating Their Own Pro Flagships: Gemini 3.5 Flash beating 3.1 Pro on agentic workloads at lower cost — is this becoming a broader inversion trend? (rank 3, new from Grok 2026-05-26 run)
-
-4. **chinese-labs-are-no-longer-the-underdogs** — Chinese Labs Are Now Shipping Multiple Frontier Options Simultaneously: DeepSeek V4 + GLM-4.6 + Qwen3.7-Max arriving in a short window at dramatically lower cost (rank 4, new from Grok 2026-05-26 run)
-
-5. **long-horizon-agents-reality-vs-hype** — The 35-Hour Agent Demo and the 40% Cancellation Forecast Are Both True: Contrasting lab capability demonstrations with real production failure data (rank 5, new from Grok 2026-05-26 run)
+**REMAINING / READY:**
+1. **qwen-3-7-max-the-new-agentic-benchmark** — Discovery piece on Qwen3.7-Max (freshest frontier release, ~$2.50/$7.50, 1M ctx, ~80% SWE-Verified, Arena ~1475-1490, just below our 1484 floor → Discovery, not tracked). MOST TIME-SENSITIVE; freshness decays fastest. Strong next pick.
+2. **chinese-labs-are-no-longer-the-underdogs** — multi-lab synthesis (DeepSeek V4 + GLM-4.6 + Qwen3.7-Max). Partially covered by published DeepSeek/GLM pieces; reframe to avoid overlap before writing.
+3. **best-model-for-coding-right-now** (NEW, proposed 2026-05-30) — first "best model for X" practical guide, driven by /api/recommend scoring (e.g. Grok 4.3 $1.25 vs Opus 4.8 $5 on coding). Fills the never-done guide-format gap.
 
 ## Briefs Retired / Absorbed This Cycle (Grok 2026-05-26)
 - Previous queue items from 2026-05-14 were reviewed. The agentic production failures angle was the strongest match for current recurring gaps and was selected for development.
 - Older briefs (DeepSeek V4, Qwen3.6-27B, Opus tokenizer, ARC-AGI explainer) are now retired or absorbed into newer framing in the fresh queue above.
 
 ## Angles Already Covered (avoid repeating within 30 days)
+- Frontier convergence / 19-Elo-point spread (2026-05-30, this cycle)
+- Claude Opus 4.8 orchestration / parallel subagents review (2026-05-28)
+- Agentic AI production failures (Fivetran/Gartner/Datadog) (2026-05-26)
 - Gemini 3.1 Pro review / ARC-AGI-2 reasoning lead (2026-05-11)
 - Google $40B Anthropic investment (2026-05-05)
 - Grok 4.3 pricing & release (2026-05-03)
@@ -38,7 +43,7 @@
 
 ## Recurring Gaps to Watch
 - "Honest Daily Use" category has no analysis article (only the Grok review) — still open
-- Opinion category remains empty — next cycle should produce an Opinion piece
+- Opinion category — FILLED 2026-05-30 by `the-frontier-is-a-near-tie`. Keep a steady Opinion cadence; don't let it go empty again.
 - No "model for X task" practical guide format yet (e.g., "Best model for data extraction")
 - No coverage of Chinese frontier labs beyond DeepSeek (now partially addressed by new Qwen3.7-Max and multi-lab brief — monitor for duplication)
 - **Agentic reliability / production failure patterns** — Now covered by the selected brief "Most Agentic AI Projects Are Already Failing" (2026-05-26 Grok run). Retire from recurring gaps.
