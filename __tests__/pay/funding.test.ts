@@ -2,7 +2,7 @@ import { mkdtempSync, rmSync } from 'fs';
 import { tmpdir } from 'os';
 import { join } from 'path';
 import { sha256OfHex } from '@/lib/pay/hash';
-import { appendEarning } from '@/lib/pay/ledger';
+import { appendEarning, appendSweep } from '@/lib/pay/ledger';
 import { getLightningBackend, getMockBackend, __resetLightningBackend } from '@/lib/pay/lightning';
 import { proposeFunding, approveFunding, getProposal } from '@/lib/pay/funding';
 
@@ -85,5 +85,20 @@ describe('funding gate', () => {
     const p = proposeFunding()!;
     await approveFunding(p.proposalId);
     await expect(approveFunding(p.proposalId)).rejects.toThrow(/not pending/);
+  });
+
+  test('approveFunding refuses if a sweep already exists for the proposal (idempotency)', async () => {
+    await earnReal(1200);
+    const p = proposeFunding()!;
+    // Simulate a sweep that was recorded but whose proposal-status write did not land.
+    appendSweep({
+      proposalId: p.proposalId,
+      amountSats: p.amountSats,
+      destination: p.destination,
+      ledgerRange: p.ledgerRange,
+      txid: 'mock-tx-prewritten',
+      ts: Date.now(),
+    });
+    await expect(approveFunding(p.proposalId)).rejects.toThrow(/already has a recorded sweep/);
   });
 });

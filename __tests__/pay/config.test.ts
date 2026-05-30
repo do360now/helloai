@@ -30,4 +30,9 @@ describe('getConfig', () => {
     process.env.PRO_PRICE_SATS = 'abc';
     expect(() => getConfig()).toThrow(/PRO_PRICE_SATS/);
   });
+
+  test('rejects fractional sats (would otherwise make the endpoint free)', () => {
+    process.env.PRO_PRICE_SATS = '0.5';
+    expect(() => getConfig()).toThrow(/PRO_PRICE_SATS/);
+  });
 });

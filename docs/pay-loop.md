@@ -39,6 +39,10 @@ from any concurrent surface (API route / webhook / cron), or before `MAINNET_ENA
   DB transaction before exposing it to any concurrent caller. (CLI single-operator use is safe.)
 - **Duplicate proposals:** `proposeFunding` does not detect an existing pending proposal over
   the same ledger range; approving two would double-sweep at the backend. De-duplicate by range.
+- **Atomic sweep commit:** `approveFunding` writes `sweeps.jsonl` then the proposal status
+  separately; a crash between them leaves the proposal `pending` with a sweep already sent.
+  v1 adds an idempotency guard (refuses if a sweep record for the proposal already exists), but
+  a real backend should make the sweep + status update a single atomic transaction.
 - **Sign proposals:** `proposals.jsonl` is unsigned (unlike the earnings ledger). A server-side
   file write could redirect the sweep destination or amount. HMAC-sign proposals like earnings.
 - **Ledger tail-truncation:** `verifyEarnings` catches reordering, gaps, and front-truncation

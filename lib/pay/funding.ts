@@ -3,7 +3,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
 import { join } from 'path';
 import { getConfig } from './config';
 import { getLightningBackend } from './lightning';
-import { unsweptEntries, unsweptTotalSats, verifyEarnings, appendSweep } from './ledger';
+import { unsweptEntries, unsweptTotalSats, verifyEarnings, appendSweep, readSweeps } from './ledger';
 import type { FundingProposal } from './types';
 
 function proposalsPath(): string {
@@ -59,6 +59,9 @@ export async function approveFunding(proposalId: string): Promise<FundingProposa
   const p = ps.find((x) => x.proposalId === proposalId);
   if (!p) throw new Error(`unknown proposal ${proposalId}`);
   if (p.status !== 'pending') throw new Error(`proposal ${proposalId} is ${p.status}, not pending`);
+  if (readSweeps().some((s) => s.proposalId === p.proposalId)) {
+    throw new Error(`proposal ${proposalId} already has a recorded sweep`);
+  }
   if (p.amountSats > cfg.maxSweepSats) {
     throw new Error(`amount ${p.amountSats} exceeds MAX_SWEEP_SATS ${cfg.maxSweepSats}`);
   }

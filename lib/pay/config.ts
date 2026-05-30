@@ -12,8 +12,8 @@ export interface PayConfig {
 function intEnv(name: string, def: number): number {
   const v = process.env[name];
   if (v == null || v === '') return def;
-  const n = parseInt(v, 10);
-  if (Number.isNaN(n)) throw new Error(`${name} must be an integer, got: ${v}`);
+  const n = Number(v);
+  if (!Number.isInteger(n) || n < 0) throw new Error(`${name} must be a non-negative integer, got: ${v}`);
   return n;
 }
 
