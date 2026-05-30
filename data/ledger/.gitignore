@@ -1,0 +1,2 @@
+# Runtime ledger artifacts — never commit
+*.jsonl
