@@ -70,11 +70,13 @@ export function verifyEarnings(): { ok: boolean; count: number; error?: string }
   const earnings = readEarnings();
   const key = getConfig().ledgerSigningKey;
   let expectedPrev = GENESIS;
-  for (const e of earnings) {
-    if (e.prevHash !== expectedPrev) return { ok: false, count: earnings.length, error: `seq ${e.seq}: prevHash mismatch` };
+  for (let i = 0; i < earnings.length; i++) {
+    const e = earnings[i];
+    if (e.seq !== i) return { ok: false, count: earnings.length, error: `seq ${i}: unexpected sequence number ${e.seq}` };
+    if (e.prevHash !== expectedPrev) return { ok: false, count: earnings.length, error: `seq ${i}: prevHash mismatch` };
     const { sig, ...base } = e;
-    if (hmacHex(key, stableStringify(base)) !== sig) return { ok: false, count: earnings.length, error: `seq ${e.seq}: bad signature` };
-    if (sha256OfHex(e.preimage) !== e.paymentHash) return { ok: false, count: earnings.length, error: `seq ${e.seq}: preimage does not hash to paymentHash` };
+    if (hmacHex(key, stableStringify(base)) !== sig) return { ok: false, count: earnings.length, error: `seq ${i}: bad signature` };
+    if (sha256OfHex(e.preimage) !== e.paymentHash) return { ok: false, count: earnings.length, error: `seq ${i}: preimage does not hash to paymentHash` };
     expectedPrev = entryHash(e);
   }
   return { ok: true, count: earnings.length };

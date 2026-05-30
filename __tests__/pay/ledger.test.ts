@@ -63,6 +63,18 @@ describe('earnings ledger', () => {
     expect(report.error).toMatch(/seq 0/);
   });
 
+  test('verifyEarnings detects front-truncation (non-contiguous seq)', () => {
+    addEarning(100); // seq 0
+    addEarning(200); // seq 1
+    const path = join(dir, 'earnings.jsonl');
+    const lines = readFileSync(path, 'utf8').trim().split('\n');
+    // Drop the genesis line, leaving the seq-1 entry at index 0.
+    writeFileSync(path, lines[1] + '\n');
+    const report = verifyEarnings();
+    expect(report.ok).toBe(false);
+    expect(report.error).toMatch(/seq 0/);
+  });
+
   test('unswept accounting subtracts swept ranges', () => {
     addEarning(400);
     addEarning(600); // total 1000, seqs 0..1
