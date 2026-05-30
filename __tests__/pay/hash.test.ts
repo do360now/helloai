@@ -15,7 +15,7 @@ describe('hash utils', () => {
   });
 
   test('sha256OfString and hmacHex are deterministic and hex', () => {
-    expect(sha256OfString('hello')).toBe(sha256OfString('hello'));
+    expect(sha256OfString('hello')).toBe('2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824');
     expect(hmacHex('k', 'msg')).toMatch(/^[0-9a-f]{64}$/);
     expect(hmacHex('k', 'msg')).not.toBe(hmacHex('other', 'msg'));
   });
