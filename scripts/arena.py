@@ -58,6 +58,8 @@ _TIMEOUT = 20
 # LMArena adds new model versions.
 _NAME_MAP: dict[str, list[str]] = {
     "claude": [
+        "claude-opus-4-8-thinking",
+        "claude-opus-4-8",
         "claude-opus-4-7-thinking",
         "claude-opus-4-7",
         "claude-opus-4-6-thinking",
