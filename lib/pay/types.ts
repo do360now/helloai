@@ -51,3 +51,25 @@ export interface FundingProposal {
   txid?: string;
   executedAt?: number;
 }
+
+export type ProOutcome =
+  | 'quote'            // 402 + invoice issued (no payment presented)
+  | 'invalid_preimage' // 400 malformed X-Preimage
+  | 'unsettled'        // 402 no settled invoice matches the preimage
+  | 'underpaid'        // 402 paid less than the price
+  | 'replay'           // 409 receipt already used
+  | 'redeemed';        // 200 success
+
+export interface ProRequestEvent {
+  ts: number;            // epoch ms, stamped by recordProRequest
+  outcome: ProOutcome;
+  status: number;        // HTTP status returned to the caller
+  callerId: string;      // self-reported X-Agent-Id (opaque), 'anonymous' if absent
+  task: string | null;
+  maxCost: string | null;
+  minContext: string | null;
+  provider: string | null;
+  paymentHash?: string;  // present once a preimage maps to an invoice; NEVER the preimage
+  amountSats?: number;   // paid amount (underpaid) or earned amount (redeemed)
+  latencyMs: number;     // total handler time
+}
