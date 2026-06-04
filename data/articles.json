@@ -1,5 +1,20 @@
 [
   {
+    "slug": "qwen-3-7-max-joins-the-tracked-frontier",
+    "title": "Qwen3.7-Max Joins the Tracked Frontier",
+    "excerpt": "Qwen3.7-Max becomes the fifth tracked frontier model after clearing helloai's admission requirements. The first new-provider entrant brings strong agentic coding performance at roughly half the price of closed leaders.",
+    "date": "2026-06-04",
+    "category": "Discovery",
+    "readTime": "2 min",
+    "content": [
+      "Qwen3.7-Max from Alibaba has cleared helloai's complete admission bar to become the fifth tracked frontier model and the first from any provider outside Anthropic, Google, xAI, and OpenAI. The release dated May 19 to 21 2026 earned its place only after this week's leaderboard drift analysis confirmed sufficient sustained Arena data together with strong real-agent benchmark results. Its text Elo of approximately 1474 rests on more than 3,750 votes collected as of early June. That score falls within ten points of the previous lowest tracked model at 1484. Set-size rules permit the collection to grow from four to five models when a new-provider entrant meets every hard and soft requirement.",
+      "Agentic performance on established benchmarks provided the key differentiation that secured the model's admission to the tracked set. The model scores about 80.4 percent on SWE-bench Verified and 1541 on the WebDev and code arena slices. These figures indicate capability on software engineering and web development tasks. The model has also completed documented autonomous multi-agent runs lasting a full 35 hours.",
+      "Pricing and context make the capabilities practical for a broader range of teams than the closed models alone have served. Public API rates stand at approximately $2.50 per million input tokens and $7.50 per million output tokens, with lower prices available on some routers. The context window reaches one million tokens, satisfying the 200,000-token minimum with substantial headroom. This package supplies frontier-adjacent agentic performance at half the price of the closed leaders.",
+      "The tracked set now stands at five models rather than four. This expansion follows the explicit set-size rules that allow new providers to join the list once they clear the hard filters on Elo, public API and pricing, provider status, and context size plus the required soft differentiation. No model from any other outside provider has previously satisfied the full list of criteria at once. Developers therefore gain an additional option that has passed the same objective evaluation applied to the original four. The rules treat new providers the same way once the data thresholds are met.",
+      "Production teams focused on agentic systems can now consider a lower-cost alternative that still meets the identical admission standards used for the dominant labs. Additional providers will need to demonstrate comparable sustained Arena participation and benchmark strength before they can expand the set further. Over the coming release cycles the set of models that have cleared the full bar may grow beyond the current five. The result is a gradually widening set of verified choices that reduces dependence on any single group of labs while maintaining consistent quality gates."
+    ]
+  },
+  {
     "slug": "the-frontier-is-a-near-tie",
     "title": "The Entire Frontier Now Fits in Nineteen Elo Points",
     "excerpt": "The top of the leaderboard is now four flagships inside a 19-point Elo band, and Opus 4.8 added barely a point over its predecessor. Capability has converged; price and fit are the whole decision now.",
@@ -132,21 +147,6 @@
       "The same week, OpenAI announced an enterprise JV raising $4B from 19 investors at a $10B valuation. Different scale, same play: turn frontier capability into a sticky enterprise pipe. GPT-5.5 doubling in price the same week is the third data point. When the two leading labs simultaneously raise enterprise vehicles and reprice their flagships, you are watching distribution channels harden, not capability frontiers expand.",
       "The counterargument is real. Anthropic's independence is not a fiction — it has a separate board, its own safety commitments, and a roadmap Google cannot unilaterally steer. A $40B check buys exposure, not control. If Anthropic decides AWS or its own first-party API deserves feature parity with Vertex, Google has limited recourse. Developers betting that Vertex will always be the best place to run Claude are betting on commercial alignment that the deal structure does not actually guarantee.",
       "What this means in practice this week: if you are picking a model, price the cloud underneath it. Standardizing on Claude via Vertex means inheriting Google's SLA, compliance posture, and data residency guarantees — a moat that has nothing to do with whether Opus 4.7 beats GPT-5.5 on your evals. Wrap your model calls behind a thin abstraction layer now, even if you only call one provider, because the switching cost in eighteen months will be your IAM policies and your audit logs, not your prompts. The model is becoming the cheap part of the stack."
-    ]
-  },
-  {
-    "slug": "grok-4-3-new-cost-leader",
-    "title": "Grok 4.3 Is Now the Cheapest Frontier Model",
-    "excerpt": "xAI's April 30 release prices Grok 4.3 at $1.25 input and $2.50 output per million tokens — undercutting Gemini 3.1 Pro by 79% and GPT-5.5 by 92% on output, while landing between Opus 4.7 and Gemini on agentic Elo.",
-    "date": "2026-05-03",
-    "category": "Analysis",
-    "readTime": "3 min",
-    "content": [
-      "Grok 4.3 shipped on April 30 at $1.25 per million input tokens and $2.50 per million output tokens. That is a 40% input cut and a 58% output cut from Grok 4.20's $2/$6, and it makes Grok the cheapest frontier model on the helloai.com leaderboard on both axes simultaneously. Gemini 3.1 Pro sits at $12 per million output. Claude Opus 4.7 is $25. GPT-5.5 is $30.",
-      "The output number is the one that matters. At $2.50 per million tokens out, Grok 4.3 undercuts Gemini 3.1 Pro by 79%, Opus 4.7 by 90%, and GPT-5.5 by 92%. Any routing decision made two weeks ago that pointed to Gemini or a mid-tier model on cost grounds is now stale. For long-running agentic loops where output dwarfs input — code generation, multi-step tool use, video transcription with reasoning — the savings compound into something that changes the unit economics of entire products.",
-      "The benchmark story is competitive without being decisive. Grok 4.3 lands at roughly 1500 Elo on agentic composites, sandwiched between Opus 4.7 at 1503 and Gemini 3.1 Pro at 1493. The 16-agent Heavy mode carries over from 4.20, native video input is new, and the context window dropped from 2M to 1M — still matching the Claude, GPT, and Gemini tiers, but a real regression for anyone who built on the larger window. xAI is pushing all commercial API users to migrate, with no waitlist gating access.",
-      "The honest caveat is that xAI's benchmark transparency still trails Anthropic and Google, and Elo numbers at this stage of a release cycle are noisier than they look. Output quality at a 90%+ discount needs real production testing, not vendor charts — particularly for the output-heavy workloads where the savings are largest, because a small quality regression on every token undoes the price advantage fast. The right play this week is an A/B on a non-critical agentic workload, not a wholesale flagship swap.",
-      "What's interesting is the pressure this puts on the rest of the field. Google has room to cut Gemini 3.1 Pro and probably will, since their cost structure has always given them headroom they choose not to use. OpenAI just raised GPT-5.5 pricing and has nowhere to go but a cheaper variant or a quiet walkback. Anthropic, fresh off the Opus 4.6 cut, is the most boxed in — Opus 4.7 is the quality leader, but the price gap to Grok is now an order of magnitude, and that is the kind of gap that reshapes default choices regardless of who actually wins on benchmarks."
     ]
   }
 ]

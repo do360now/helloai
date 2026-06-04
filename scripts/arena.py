@@ -88,6 +88,11 @@ _NAME_MAP: dict[str, list[str]] = {
         "gpt-5.2-high",
         "gpt-5.1-high",
     ],
+    "qwen": [
+        "qwen3.7-max-preview",
+        "qwen3.7-max-20260517",
+        "qwen3.7-max",
+    ],
 }
 
 # CSV column names vary across sources. We try each in order.

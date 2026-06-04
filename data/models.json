@@ -61,5 +61,21 @@
     "cost_per_million_tokens_output": 30,
     "context_window": 1000000,
     "strengths": []
+  },
+  {
+    "id": "qwen",
+    "name": "Qwen3.7-Max",
+    "provider": "Alibaba",
+    "url": "https://qwen.ai",
+    "tag": "Agent Frontier",
+    "desc": "Purpose-built for sustained agentic execution and long-horizon coding workflows. 80.4% SWE-bench Verified and top-tier code arena slices at roughly half the price of closed flagships.",
+    "color": "#FF6B35",
+    "elo": 1475,
+    "cost_per_million_tokens": 2.5,
+    "cost_per_million_tokens_output": 7.5,
+    "context_window": 1000000,
+    "strengths": [
+      "Coding & Engineering"
+    ]
   }
 ]
