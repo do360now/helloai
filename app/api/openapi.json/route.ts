@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getCategories, getSiteConfig } from '@/data';
+import { getCategories, getModels, getSiteConfig } from '@/data';
 import { getCorsHeaders } from '@/lib/cors';
 
 export async function GET(req: NextRequest) {
@@ -11,6 +11,8 @@ export async function GET(req: NextRequest) {
   };
   const config = getSiteConfig();
   const categories = getCategories();
+  const models = getModels();
+  const exampleModel = models[0];
   const taskExamples = categories.map((c) => c.name.split(' ')[0].toLowerCase());
 
   const spec = {
@@ -155,17 +157,17 @@ export async function GET(req: NextRequest) {
         Model: {
           type: 'object',
           properties: {
-            id: { type: 'string', example: 'claude' },
-            name: { type: 'string', example: 'Claude Opus 4.6' },
-            provider: { type: 'string', example: 'Anthropic' },
-            url: { type: 'string', format: 'uri', example: 'https://claude.ai' },
-            tag: { type: 'string', example: 'Coding King' },
+            id: { type: 'string', example: exampleModel.id },
+            name: { type: 'string', example: exampleModel.name },
+            provider: { type: 'string', example: exampleModel.provider },
+            url: { type: 'string', format: 'uri', example: exampleModel.url },
+            tag: { type: 'string', example: exampleModel.tag },
             desc: { type: 'string' },
-            color: { type: 'string', example: '#D97706' },
-            elo: { type: 'integer', example: 1503 },
-            cost_per_million_tokens: { type: 'number', example: 15, description: 'USD per 1M input tokens' },
-            cost_per_million_tokens_output: { type: 'number', example: 75, description: 'USD per 1M output tokens' },
-            context_window: { type: 'integer', example: 1000000, description: 'Max context window in tokens' },
+            color: { type: 'string', example: exampleModel.color },
+            elo: { type: 'integer', example: exampleModel.elo },
+            cost_per_million_tokens: { type: 'number', example: exampleModel.cost_per_million_tokens, description: 'USD per 1M input tokens' },
+            cost_per_million_tokens_output: { type: 'number', example: exampleModel.cost_per_million_tokens_output, description: 'USD per 1M output tokens' },
+            context_window: { type: 'integer', example: exampleModel.context_window, description: 'Max context window in tokens' },
             strengths: {
               type: 'array',
               items: { type: 'string' },
