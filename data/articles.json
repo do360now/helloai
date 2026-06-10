@@ -1,5 +1,20 @@
 [
   {
+    "slug": "claude-fable-5-mythos-power-general-use",
+    "title": "Claude Fable 5: Mythos Power for General Use",
+    "excerpt": "Fable 5 is the first Mythos-class model cleared for normal users, with big leads on long-horizon coding and research at double the prior price and with new safeguard fallbacks.",
+    "date": "2026-06-10",
+    "category": "Review",
+    "readTime": "2 min",
+    "content": [
+      "Anthropic shipped Claude Fable 5 on June 9 as the first Mythos-class model available to ordinary users. It shares the same base as the restricted Mythos 5 but adds conservative safety classifiers that hand off certain queries to Opus 4.8. The result is a model whose headline numbers sit well above prior flagships on the work that matters for engineering and research.",
+      "On Anthropic's coding evaluations Fable 5 reaches 95.0 percent on SWE-bench Verified and 80 percent on SWE-bench Pro, against 88.6 and 69.2 percent for Opus 4.8. It also leads the GDPval-AA knowledge-work Elo at 1932 versus 1890. Early testers report the margin widens on long, multi-step jobs; the harder the task, the more the gap shows up in practice.",
+      "Pricing doubles the previous tier: ten dollars per million input tokens and fifty for output. Context stays at one million tokens with no long-context surcharge. The model is slower and burns more tokens during heavy reasoning, so real workloads cost several times an Opus 4.8 session even before the rate card. Teams that only need occasional frontier performance will route most traffic elsewhere.",
+      "The safeguards are deliberately broad for launch. Cybersecurity, high-risk biology and chemistry, and distillation attempts trigger fallback; the average session sees no swap, but some innocent prompts still route to the older model and users receive notice. Anthropic states this keeps the dangerous edges contained while the rest of the model runs at full strength.",
+      "Fable 5 closes the loop that started with the April Mythos Preview decision to withhold the model. The same underlying engine is now priced for paid users with guardrails that are tunable over time. What changes for builders is access to a higher capability band for the hardest slices of agentic work, at a cost that forces explicit choices about when the extra performance is worth the spend."
+    ]
+  },
+  {
     "slug": "qwen-3-7-max-joins-the-tracked-frontier",
     "title": "Qwen3.7-Max Joins the Tracked Frontier",
     "excerpt": "Qwen3.7-Max becomes the fifth tracked frontier model after clearing helloai's admission requirements. The first new-provider entrant brings strong agentic coding performance at roughly half the price of closed leaders.",
@@ -132,21 +147,6 @@
       "GPQA Diamond tells the same story from a different angle. Gemini 3.1 Pro leads at 94.3% — the highest score recorded on the graduate-level science benchmark — edging out Claude Mythos Preview's 93.9% on a different eval set. Together with ARC-AGI-2, that is two independent reasoning evals where Gemini is the unambiguous leader, not the third-place model the Arena ranking implies. For research workloads, multi-step scientific question answering, and any task where the bottleneck is deduction rather than fluency, the case for Gemini is no longer a tie-breaker. It is the default.",
       "The honest counterweight is that reasoning benchmarks do not automatically translate into production coding wins. Claude Opus 4.7's Arena lead is real for the workloads it reflects — agentic coding loops, repo-scale refactors, long-running tool use — and developers running those flows have been consistent about why they pay the premium. Gemini at $2 input and $12 output per million tokens is the cheapest of the four tracked frontier models on input and 58% cheaper on output than Opus, but price comparisons stop mattering when a model abandons branches or edits the wrong file. Until the SWE-Bench and agentic coding numbers move, Opus stays the right call for those workloads.",
       "What the ARC-AGI-2 result actually signals is the direction of travel. Released in preview on February 19 with a 1M context window matching the field, Gemini 3.1 Pro has reasoning headroom that the other frontier models do not. If Google closes even half the agentic-coding gap in the next release — and a reasoning leader usually does — the price advantage and the benchmark spread compound into the obvious default for mixed workloads. The model worth testing this quarter is the one most teams have not gotten around to."
-    ]
-  },
-  {
-    "slug": "google-40b-anthropic-bet",
-    "title": "Google Just Bet $40B on Anthropic — What That Means for Your Stack",
-    "excerpt": "Google committed up to $40B in Anthropic on April 24 — the same week OpenAI launched a separate enterprise JV and GPT-5.5 doubled in price. The frontier market is hardening into two distribution channels, and the model is becoming the cheap part of the stack.",
-    "date": "2026-05-05",
-    "category": "Analysis",
-    "readTime": "3 min",
-    "content": [
-      "Picking a frontier model in 2026 is no longer a model-quality decision. It is a cloud commitment with a model attached. Google's $40B Anthropic investment, announced April 24, makes that explicit — and the OpenAI enterprise JV news ten days later confirms the shape of the market. Two distribution channels, two pricing regimes, two compliance stacks. Choose accordingly.",
-      "The dollar figure is the least interesting part. Google committed up to $40B with an initial $10B tranche and the remaining $30B tied to performance milestones, valuing Anthropic at $380B — ahead of where OpenAI sat before its 2024 restructuring. But Claude Opus 4.7 is already on Vertex AI. This deal does not open a new channel; it cements one. The signal is that Google is willing to pay $380B to make sure Claude stays inside its perimeter, not to put it there.",
-      "The same week, OpenAI announced an enterprise JV raising $4B from 19 investors at a $10B valuation. Different scale, same play: turn frontier capability into a sticky enterprise pipe. GPT-5.5 doubling in price the same week is the third data point. When the two leading labs simultaneously raise enterprise vehicles and reprice their flagships, you are watching distribution channels harden, not capability frontiers expand.",
-      "The counterargument is real. Anthropic's independence is not a fiction — it has a separate board, its own safety commitments, and a roadmap Google cannot unilaterally steer. A $40B check buys exposure, not control. If Anthropic decides AWS or its own first-party API deserves feature parity with Vertex, Google has limited recourse. Developers betting that Vertex will always be the best place to run Claude are betting on commercial alignment that the deal structure does not actually guarantee.",
-      "What this means in practice this week: if you are picking a model, price the cloud underneath it. Standardizing on Claude via Vertex means inheriting Google's SLA, compliance posture, and data residency guarantees — a moat that has nothing to do with whether Opus 4.7 beats GPT-5.5 on your evals. Wrap your model calls behind a thin abstraction layer now, even if you only call one provider, because the switching cost in eighteen months will be your IAM policies and your audit logs, not your prompts. The model is becoming the cheap part of the stack."
     ]
   }
 ]

@@ -1,15 +1,15 @@
 [
   {
     "name": "Overall Preference",
-    "leader": "Claude Opus 4.8",
-    "insight": "Anthropic holds #1 in blind user votes on LMArena at 1503 Elo; Opus 4.8 (May 28) extends the lead. Gemini 3.1 Pro close behind at 1493.",
+    "leader": "Claude Fable 5",
+    "insight": "Mythos-class public debut at 1525 Elo. Fable 5 leads capability evals including 1932 GDPval-AA (Opus 4.8: 1890). First time this tier is available to normal users.",
     "icon": "trophy",
     "color": "#FBBF24"
   },
   {
     "name": "Coding & Engineering",
-    "leader": "Claude Opus 4.8",
-    "insight": "Tops SWE-bench Verified at 88.6% with new parallel-subagent workflows for codebase-scale migrations. Many devs have switched and aren't looking back.",
+    "leader": "Claude Fable 5",
+    "insight": "95% on SWE-bench Verified and 80% on SWE-bench Pro. Clear step-change on long-horizon agentic coding and complex workflows; bigger gains as tasks get harder.",
     "icon": "code",
     "color": "#00E5A0"
   },

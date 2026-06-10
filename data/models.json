@@ -1,5 +1,22 @@
 [
   {
+    "id": "fable",
+    "name": "Claude Fable 5",
+    "provider": "Anthropic",
+    "url": "https://claude.ai",
+    "tag": "Public Mythos",
+    "desc": "First Mythos-class model cleared for general use. 95% SWE-bench Verified, leads GDPval-AA at 1932 Elo. Sharp gains on long-horizon agentic work; larger leads the harder the task. $10/$50, 1M context. Safeguards fallback to Opus 4.8 on <5% of cyber/bio/distillation sessions.",
+    "color": "#7C3AED",
+    "elo": 1525,
+    "cost_per_million_tokens": 10,
+    "cost_per_million_tokens_output": 50,
+    "context_window": 1000000,
+    "strengths": [
+      "Coding & Engineering",
+      "Overall Preference"
+    ]
+  },
+  {
     "id": "claude",
     "name": "Claude Opus 4.8",
     "provider": "Anthropic",
