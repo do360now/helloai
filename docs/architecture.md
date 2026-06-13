@@ -12,11 +12,15 @@ app/
 ```
 
 ## Design
-- Background: slate-900 (#0F172A)
-- Accent: cyan-400 (#22D3EE), purple-500 (#A855F7)
-- Glass effect: backdrop blur, semi-transparent border
+- Background: #080A12
+- Primary accent: #00E5A0 (mint green)
+- Secondary accent: #6366F1 (indigo)
+- Tertiary: #F472B6 (pink)
+- Glass effect: backdrop blur, semi-transparent border (see app/globals.css)
+- Each model has a distinct brand color (from data/models.json)
 
 ## Deployment
-- Docker: Multi-stage build (deps → builder → runner)
-- Image: do360now/helloai-web:2.9.0
-- Make targets: build_helloai_app, build_helloai_image, deploy
+- Docker: Multi-stage build (deps → builder → runner, standalone output)
+- Image: do360now/helloai-web (VERSION from Makefile, e.g. 2.14.33+; also tagged :latest)
+- Make targets: `make bump_version` (always separate), `make build_helloai_app`, `make build_helloai_image`, `make push_helloai_image`, `make az_deploy`
+- Full one-command: `make deploy` (after data prep + verify)

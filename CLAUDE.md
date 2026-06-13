@@ -29,13 +29,13 @@ A Next.js 16 site for "Hello, AI" — an unbiased, curated directory comparing f
 
 | Command | Description |
 |---------|-------------|
-| `make bump_version` | Bump patch version in Makefile (always run SEPARATELY before build) |
-| `make build_helloai_app` | Production build (injects NEXT_PUBLIC_APP_VERSION) |
-| `make build_helloai_image` | Build Docker image (passes --build-arg APP_VERSION) |
+| `make bump_version` | Bump patch version in Makefile (**always run SEPARATELY** before any build that consumes VERSION) |
+| `make build_helloai_app` | Production Next.js build (injects NEXT_PUBLIC_APP_VERSION) |
+| `make build_helloai_image` | Build Docker image (passes --build-arg APP_VERSION; tags :VERSION and :latest) |
 | `make push_helloai_image` | Push image to Docker Hub |
 | `make az_deploy` | Update Azure container tag and restart |
-| `make deploy` | Full pipeline: weekly_update (deterministic) → bump → build → push → deploy |
-| `make weekly_update` | Run deterministic leaderboard/Elo refresh only (article generation now handled by `/weekly-update` skill via Claude Code agents) |
+| `make deploy` | Full pipeline (see weekly_update + bump + build/push/az) |
+| `make weekly_update` | Run deterministic leaderboard/Elo refresh only (article generation handled by `/weekly-update` skill / Grok + article-writer) |
 
 > **Important**: Always run `make bump_version` as a separate step before `make build_helloai_image`. Chaining them in one make invocation causes VERSION to be read before the bump writes it.
 
@@ -133,7 +133,10 @@ Manual one-off data edits:
 4. `npx tsc --noEmit` — typecheck
 5. `npm run build` — full build
 6. `./verify-all-agents.sh` — verify agent integrity hashes
-7. Deploy via Makefile
+7. `git add data/ && git commit -m "data: ..."` (include new models/articles)
+8. Deploy via Makefile (see below + README.md)
+
+**Note on frontier events**: New models or major availability changes (e.g. a high-Elo launch like Claude Fable 5, or sudden suspension of a tracked model) typically warrant an immediate article. Use the `article-idea-generator` (now default Grok) + `article-writer` pipeline (or the `/weekly-update` skill) to produce + insert one via `scripts/add_article.py` before the data commit. The data test enforces that every model in models.json appears in at least one article.
 
 ## Design System
 

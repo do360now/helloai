@@ -62,14 +62,27 @@ npm run build        # Production build
 
 ## Deployment
 
+For data/model changes (one-off or weekly):
+
+1. Edit data/ (models, categories, articles, site.json lastUpdated)
+2. `npx jest && npx tsc --noEmit && npm run build` (validate)
+3. `./verify-all-agents.sh`
+4. `git add data/ && git commit -m "data: ..."`
+5. `make bump_version`  (run **separately** — do not chain)
+6. `make build_helloai_app && make build_helloai_image`
+7. `make push_helloai_image && make az_deploy`
+
 ```bash
-make bump_version          # Bump patch version (always run separately)
-make build_helloai_image   # Build Docker image (injects APP_VERSION)
-make push_helloai_image    # Push to Docker Hub
-make az_deploy             # Update Azure container + restart
+make bump_version          # Bump patch version (always run separately before image)
+make build_helloai_app     # Prod Next.js build (injects NEXT_PUBLIC_APP_VERSION)
+make build_helloai_image   # Docker image (passes --build-arg APP_VERSION)
+make push_helloai_image    # Push :VERSION and :latest to Docker Hub
+make az_deploy             # Set container tag on Azure + restart
 ```
 
-Full pipeline: `make deploy`
+Full pipeline (data + article + version + deploy): `make deploy`
+
+(See CLAUDE.md "Manual one-off data edits" and "Data Update Workflow" for details.)
 
 ## Project structure
 

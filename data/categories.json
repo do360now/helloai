@@ -1,15 +1,15 @@
 [
   {
     "name": "Overall Preference",
-    "leader": "Claude Fable 5",
-    "insight": "Mythos-class public debut at 1525 Elo. Fable 5 leads capability evals including 1932 GDPval-AA (Opus 4.8: 1890). First time this tier is available to normal users.",
+    "leader": "Claude Opus 4.8",
+    "insight": "Highest Elo in the tracked set at 1503 after Fable 5 suspension. Strong on agentic coding and parallel subagent orchestration for large-scale engineering work.",
     "icon": "trophy",
     "color": "#FBBF24"
   },
   {
     "name": "Coding & Engineering",
-    "leader": "Claude Fable 5",
-    "insight": "95% on SWE-bench Verified and 80% on SWE-bench Pro. Clear step-change on long-horizon agentic coding and complex workflows; bigger gains as tasks get harder.",
+    "leader": "Claude Opus 4.8",
+    "insight": "88.6% on SWE-bench Verified and 69.2% on SWE-bench Pro. Leads for codebase-scale agentic coding with dynamic parallel subagent workflows; gains widen on harder, longer tasks.",
     "icon": "code",
     "color": "#00E5A0"
   },
