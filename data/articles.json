@@ -1,5 +1,20 @@
 [
   {
+    "slug": "grok-4-3-now-on-amazon-bedrock",
+    "title": "Grok 4.3 Lands on Amazon Bedrock",
+    "excerpt": "xAI's frontier model is now GA on Amazon Bedrock with the same $1.25/$2.50 pricing, 1M context, and configurable reasoning — the cheapest tracked frontier model just became enterprise-deployable.",
+    "date": "2026-06-22",
+    "category": "Discovery",
+    "readTime": "3 min",
+    "content": [
+      "On June 17, xAI announced that Grok 4.3 is generally available on Amazon Bedrock — the first time an xAI frontier model has shipped through AWS's managed inference stack. The move matters because Grok was already the cheapest model in helloai's tracked set at $1.25 per million input tokens and $2.50 output, but many enterprise teams could not route production traffic to a provider outside their existing cloud contracts. Bedrock closes that gap without changing the rate card: the same per-token pricing that applies on docs.x.ai applies on Bedrock, alongside a one-million-token context window and configurable reasoning effort at none, low, medium, or high.",
+      "The technical integration runs through Bedrock Mantle, AWS's OpenAI-compatible inference endpoint. Developers call grok-4.3 via a standard responses API, passing a reasoning.effort parameter to scale compute to task difficulty. That configurability is not cosmetic. Grok 4.3's default behavior includes reasoning on every query through xAI's direct API; on Bedrock, teams can set effort to none for latency-sensitive lookups and reserve high effort for agentic chains that need deeper deliberation. For workloads where output tokens dominate cost — tool loops, multi-step retrieval, customer-support agents — the ability to dial reasoning down on simple turns is a direct bill reduction, not a benchmark curiosity.",
+      "xAI's launch post leans on enterprise agent benchmarks rather than arena rank. It claims the lowest hallucination rate among frontier models on Artificial Analysis Omniscience, top placement on Tau2 Telecom for real-world tool-calling in support scenarios, and leading scores on Vals AI legal and finance document tasks. Those claims are vendor-reported and should be treated as directional, but they align with how Grok is positioned on helloai: Honest Daily Use leader, optimized for high-stakes research where fabricated citations are worse than a slower answer. The Bedrock listing does not change Grok's 1490 Elo or its fourth-place rank in the tracked set — it changes where that capability can legally and operationally run.",
+      "The competitive picture shifts on procurement, not capability. Claude Opus 4.8 still leads coding at 1503 Elo and $5/$25. Gemini 3.1 Pro holds the reasoning crown at 1493. GPT-5.5 remains the enterprise agentic default for teams already on Azure or OpenAI contracts. Grok's Bedrock availability means AWS-native shops can now slot the Pareto-cheapest frontier option into the same IAM, VPC, and compliance envelope they use for Anthropic and Meta models — without accepting a second vendor relationship or routing sensitive prompts through xAI's consumer stack. For agent pipelines that burn millions of output tokens monthly, the twelve-to-one output price gap versus GPT-5.5 compounds faster than a thirteen-point Elo deficit.",
+      "What comes next is distribution, not a new model generation. Grok 4.4 remains unreleased; the Bedrock milestone is about enterprise reach for the current flagship. Teams evaluating Grok should test reasoning effort settings against their actual token profiles before assuming the headline $1.25/$2.50 rate matches production spend — high-effort agent runs still generate reasoning tokens. But for AWS shops that have been paying frontier prices because Bedrock was the only approved path, the tracked set's cost floor just became deployable without a procurement exception."
+    ]
+  },
+  {
     "slug": "best-model-for-coding-right-now",
     "title": "Best Model for Coding Right Now",
     "excerpt": "The tracked frontier spans 28 Elo points on coding, but input prices run 4x and output prices 12x. Here is how helloai's scoring picks a winner for engineering work — and when to trade rank for cost.",
@@ -132,21 +147,6 @@
       "The crown does not transfer cleanly, though. Gemini 3.1 Pro still leads on pure reasoning: 77.1% on ARC-AGI-2 against Flash's 72.1%, and 44.4% on Humanity's Last Exam against 40.2%. If your workload leans on hard, multi-step abstract reasoning rather than tool use and code execution, Pro remains the stronger pick. Flash wins the benchmarks that map to building agents; it does not win the ones that map to solving novel puzzles.",
       "That split is the whole decision. Most production agent work — running terminal commands, chaining tool calls through MCP, editing code — lives closer to Terminal-Bench and MCP Atlas than to ARC-AGI-2. For those tasks, paying the Pro premium now buys you a reasoning edge you may never exercise. The 1,048,576-token input window and 65,536-token output ceiling, with a January 2026 knowledge cutoff, hold up for long-context agent loops too.",
       "The open question is what happens next month. Gemini 3.5 Pro is reportedly in internal testing and expected soon. If Pro follows the same arc Flash just traced — beating the previous flagship at a lower price — the reasoning advantage that still justifies 3.1 Pro could evaporate within weeks. Anyone standardizing an agent stack on a single model right now should treat that choice as a 30-day commitment, not a year-long one."
-    ]
-  },
-  {
-    "slug": "glm-46-the-mit-licensed-model-closing-the-open-gap",
-    "title": "GLM-4.6: The MIT-Licensed Model Closing the Open Gap",
-    "excerpt": "Z.ai's GLM-4.6 lands within ~60 Elo of the closed frontier and ships under a no-strings MIT license — the best open-weight model nobody in Western dev circles is discussing.",
-    "date": "2026-05-22",
-    "category": "Discovery",
-    "readTime": "2 min",
-    "content": [
-      "GLM-4.6, from the Beijing lab Z.ai, ships under an MIT license and lands within striking distance of the closed frontier on LMArena — and almost nobody in Western developer circles is talking about it. While the discourse fixates on Claude Opus 4.7 and GPT-5.5, the most consequential open-weight release of the quarter is a model you can download, fine-tune, and ship commercially with no strings attached.",
-      "The numbers explain the noise it should be making. GLM-4.6 posts an LMArena text Elo in the low 1400s, ahead of every other permissively-licensed model and within roughly 60 points of the frontier leaders — a gap that sat north of 150 a year ago. Its predecessor, GLM-4.5, already cracked the top tier at 1434 under the same MIT terms; 4.6 extends the context window, tightens tool-use, and sharpens coding. The headline isn't that it beats Opus, because it doesn't. It's that the price of \"good enough for most production work\" is now a weights file on Hugging Face.",
-      "The license is the real story. Unlike Llama's community terms or the usage-gated clauses stapled to most \"open\" releases, MIT means no monthly-active-user ceiling, no acceptable-use policy that can be revoked, and no provider sitting in your request path. For teams with GPUs already in the rack, GLM-4.6 turns frontier-adjacent inference into a fixed capital cost instead of a per-token bill that grows with your own success.",
-      "The caveats deserve equal billing. Z.ai's benchmark reporting is thinner and less independently audited than Anthropic's or Google's, and a model this size still wants multi-GPU inference to serve at low latency — an open license doesn't make the hardware free. English-language polish and long-horizon agentic reliability still trail the closed frontier, and the data-governance questions that follow any Chinese-lab model don't vanish because the weights are public. For regulated buyers, self-hostability is the feature that matters; for everyone else, the hosted frontier is still the path of least resistance.",
-      "What GLM-4.6 marks is the open-versus-closed gap compressing into something a procurement team can no longer wave away. When the best MIT-licensed model is one release behind the frontier instead of a full generation, the question stops being \"is open good enough\" and becomes \"which workloads still justify paying for closed at all.\" Expect the next GLM — and the DeepSeek and Qwen releases chasing it — to make that question louder, not quieter."
     ]
   }
 ]
