@@ -1,6 +1,41 @@
 # leaderboard-updater agent memory
 
-## Last run: 2026-06-04 (Grok weekly update)
+## Last run: 2026-06-22 (Grok weekly update)
+
+### Verified model states
+- **claude**: Claude Opus 4.8 — pricing $5/$25, context 1M, LMArena name map current. Fable 5/Mythos 5 suspended June 12 per US directive; not tracked (correct). No drift.
+- **gemini**: Gemini 3.1 Pro — version current. Pricing $2/$12 (≤200k) / $4/$18 (>200k) per official docs; flat rate in models.json remains known gap. Gemini 3.5 Pro not released. Context 1M. Arena id gemini-3.1-pro-preview. No drift.
+- **grok**: Grok 4.3 — pricing $1.25/$2.50 confirmed on docs.x.ai, context 1M, map current. Grok 4.4 not released. No drift.
+- **gpt**: GPT-5.5 — pricing $5/$30, context 1M. GPT-5.6 still not public per OpenAI release notes. No drift.
+- **qwen**: Qwen3.7-Max — pricing $2.50/$7.50, context 1M, Elo 1475. Admitted June 4; stable. No drift.
+
+### Staleness streaks
+- None active.
+
+### Applied patches (confirmed this run)
+- None. All tracked models current; Elo scraper kept curated values (nakasyou snapshot stale at 20250522; name-map matches intact for when source refreshes).
+
+### Rejected candidates (do not re-propose within 30 days)
+- **claude-mythos-preview / Fable 5**: suspended + invite-only Mythos. Re-eval only if Fable 5 restored with public API.
+- **DeepSeek V4**: Elo still below threshold. Re-eval if climbs.
+- **GPT-5.6**: not public. Re-eval on announcement.
+- **gemini-3.5-pro**: not released (3.5 Flash exists but Flash-tier historically fails 200K context bar). Re-eval on GA.
+- **muse-spark** (Meta): still no public API.
+
+### Pending manual verifications for next run
+- Monitor Fable 5 restoration timeline post-June 12 suspension.
+- Monitor GPT-5.6 public release (still expected before June 30 per markets).
+- Monitor Gemini 3.5 Pro GA — may replace 3.1 Pro when shipped.
+- Monitor Grok 4.4 release.
+- Re-check nakasyou lmarena-history snapshot freshness (currently stuck at 20250522).
+
+### Notes from Grok 2026-06-22 run
+- No models.json or arena.py patches required.
+- Elo refresh ran; all five models kept curated Elos (no LMArena name matches in stale snapshot).
+- Tracked set remains 5 models post-Fable 5 suspension (Fable was never admitted to tracked set; articles cover the event).
+- Article written: best-model-for-coding-right-now (fills recurring "model for X" guide gap).
+
+## Previous run: 2026-06-04 (Grok weekly update)
 
 ### Verified model states
 - **claude**: Claude Opus 4.8 — pricing $5/$25, context 1M, LMArena names current (4.8* entries in map). No drift. Mythos still invite-only.

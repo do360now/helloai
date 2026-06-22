@@ -133,7 +133,58 @@ scripts/                       # Python automation scripts
 verify-all-agents.sh           # Verify agent frontmatter integrity hashes
 ```
 
-## Data update workflow
+## Weekly update (leaderboard + article)
+
+The weekly pipeline checks model drift, refreshes Elo, writes a new article when there is something worth covering, validates, and commits. It does **not** deploy — that is a separate step.
+
+### Grok (recommended)
+
+In a Grok session in this repo, run:
+
+```
+/weekly-update
+```
+
+Or say something equivalent:
+
+> Check the leaderboard and update if necessary. Write an article if there is something worth writing about.
+
+Grok follows `.grok/skills/weekly-update/SKILL.md` (slash command) and the canonical spec at `.claude/skills/weekly-update/SKILL.md`.
+
+### Claude Code (fallback)
+
+In Claude Code, invoke the skill:
+
+```
+/weekly-update
+```
+
+Or run agents individually: `/agent leaderboard-updater`, then `/agent article-idea-generator`, then `/agent article-writer` with the selected brief.
+
+### What you run after the agent finishes
+
+Validate, verify agents, commit, then deploy when ready:
+
+```bash
+npx jest && npx tsc --noEmit          # validate data + types
+./verify-all-agents.sh                # agent integrity hashes
+git add data/ && git commit -m "data: weekly update $(date +%Y-%m-%d)"
+
+# deploy separately (bump_version MUST be its own invocation):
+make bump_version
+make build_helloai_app && make build_helloai_image
+make push_helloai_image && make az_deploy
+```
+
+Or the full deploy pipeline (includes Elo-only `make weekly_update` + version bump + image + Azure):
+
+```bash
+make deploy
+```
+
+> **Note:** `make weekly_update` runs only the deterministic Python Elo scraper (`scripts/weekly_update.py`). It does **not** run leaderboard drift analysis or article generation — use `/weekly-update` for the full cycle.
+
+## Data update workflow (manual one-offs)
 
 1. Edit `/data/*.json`
 2. Update `site.json → lastUpdated` to today's date
