@@ -63,10 +63,10 @@ def update_category_leaders(
     if not models:
         return categories, has_changes
 
-    leader_map = {
+    keyword_fallback = {
         "Overall": models[0]["name"],
         "Coding": next(
-            (m["name"] for m in models if "claude" in m["id"].lower()),
+            (m["name"] for m in models if "claude" in m["id"].lower() or m["id"] == "fable"),
             models[0]["name"],
         ),
         "Reasoning": next(
@@ -80,13 +80,20 @@ def update_category_leaders(
     }
 
     for cat in categories:
-        for keyword, leader in leader_map.items():
-            if keyword.lower() in cat["name"].lower():
-                if cat["leader"] != leader:
-                    log.info(f"  Category '{cat['name']}': {cat['leader']} → {leader}")
-                    cat["leader"] = leader
-                    has_changes = True
-                break
+        cat_name = cat["name"]
+        leader = next(
+            (m["name"] for m in models if cat_name in m.get("strengths", [])),
+            None,
+        )
+        if leader is None:
+            for keyword, fallback in keyword_fallback.items():
+                if keyword.lower() in cat_name.lower():
+                    leader = fallback
+                    break
+        if leader and cat["leader"] != leader:
+            log.info(f"  Category '{cat_name}': {cat['leader']} → {leader}")
+            cat["leader"] = leader
+            has_changes = True
 
     return categories, has_changes
 

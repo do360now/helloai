@@ -57,6 +57,9 @@ _TIMEOUT = 20
 # Checked in order — first match wins. Keep these current when
 # LMArena adds new model versions.
 _NAME_MAP: dict[str, list[str]] = {
+    "fable": [
+        "claude-fable-5",
+    ],
     "claude": [
         "claude-opus-4-8-thinking",
         "claude-opus-4-8",

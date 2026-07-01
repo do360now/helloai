@@ -1,5 +1,22 @@
 [
   {
+    "id": "fable",
+    "name": "Claude Fable 5",
+    "provider": "Anthropic",
+    "url": "https://claude.ai",
+    "tag": "Mythos Class",
+    "desc": "First Mythos-class model cleared for general use. Leads LMArena text overall at 1508 Elo with 95% on SWE-bench Verified and top GDPval-AA knowledge-work scores — gains widen on long-horizon agentic runs.",
+    "color": "#9333EA",
+    "elo": 1508,
+    "cost_per_million_tokens": 10,
+    "cost_per_million_tokens_output": 50,
+    "context_window": 1000000,
+    "strengths": [
+      "Coding & Engineering",
+      "Overall Preference"
+    ]
+  },
+  {
     "id": "claude",
     "name": "Claude Opus 4.8",
     "provider": "Anthropic",
