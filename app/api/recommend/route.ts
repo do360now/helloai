@@ -3,20 +3,62 @@ import { getModels, getCategories, getSiteConfig } from '@/data';
 import { scoreAndRank } from '@/data/recommend';
 import { getCorsHeaders } from '@/lib/cors';
 
+// ---------------------------------------------------------------------------
+// SOL-002 / SOL-005: input sanitization + cache-key safety.
+//
+// Prior state: the raw `task` query param was reflected verbatim into the JSON
+// response body (`query.task`). While no client sink renders it unescaped today
+// (both dangerouslySetInnerHTML sinks are JSON.stringify of owner-authored
+// schema.org data), reflecting user input is a latent XSS / cache-poisoning
+// chain. Two controls:
+//   1. sanitizeTask() — strip control chars, angle brackets, quotes; cap length.
+//   2. When any user-supplied query param is present, mark the response
+//      Cache-Control: private, no-store so a poisoned URL can never be cached
+//      and served to another user. The unparameterized /api/recommend (the
+//      common case) stays cacheable for 5 min, preserving the perf win.
+// ---------------------------------------------------------------------------
+
+const MAX_TASK_LEN = 64;
+
+function sanitizeTask(raw: string | null): string | null {
+  if (raw === null) return null;
+  // Strip < > " ' & and control chars — breaks HTML/JSON injection scaffolding.
+  // Keep alphanumerics, spaces, hyphens, underscores, basic punctuation.
+  const cleaned = raw
+    .replace(/[<>"'&]/g, '')
+    .replace(/[\x00-\x1F\x7F]/g, '')
+    .trim()
+    .slice(0, MAX_TASK_LEN);
+  return cleaned.length > 0 ? cleaned : null;
+}
+
 export async function GET(req: NextRequest) {
   const origin = req.headers.get('origin');
-  const HEADERS = {
-    'Content-Type': 'application/json',
-    'Cache-Control': 'public, s-maxage=300, stale-while-revalidate=600',
-    ...getCorsHeaders(origin),
-  };
   const { searchParams } = req.nextUrl;
 
-  const task = searchParams.get('task');
+  const taskRaw = searchParams.get('task');
+  const task = sanitizeTask(taskRaw);
   const maxCostParam = searchParams.get('max_cost');
   const minContextParam = searchParams.get('min_context');
   const providerParam = searchParams.get('provider');
   const limitParam = searchParams.get('limit');
+
+  // SOL-005: if any filter param is present, do not cache. The unparameterized
+  // endpoint (no query string at all) stays public+cacheable.
+  const isParameterized =
+    taskRaw !== null ||
+    maxCostParam !== null ||
+    minContextParam !== null ||
+    providerParam !== null ||
+    limitParam !== null;
+
+  const HEADERS = {
+    'Content-Type': 'application/json',
+    'Cache-Control': isParameterized
+      ? 'private, no-store'
+      : 'public, s-maxage=300, stale-while-revalidate=600',
+    ...getCorsHeaders(origin),
+  };
 
   const maxCost = maxCostParam ? parseFloat(maxCostParam) : null;
   const minContext = minContextParam ? parseInt(minContextParam) : null;
