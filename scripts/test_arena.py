@@ -7,14 +7,19 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from arena import _resolve_model_id, _ArenaEntry
+from arena import _resolve_model_id, _ArenaEntry, _NAME_MAP
 
 
 def main() -> None:
     failures: list[str] = []
 
-    # The first (highest-priority) name-map candidate for "claude"
-    CLAUDE_ARENA_NAME = "claude-opus-4-7-thinking"
+    # Read the first (highest-priority) name-map candidate for "claude" straight
+    # from arena.py so this test can't rot when _NAME_MAP is updated. Hardcoding
+    # the name here previously left the test passing against itself even after
+    # the real first candidate changed (4-7 → 4-8).
+    CLAUDE_ARENA_NAME = _NAME_MAP["claude"][0]
+    if not CLAUDE_ARENA_NAME:
+        failures.append("FAIL: _NAME_MAP['claude'] has no candidates")
 
     # Test 1: exact name-map match — should return the entry
     exact_entries = {CLAUDE_ARENA_NAME: _ArenaEntry(name=CLAUDE_ARENA_NAME, score=1520.0)}
