@@ -41,15 +41,6 @@ export interface Article {
   content: string[];
 }
 
-export interface LocalModel {
-  model: string;
-  avg_score: number;
-  pass_rate: number;
-  passed: number;
-  total: number;
-  response_time: number;
-}
-
 export interface OpenWeightModel {
   id: string;
   name: string;
