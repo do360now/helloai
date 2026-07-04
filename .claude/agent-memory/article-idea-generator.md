@@ -1,7 +1,10 @@
 # Article Idea Generator — Cross-Session Memory
 
 ## Last Run
-- Date: 2026-07-04 (user-requested article)
+- Date: 2026-07-04 (weekly update, second pass)
+
+## Article WRITTEN this cycle (2026-07-04, weekly update second pass)
+- **how-caching-and-batching-cut-frontier-costs-90-percent** — "How Caching and Batching Cut Frontier API Costs by 90%" (Analysis). Anthropic cache read 0.1× + batch 50% stacks to $0.25/MTok on Opus 4.8 cached input; OpenAI/Gemini mirror pattern; helloai nominal rates are ceiling not quote. Fills long-queued cost-optimization gap.
 
 ## Article WRITTEN this cycle (2026-07-04, user request)
 - **ollama-hermes-glm-5-2-cloud-frontier-margins** — "Ollama, Hermes, and GLM-5.2:cloud Are Rewriting the Margin Map" (Opinion). Ollama runtime + Hermes agent + GLM-5.2:cloud MIT weights; margin compression on commodity agent workloads vs Anthropic/OpenAI premium tiers; routing-as-moat thesis.
@@ -31,14 +34,14 @@
 - ~~grok-4-3-now-on-amazon-bedrock~~ — WRITTEN 2026-06-22 v2.
 
 **REMAINING / CARRY-FORWARD:**
-1. **how-caching-and-batching-cut-frontier-costs-90-percent** (rank 1) — Prompt caching (90% off) + batch API (50% off) stack. Analysis. Zero coverage on site. TOP candidate for next run.
-2. **llama-4-open-source-but-benchmarks-contested** (rank 2) — Llama 4 Scout/Maverick April 2026; independent evaluators could not reproduce Meta's benchmark claims. Discovery/Analysis.
+1. **llama-4-open-source-but-benchmarks-contested** (rank 1) — Llama 4 Scout/Maverick April 2026; independent evaluators could not reproduce Meta's benchmark claims. Discovery/Analysis. TOP candidate for next run.
 3. **best-model-for-reasoning-right-now** — companion guide format; HOLD until Gemini 3.5 Pro ships GA.
 4. **gemini-3-5-pro-2m-context-deep-think** — WRITE WHEN GA CONFIRMED.
 5. **gpt-5-6-general-availability** — WRITE WHEN general API GA confirmed (partner-only as of July 4).
 6. **chinese-labs-are-no-longer-the-underdogs** — multi-lab synthesis. Partially covered; reframe to avoid overlap before writing.
 
 ## Angles Already Covered (avoid repeating within 30 days)
+- Prompt caching + batch API cost stacking / nominal vs effective rates (2026-07-04)
 - ARC-AGI-3 interactive benchmark gap / frontier under 1% (2026-07-04)
 - Government-gated frontier releases / export controls (2026-07-01)
 - Grok 4.3 Amazon Bedrock enterprise distribution (2026-06-22 v2)
@@ -71,7 +74,7 @@
 - Context window economics: Gemini 3.5 Pro 2M context will reopen this gap — brief queued, write when GA confirmed
 - Tokenizer economics (effective cost vs. nominal per-token rates) — overlaps with caching/batching brief queued as rank 1
 
-## Notes (2026-07-04 Grok weekly update)
+## Notes (2026-07-04 Grok weekly update, second pass)
 - Leaderboard drift: no models.json patches. GPT-5.6 partner-only; Gemini 3.5 Pro still delayed; nakasyou snapshot 20250522.
 - Elo scraper kept curated values.
-- Next article candidate: how-caching-and-batching-cut-frontier-costs-90-percent.
+- Next article candidate: llama-4-open-source-but-benchmarks-contested.

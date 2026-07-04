@@ -1,5 +1,20 @@
 [
   {
+    "slug": "how-caching-and-batching-cut-frontier-costs-90-percent",
+    "title": "How Caching and Batching Cut Frontier API Costs by 90%",
+    "excerpt": "helloai's leaderboard shows nominal per-token rates. Prompt caching and batch APIs stack underneath — turning a $5/MTok flagship into $0.25 on repeated context.",
+    "date": "2026-07-04",
+    "category": "Analysis",
+    "readTime": "2 min",
+    "content": [
+      "helloai's models.json lists nominal per-million-token rates: Opus 4.8 at $5/$25, GPT-5.5 at $5/$30, Gemini 3.1 Pro at $2/$12. Those numbers are real — and misleading for any production workload that repeats system prompts, tool schemas, or document context across thousands of calls. Every major frontier provider now ships prompt caching and a batch API underneath the headline price card. Stack them correctly and effective input cost drops by an order of magnitude without switching models.",
+      "Anthropic's published multipliers make the math explicit. A cache read costs 0.1× the base input rate — 90% off. Opus 4.8's $5/MTok base becomes $0.50/MTok on a cache hit. The Batch API halves both input and output: $2.50/$12.50 for the same model. Anthropic documents that caching multipliers stack with batch pricing. A cached input token submitted through the Batch API on Opus 4.8 lands at $0.25/MTok — 95% below the rate helloai displays. The trade-off is latency: batch jobs run asynchronously, and cache writes cost 1.25× base on first storage.",
+      "OpenAI and Google mirror the pattern with different labels. OpenAI enables prompt caching automatically on prompts of 1,024 tokens or longer, advertising up to 90% input savings and 80% latency reduction; GPT-5.5's batch tier lists $2.50 input versus $5 standard — a straight 50% cut. Gemini 3.1 Pro Preview drops from $2/$12 to $1/$6 on the Batch API for prompts under 200k tokens, with context caching at $0.20/MTok versus $2.00 standard — another 90% reduction on stored context. helloai tracks Grok 4.3 as the cheapest nominal frontier at $1.25/$2.50, but xAI's public docs list no equivalent caching or batch tier today. For agentic workloads with fat system prompts, Grok's headline rate advantage narrows once competitors serve repeat context at ten cents on the dollar.",
+      "The engineering implication is structural, not cosmetic. Agent harnesses — Claude Code, Codex, custom tool loops — resend the same instructions, MCP tool definitions, and repository context on every turn. That is precisely the traffic pattern caching was built for: static prefix first, variable user message last. Teams billing against nominal leaderboard rates are often paying five to twenty times what optimized routing would cost. The /api/recommend endpoint weights cost efficiency at 15% of its score using those nominal figures; a workload-aware cost model would reorder several matchups, especially where Gemini's $2 headline rate competes with Opus after discounts.",
+      "helloai will keep publishing nominal rates because they are comparable across providers and stable week to week. But the leaderboard row is a ceiling, not a quote. Before the next model swap, audit what fraction of your tokens are cache-eligible and which requests can tolerate batch latency. The frontier intelligence race gets the headlines; the caching-and-batching stack underneath is where most teams will actually win or lose on margin."
+    ]
+  },
+  {
     "slug": "ollama-hermes-glm-5-2-cloud-frontier-margins",
     "title": "Ollama, Hermes, and GLM-5.2:cloud Are Rewriting the Margin Map",
     "excerpt": "One command routes a full agent harness to MIT-licensed weights at Ollama Pro prices. That stack does not kill frontier labs, but it is eating their easiest revenue.",
@@ -132,21 +147,6 @@
       "Meanwhile the economics have not converged at all — they have spread out. All four leaders now offer a 1M-token context window, so the one spec that used to separate them is now table stakes. But input price varies 4x across the four, from Grok 4.3 at $1.25 per million to Opus 4.8 and GPT-5.5 at $5. Output price varies 12x: $2.50 per million for Grok against $30 for GPT-5.5. The capability gap is nineteen points; the cost gap is an order of magnitude. For any workload that runs at scale, the bill will dominate the benchmark every time.",
       "A near-tie at the top does not mean the models are interchangeable, and that is the trap. Each still carries a distinct shape: Opus is the Coding King, Gemini the Multimodal Leader, Grok the Truth Machine, GPT-5.5 the Agentic Leap. Those profiles describe how a model behaves inside a real pipeline — how it handles tool calls, long-horizon tasks, images, refusals — and they diverge far more than the Elo spread suggests. The ranking tells you almost nothing useful; the shape tells you everything.",
       "So the honest question for developers in mid-2026 is no longer which model is smartest. It is which one fits the price, the context economics, and the agentic shape of the job in front of you. As the capability lines keep flattening, the labs that win the next year will not be the ones that squeeze out another Elo point — they will be the ones that make their distinct shape legible enough that an engineer can pick correctly in five minutes. The leaderboard is becoming a tie. The decision is moving somewhere else."
-    ]
-  },
-  {
-    "slug": "claude-opus-4-8-the-orchestration-upgrade",
-    "title": "Claude Opus 4.8: The Upgrade Is the Workflow, Not the Model",
-    "excerpt": "Opus 4.8 ships 41 days after 4.7 at the same price, with a one-point SWE-bench bump and an engine that fans one task across hundreds of parallel subagents. The race is moving from IQ to orchestration.",
-    "date": "2026-05-28",
-    "category": "Review",
-    "readTime": "2 min",
-    "content": [
-      "Anthropic shipped Claude Opus 4.8 on May 28, just 41 days after 4.7, at exactly the same price — $5 per million input tokens and $25 output. The headline isn't a benchmark; it's a workflow. Paired with Claude Code, Opus 4.8 can fan a single task out across hundreds of parallel subagents and run a codebase-scale migration from kickoff to merge. The model got better at the margins, but the orchestration wrapped around it got the real upgrade.",
-      "The raw capability gains are uneven, and worth reading honestly. SWE-bench Verified crept from 87.6% to 88.6% — inside the noise for most teams. But SWE-bench Pro jumped from 64.3% to 69.2%, GraphWalks long-context F1 at one million tokens nearly doubled from 40.3% to 68.1%, and USAMO 2026 math went from a middling 69.3% to a near-perfect 96.7%. The easy evals are saturating; the gains now land on the hard, long-horizon, multi-step problems that actually break in production rather than the ones that look good in a launch post.",
-      "Dynamic workflows are the bet. Instead of one model grinding sequentially through a large job, Opus 4.8 plans the work, dispatches parallel subagents each holding their own slice of context, and merges the result. For a hundred-thousand-line migration that is the difference between a week of babysitting and an afternoon. A quieter change matters just as much for agent builders: mid-task system messages on the Messages API let you steer a running job without restarting it, which is exactly the control long agent loops have lacked.",
-      "The 41-day cadence deserves a skeptical eye. Anthropic pushed 4.8 fast on the heels of a 4.7 release that landed to mixed reviews, with OpenAI and Google both shipping aggressively in the same window. A point release this quick can read as a course correction as much as a roadmap milestone. The most interesting non-benchmark claim is honesty: 4.8 is measurably more willing to flag problems in its own inputs and outputs — a genuinely useful trait for agentic work, where a confidently wrong subagent is far more dangerous than a slow one.",
-      "What 4.8 really signals is where the competition is headed. When the flagship coding model arrives at a flat price and a one-point SWE-bench bump, the contest has stopped being about who answers a single prompt best and started being about who orchestrates a hundred of them without losing the plot. Expect the next round of releases, from every lab, to be judged less on Elo and more on whether their agents can hold a coherent plan across a real codebase. The model is increasingly the cheap part; the workflow is the product."
     ]
   }
 ]
