@@ -5,6 +5,7 @@ import { Nav, Hero, ModelCard, CategoryIcon, SectionHeader, ArticleCard, OpenWei
 import ModelFilter from './components/ModelFilter';
 import { getSiteConfig, getModels, getCategories, getArticles, getOpenWeightModels, formatDate } from '@/data';
 import { scoreAndRank } from '@/data/recommend';
+import { eloBarWidth } from '@/data/leaderboard';
 
 const config = getSiteConfig();
 const models = getModels();
@@ -61,6 +62,7 @@ function ModelsSection() {
 
 function LeaderboardSection() {
   const maxElo = Math.max(...models.map((x) => x.elo));
+  const minElo = Math.min(...models.map((x) => x.elo));
 
   return (
     <section id="leaderboard" className="leaderboard-section">
@@ -72,7 +74,7 @@ function LeaderboardSection() {
         />
         <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
           {models.map((m, i) => {
-            const barWidth = ((m.elo - 1480) / (maxElo - 1480)) * 100;
+            const barWidth = eloBarWidth(m.elo, minElo, maxElo);
             return (
               <div
                 key={m.id}
