@@ -1,9 +1,12 @@
 # Article Idea Generator — Cross-Session Memory
 
 ## Last Run
-- Date: 2026-07-04 (Grok weekly update)
+- Date: 2026-07-04 (user-requested article)
 
-## Article WRITTEN this cycle (2026-07-04)
+## Article WRITTEN this cycle (2026-07-04, user request)
+- **ollama-hermes-glm-5-2-cloud-frontier-margins** — "Ollama, Hermes, and GLM-5.2:cloud Are Rewriting the Margin Map" (Opinion). Ollama runtime + Hermes agent + GLM-5.2:cloud MIT weights; margin compression on commodity agent workloads vs Anthropic/OpenAI premium tiers; routing-as-moat thesis.
+
+## Article WRITTEN this cycle (2026-07-04, weekly update)
 - **arc-agi-3-frontier-models-under-1-percent** — "Frontier Models Score Under 1% on ARC-AGI-3" (Analysis). ARC-AGI-3 launched March 25; humans 100%, frontier AI 0.51%; GPT-5.5 0.43%, Opus 4.7 0.18% per May analysis. Fills long-queued interactive benchmark gap; contrasts arena Elo convergence with exploration failure.
 
 ## Article WRITTEN this cycle (2026-07-01)
