@@ -21,6 +21,8 @@ describe('getConfig', () => {
   test('reads overrides from env', () => {
     process.env.PRO_PRICE_SATS = '250';
     process.env.MAINNET_ENABLED = 'true';
+    process.env.LEDGER_SIGNING_KEY = 'real-key';
+    process.env.ACCUMULATION_ADDRESS = 'bc1qrealaddress';
     const cfg = getConfig();
     expect(cfg.proPriceSats).toBe(250);
     expect(cfg.mainnetEnabled).toBe(true);
@@ -34,5 +36,37 @@ describe('getConfig', () => {
   test('rejects fractional sats (would otherwise make the endpoint free)', () => {
     process.env.PRO_PRICE_SATS = '0.5';
     expect(() => getConfig()).toThrow(/PRO_PRICE_SATS/);
+  });
+});
+
+describe('getConfig default-secret guard', () => {
+  const ORIG = { ...process.env };
+  afterEach(() => { process.env = { ...ORIG }; });
+
+  test('throws when LN_BACKEND is non-mock and LEDGER_SIGNING_KEY is unset', () => {
+    process.env.LN_BACKEND = 'lnd';
+    delete process.env.LEDGER_SIGNING_KEY;
+    delete process.env.ACCUMULATION_ADDRESS;
+    expect(() => getConfig()).toThrow(/LEDGER_SIGNING_KEY/);
+  });
+
+  test('throws when MAINNET_ENABLED=true with default secrets', () => {
+    process.env.MAINNET_ENABLED = 'true';
+    delete process.env.LEDGER_SIGNING_KEY;
+    expect(() => getConfig()).toThrow(/LEDGER_SIGNING_KEY/);
+  });
+
+  test('does not throw in default mock mode', () => {
+    delete process.env.LN_BACKEND;
+    delete process.env.MAINNET_ENABLED;
+    delete process.env.LEDGER_SIGNING_KEY;
+    expect(() => getConfig()).not.toThrow();
+  });
+
+  test('does not throw outside mock mode when both secrets are set', () => {
+    process.env.LN_BACKEND = 'lnd';
+    process.env.LEDGER_SIGNING_KEY = 'real-key';
+    process.env.ACCUMULATION_ADDRESS = 'bc1qrealaddress';
+    expect(() => getConfig()).not.toThrow();
   });
 });

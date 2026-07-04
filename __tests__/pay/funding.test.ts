@@ -69,6 +69,7 @@ describe('funding gate', () => {
     await earnReal(1200);
     const p = proposeFunding()!;
     process.env.MAINNET_ENABLED = 'true';
+    process.env.ACCUMULATION_ADDRESS = 'bc1qrealaddress';
     await expect(approveFunding(p.proposalId)).rejects.toThrow(/mainnet/i);
   });
 
