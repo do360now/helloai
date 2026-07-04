@@ -41,3 +41,22 @@ docs/_build
 # Misc
 .DS_Store
 Thumbs.db
+
+# Secrets — never in any image layer
+.env
+.env.*
+
+# Runtime/agent state — not needed to build
+data/ledger
+.claude
+.grok
+.superpowers
+
+# Not needed to build
+__tests__
+scripts
+docs
+.github
+Makefile
+verify-all-agents.sh
+cleanup.sh
