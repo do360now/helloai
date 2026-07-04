@@ -1,7 +1,10 @@
 # Article Idea Generator — Cross-Session Memory
 
 ## Last Run
-- Date: 2026-07-01 (Grok weekly update)
+- Date: 2026-07-04 (Grok weekly update)
+
+## Article WRITTEN this cycle (2026-07-04)
+- **arc-agi-3-frontier-models-under-1-percent** — "Frontier Models Score Under 1% on ARC-AGI-3" (Analysis). ARC-AGI-3 launched March 25; humans 100%, frontier AI 0.51%; GPT-5.5 0.43%, Opus 4.7 0.18% per May analysis. Fills long-queued interactive benchmark gap; contrasts arena Elo convergence with exploration failure.
 
 ## Article WRITTEN this cycle (2026-07-01)
 - **government-gated-frontier-releases** — "Frontier Releases Now Run Through Government Gates" (Opinion). Fable 5 returns July 1 after 18-day export-control suspension; GPT-5.6 Sol limited to vetted partners June 26. Fills Opinion cadence gap; timely follow-up to Fable suspension article without duplicating it.
@@ -12,9 +15,10 @@
 ## Article WRITTEN this cycle (2026-06-22, first pass)
 - **best-model-for-coding-right-now** — "Best Model for Coding Right Now" (Analysis). First practical "model for X" guide using /api/recommend scoring weights on live models.json data. Covers Opus 4.8 default win, Qwen cost trade-off, Grok as cost firewall, GPT-5.5 output-premium trap. Fills long-standing guide-format gap.
 
-## Brief Queue (reconciled 2026-07-01)
+## Brief Queue (reconciled 2026-07-04)
 
 **CONSUMED / RETIRED:**
+- ~~arc-agi-3-frontier-models-under-1-percent~~ — WRITTEN 2026-07-04.
 - ~~government-gated-frontier-releases~~ — WRITTEN 2026-07-01 (supersedes queued fable-5-suspension-aftermath angle with GPT-5.6 addition).
 - ~~agentic-ai-is-failing-in-production~~ — WRITTEN & PUBLISHED 2026-05-26.
 - ~~flash-beats-pro-is-becoming-a-pattern~~ — RETIRE: redundant with published `gemini-3-5-flash-faster-cheaper-and-beating-3-1-pro` (05-22).
@@ -24,15 +28,15 @@
 - ~~grok-4-3-now-on-amazon-bedrock~~ — WRITTEN 2026-06-22 v2.
 
 **REMAINING / CARRY-FORWARD:**
-1. **arc-agi-3-frontier-models-under-1-percent** (rank 1) — ARC-AGI-3 launched March 25; humans 100%, frontier below 1% (Gemini 3.1 Pro 0.37% highest). Analysis/Opinion. Strong hook; no site coverage yet. TOP candidate for next run.
-2. **how-caching-and-batching-cut-frontier-costs-90-percent** (rank 4) — Prompt caching (90% off) + batch API (50% off) stack. Analysis. Zero coverage on site.
-3. **llama-4-open-source-but-benchmarks-contested** (rank 5) — Llama 4 Scout/Maverick April 2026; independent evaluators could not reproduce Meta's benchmark claims. Discovery/Analysis.
-4. **chinese-labs-are-no-longer-the-underdogs** — multi-lab synthesis. Partially covered; reframe to avoid overlap before writing.
-5. **best-model-for-reasoning-right-now** — companion guide format; HOLD until Gemini 3.5 Pro ships GA.
-6. **gemini-3-5-pro-2m-context-deep-think** — WRITE WHEN GA CONFIRMED.
-7. **gpt-5-6-general-availability** — WRITE WHEN general API GA confirmed (partner-only as of June 26).
+1. **how-caching-and-batching-cut-frontier-costs-90-percent** (rank 1) — Prompt caching (90% off) + batch API (50% off) stack. Analysis. Zero coverage on site. TOP candidate for next run.
+2. **llama-4-open-source-but-benchmarks-contested** (rank 2) — Llama 4 Scout/Maverick April 2026; independent evaluators could not reproduce Meta's benchmark claims. Discovery/Analysis.
+3. **best-model-for-reasoning-right-now** — companion guide format; HOLD until Gemini 3.5 Pro ships GA.
+4. **gemini-3-5-pro-2m-context-deep-think** — WRITE WHEN GA CONFIRMED.
+5. **gpt-5-6-general-availability** — WRITE WHEN general API GA confirmed (partner-only as of July 4).
+6. **chinese-labs-are-no-longer-the-underdogs** — multi-lab synthesis. Partially covered; reframe to avoid overlap before writing.
 
 ## Angles Already Covered (avoid repeating within 30 days)
+- ARC-AGI-3 interactive benchmark gap / frontier under 1% (2026-07-04)
 - Government-gated frontier releases / export controls (2026-07-01)
 - Grok 4.3 Amazon Bedrock enterprise distribution (2026-06-22 v2)
 - Best model for coding practical guide / recommend scoring (2026-06-22)
@@ -58,14 +62,13 @@
 
 ## Recurring Gaps to Watch
 - "Honest Daily Use" category has no dedicated analysis article — still open
-- Opinion cadence: filled 2026-07-01. Next Opinion due ~late July.
+- Opinion cadence: last Opinion 2026-07-01. Next Opinion due ~late July.
 - "Model for X task" guide series: coding filled (2026-06-22). Reasoning guide on hold pending Gemini 3.5 Pro GA. Daily use guide still open.
-- Llama 4 / Meta open-source angle: still uncovered (brief queued as rank 5)
+- Llama 4 / Meta open-source angle: still uncovered (brief queued as rank 2)
 - Context window economics: Gemini 3.5 Pro 2M context will reopen this gap — brief queued, write when GA confirmed
-- Tokenizer economics (effective cost vs. nominal per-token rates) — overlaps with caching/batching brief queued as rank 4
-- ARC-AGI-3 interactive benchmark gap — top queued candidate for next run
+- Tokenizer economics (effective cost vs. nominal per-token rates) — overlaps with caching/batching brief queued as rank 1
 
-## Notes (2026-07-01 Grok weekly update)
-- Leaderboard drift: no models.json patches. Fable 5 restored but not tracked; GPT-5.6 partner-only; Gemini 3.5 Pro still delayed.
-- Elo scraper kept curated values (nakasyou snapshot 20250522).
-- Next article candidate: arc-agi-3-frontier-models-under-1-percent.
+## Notes (2026-07-04 Grok weekly update)
+- Leaderboard drift: no models.json patches. GPT-5.6 partner-only; Gemini 3.5 Pro still delayed; nakasyou snapshot 20250522.
+- Elo scraper kept curated values.
+- Next article candidate: how-caching-and-batching-cut-frontier-costs-90-percent.
