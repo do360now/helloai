@@ -107,6 +107,23 @@ def write_version(version: str) -> None:
         log.info(f"  Updated Makefile VERSION={version}")
 
 
+def get_version() -> str:
+    """Read VERSION from the Makefile — single source of truth (see CLAUDE.md).
+
+    Unlike get_current_version(), this has no package.json fallback: it backs
+    the build steps (build_app/build_image), which must inject the exact
+    version the Makefile targets would (make build_helloai_app / _image), and
+    fails loudly rather than silently drifting from that source of truth.
+    """
+    if not MAKEFILE.exists():
+        raise RuntimeError(f"Makefile not found at {MAKEFILE}")
+    content = MAKEFILE.read_text()
+    match = re.search(r"^VERSION\s*[:?]?=\s*(\S+)", content, re.MULTILINE)
+    if not match:
+        raise RuntimeError("VERSION not found in Makefile")
+    return match.group(1)
+
+
 # ─── COMMAND RUNNER ─────────────────────────────────────────────────────────
 
 def run(
@@ -115,6 +132,7 @@ def run(
     dry_run: bool = False,
     check: bool = True,
     cwd: Path | None = None,
+    env: dict | None = None,
 ) -> subprocess.CompletedProcess | None:
     """Run a shell command with logging."""
     log.info(f"{'[DRY RUN] ' if dry_run else ''}{description}")
@@ -128,6 +146,7 @@ def run(
         capture_output=True,
         text=True,
         cwd=cwd or PROJECT_ROOT,
+        env=env,
     )
 
     if result.stdout.strip():
@@ -148,17 +167,29 @@ def run(
 
 def build_app(dry_run: bool = False) -> None:
     """Step 1: Build the Next.js app."""
-    run(["npm", "run", "build"], "Building Next.js app...", dry_run=dry_run)
+    version = get_version()
+    env = {**os.environ, "NEXT_PUBLIC_APP_VERSION": version}
+    run(
+        ["npm", "run", "build"],
+        f"Building Next.js app (NEXT_PUBLIC_APP_VERSION={version})...",
+        dry_run=dry_run,
+        env=env,
+    )
 
 
 def build_image(tag: str, dry_run: bool = False) -> str:
     """Step 2: Build Docker image. Returns full image:tag string."""
+    version = get_version()
     full_tag = f"{DOCKER_REGISTRY}/{DOCKER_IMAGE}:{tag}"
     latest_tag = f"{DOCKER_REGISTRY}/{DOCKER_IMAGE}:latest"
 
     run(
-        ["docker", "build", "-t", full_tag, "-t", latest_tag, "."],
-        f"Building Docker image {full_tag}...",
+        [
+            "docker", "build",
+            "--build-arg", f"APP_VERSION={version}",
+            "-t", full_tag, "-t", latest_tag, ".",
+        ],
+        f"Building Docker image {full_tag} (APP_VERSION={version})...",
         dry_run=dry_run,
     )
     return full_tag
@@ -192,16 +223,13 @@ def update_azure(tag: str, dry_run: bool = False) -> None:
 
     full_tag = f"{DOCKER_REGISTRY}/{DOCKER_IMAGE}:{tag}"
 
-    # Update the container image
-    # Note: --docker-custom-image-name is deprecated but --container-image-name
-    # doesn't work in all az CLI versions yet (see Azure/azure-cli#28862).
-    # Use the flag that works with the installed version.
+    # Update the container image (matches Makefile:46's az_set_tag target).
     run(
         [
             "az", "webapp", "config", "container", "set",
             "--name", AZURE_WEBAPP,
             "--resource-group", AZURE_RG,
-            "--docker-custom-image-name", full_tag,
+            "--container-image-name", full_tag,
         ],
         f"Setting Azure container to {full_tag}...",
         dry_run=dry_run,
@@ -222,7 +250,7 @@ def update_azure(tag: str, dry_run: bool = False) -> None:
 def verify_health(dry_run: bool = False) -> None:
     """Step 5: Wait for the site to come up and verify it's healthy."""
     if dry_run:
-        log.info("[DRY RUN] Would verify health at {SITE_URL}")
+        log.info(f"[DRY RUN] Would verify health at {SITE_URL}")
         return
 
     import requests
