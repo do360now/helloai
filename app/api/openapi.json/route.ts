@@ -52,7 +52,7 @@ export async function GET(req: NextRequest) {
                     type: 'object',
                     properties: {
                       models: { type: 'array', items: { $ref: '#/components/schemas/Model' } },
-                      count: { type: 'integer', example: 4 },
+                      count: { type: 'integer', example: getModels().length },
                       last_updated: { type: 'string', format: 'date', example: config.lastUpdated },
                     },
                   },
@@ -202,7 +202,7 @@ export async function GET(req: NextRequest) {
             reasons: {
               type: 'array',
               items: { type: 'string' },
-              example: ['Category leader for Coding & Engineering', 'Highest Elo rating (1503)'],
+              example: ['Category leader for Coding & Engineering', 'Highest Elo (1508)'],
             },
             model: { $ref: '#/components/schemas/RecommendModel' },
           },
@@ -237,7 +237,7 @@ export async function GET(req: NextRequest) {
           type: 'object',
           properties: {
             status: { type: 'string', example: 'ok' },
-            version: { type: 'string', example: '2.14.13' },
+            version: { type: 'string', example: process.env.NEXT_PUBLIC_APP_VERSION ?? 'dev' },
             data_last_updated: { type: 'string', format: 'date' },
             models_count: { type: 'integer' },
             categories_count: { type: 'integer' },
