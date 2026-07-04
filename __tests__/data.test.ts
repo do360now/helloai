@@ -135,3 +135,38 @@ describe('Article ↔ Model drift', () => {
     expect(missing).toEqual([]);
   });
 });
+
+describe('Cross-file integrity (Category ↔ Model)', () => {
+  const models = getModels();
+  const categories = getCategories();
+  const modelNames = new Set(models.map((m) => m.name));
+  const categoryNames = new Set(categories.map((c) => c.name));
+
+  test('every category leader matches an existing model name', () => {
+    const orphans = categories.filter((c) => !modelNames.has(c.leader));
+    if (orphans.length > 0) {
+      const detail = orphans.map((c) => `${c.name} → leader "${c.leader}"`).join('; ');
+      throw new Error(
+        `Category leader(s) reference a model name not present in models.json: ${detail}`
+      );
+    }
+    expect(orphans).toEqual([]);
+  });
+
+  test('every model strength matches an existing category name', () => {
+    const offenders: string[] = [];
+    for (const m of models) {
+      for (const s of m.strengths) {
+        if (!categoryNames.has(s)) {
+          offenders.push(`${m.name} → strength "${s}"`);
+        }
+      }
+    }
+    if (offenders.length > 0) {
+      throw new Error(
+        `Model strengths reference category names not present in categories.json: ${offenders.join('; ')}`
+      );
+    }
+    expect(offenders).toEqual([]);
+  });
+});
