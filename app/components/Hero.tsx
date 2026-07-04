@@ -10,10 +10,11 @@ export default function Hero({ config }: { config: SiteConfig }) {
     setTimeout(() => setVisible(true), 100);
   }, []);
 
-  const formatted = new Date(config.lastUpdated + 'T00:00:00').toLocaleDateString('en-US', {
+  const formatted = new Date(config.lastUpdated + 'T00:00:00Z').toLocaleDateString('en-US', {
     month: 'long',
     day: 'numeric',
     year: 'numeric',
+    timeZone: 'UTC',
   });
 
   return (

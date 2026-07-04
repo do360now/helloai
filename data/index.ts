@@ -18,10 +18,11 @@ export const getArticleBySlug = (slug: string): Article | undefined =>
   articlesData.find((a: Article) => a.slug === slug);
 
 export const formatDate = (dateStr: string): string => {
-  const date = new Date(dateStr + 'T00:00:00');
+  const date = new Date(dateStr + 'T00:00:00Z');
   return date.toLocaleDateString('en-US', {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
+    timeZone: 'UTC',
   });
 };
