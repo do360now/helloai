@@ -56,6 +56,12 @@ _FALLBACK_CSV_URL = (
     "/releases/latest/download/lmarena_text.csv"
 )
 
+# Release metadata for the CSV fallback — used to date it, since the CSV
+# body itself carries no snapshot date (columns are rank/model/score/...).
+_FALLBACK_RELEASE_API_URL = (
+    "https://api.github.com/repos/fboulnois/llm-leaderboard-csv/releases/latest"
+)
+
 _USER_AGENT = "HelloAi-Bot/1.0 (+https://helloai.com)"
 _TIMEOUT = 20
 
@@ -158,11 +164,55 @@ def _fetch_from_nakasyou() -> dict[str, "_ArenaEntry"]:
     return entries
 
 
+def _csv_release_freshness() -> tuple[str, int] | None:
+    """
+    Date the CSV fallback via the GitHub releases API.
+    Returns (release_tag, age_days) or None if the release cannot be dated
+    (API unreachable, rate-limited, or missing published_at).
+    """
+    try:
+        resp = requests.get(
+            _FALLBACK_RELEASE_API_URL,
+            timeout=_TIMEOUT,
+            headers={"User-Agent": _USER_AGENT},
+        )
+        resp.raise_for_status()
+        release = resp.json()
+        published = release.get("published_at")
+        if not published:
+            return None
+        pub = datetime.strptime(published, "%Y-%m-%dT%H:%M:%SZ").replace(
+            tzinfo=timezone.utc
+        )
+        age_days = (datetime.now(timezone.utc) - pub).days
+        return (release.get("tag_name") or published, age_days)
+    except (requests.RequestException, ValueError):
+        return None
+
+
+# NOTE: Both sources are freshness-guarded symmetrically — the nakasyou JSON
+# by its snapshot key, the CSV by its GitHub release published_at. A source
+# that is stale (or, for the CSV, undatable) returns {} so curated Elos win.
 def _parse_csv() -> dict[str, "_ArenaEntry"]:
     """
     Parse community CSV fallback.
-    Returns {model_name: _ArenaEntry}.
+    Returns {model_name: _ArenaEntry}; {} if the release is stale or undatable.
     """
+    freshness = _csv_release_freshness()
+    if freshness is None:
+        log.warning(
+            "Cannot determine CSV fallback release date; skipping CSV "
+            "to avoid applying unverifiable data; keeping curated Elos"
+        )
+        return {}
+    tag, age_days = freshness
+    if age_days > MAX_SNAPSHOT_AGE_DAYS:
+        log.warning(
+            f"CSV fallback release {tag} is {age_days} days old "
+            f"(max {MAX_SNAPSHOT_AGE_DAYS}); keeping curated Elos"
+        )
+        return {}
+
     resp = requests.get(
         _FALLBACK_CSV_URL,
         timeout=_TIMEOUT,
