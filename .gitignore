@@ -43,10 +43,3 @@ next-env.d.ts
 .venv
 scripts/__pycache__/
 scripts/__pycache__/*
-
-REQUIREMENTS.md
-RISK_ANALYSIS.md
-SECURITY_FINDINGS.md
-SOLUTIONS.md
-SECURITY_RED_TEAM_REPORT.md
-SECURITY_P0_REMEDIATION.md
