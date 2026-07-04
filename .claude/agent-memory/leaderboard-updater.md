@@ -1,6 +1,6 @@
 # leaderboard-updater agent memory
 
-## Last run: 2026-07-04 (Grok weekly update)
+## Last run: 2026-07-04 (Grok weekly update, second pass)
 
 ### Verified model states
 - **fable**: Claude Fable 5 — pricing $10/$50, context 1M, LMArena name map current (claude-fable-5). Restored globally July 1; admitted to tracked set July 1. No drift.
@@ -31,7 +31,25 @@
 - Re-check nakasyou lmarena-history snapshot freshness.
 - Monitor Fable 5 post-restore stability.
 
-### Notes from Grok 2026-07-04 run
+### Notes from Grok 2026-07-04 run (second pass)
+- No models.json or arena.py patches required.
+- Elo refresh ran; all six models kept curated Elos (stale nakasyou snapshot 20250522).
+- Article written: how-caching-and-batching-cut-frontier-costs-90-percent (Analysis on prompt caching + batch API stacking).
+
+## Previous run: 2026-07-04 (Grok weekly update, first pass)
+
+### Verified model states
+- **fable**: Claude Fable 5 — pricing $10/$50, context 1M, LMArena name map current (claude-fable-5). Restored globally July 1; admitted to tracked set July 1. No drift.
+- **claude**: Claude Opus 4.8 — pricing $5/$25, context 1M, LMArena name map current. No drift.
+- **gemini**: Gemini 3.1 Pro — version current. Pricing $2/$12 (≤200k) / $4/$18 (>200k) per official docs; flat rate in models.json remains known gap. Gemini 3.5 Pro still not GA on pricing page as of July 4 (only 3.1 Pro Preview and 3.5 Flash). Context 1M. No drift.
+- **grok**: Grok 4.3 — pricing $1.25/$2.50 confirmed on docs.x.ai, context 1M, map current. Grok 4.4 not released. No drift.
+- **gpt**: GPT-5.5 — pricing $5/$30, context 1M. GPT-5.6 Sol/Terra/Luna still partner-only preview per OpenAI help article. GPT-5.5 remains tracked OpenAI entry. No drift.
+- **qwen**: Qwen3.7-Max — pricing $2.50/$7.50, context 1M, Elo 1475. Stable. No drift.
+
+### Applied patches (confirmed this run)
+- None. All tracked models current; no models.json or arena.py changes required.
+
+### Notes from Grok 2026-07-04 run (first pass)
 - No models.json or arena.py patches required.
 - Elo refresh ran; all six models kept curated Elos (stale nakasyou snapshot).
 - Article written: arc-agi-3-frontier-models-under-1-percent (Analysis on interactive benchmark gap).
