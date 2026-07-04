@@ -8,7 +8,10 @@ export async function GET(req: NextRequest) {
   const config = getSiteConfig();
   const categories = getCategories();
   const models = getModels();
-  const exampleModel = models[0];
+  // Pick the example model by stable id so the OpenAPI examples don't drift
+  // when models.json is reordered or a new top entry appears. Falls back to
+  // the first model if the id is ever renamed.
+  const exampleModel = models.find((m) => m.id === 'fable') ?? models[0];
   const taskExamples = categories.map((c) => c.name.split(' ')[0].toLowerCase());
 
   const spec = {

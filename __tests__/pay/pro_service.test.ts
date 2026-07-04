@@ -65,4 +65,44 @@ describe('serveProRecommend', () => {
     const r = await serveProRecommend({ preimage, callerId: 'a', params: params() });
     expect(r.status).toBe(402);
   });
+
+  // Input validation parity with public /api/recommend (SOL-002/SOL-005 class).
+  // These must be rejected BEFORE payment, so no quote is issued for bad input.
+  test('invalid limit → 400 before payment (no quote issued)', async () => {
+    const r = await serveProRecommend({ preimage: null, callerId: 'a', params: params('task=coding&limit=99') });
+    expect(r.status).toBe(400);
+    expect((r.body as any).error).toMatch(/Invalid parameter/);
+  });
+
+  test('non-numeric max_cost → 400 before payment', async () => {
+    const r = await serveProRecommend({ preimage: null, callerId: 'a', params: params('task=coding&max_cost=abc') });
+    expect(r.status).toBe(400);
+  });
+
+  test('unknown provider → 400 before payment', async () => {
+    const r = await serveProRecommend({ preimage: null, callerId: 'a', params: params('task=coding&provider=NoSuchProvider') });
+    expect(r.status).toBe(400);
+    expect((r.body as any).valid_providers).toBeDefined();
+  });
+
+  test('sanitizes task before scoring (XSS scaffolding stripped)', async () => {
+    const quote = await serveProRecommend({ preimage: null, callerId: 'a', params: params('task=<script>coding</script>') });
+    const ph = (quote.body as any).payment.payment_hash;
+    const preimage = getMockBackend().settle(ph);
+    const r = await serveProRecommend({ preimage, callerId: 'a', params: params('task=<script>coding</script>') });
+    expect(r.status).toBe(200);
+    // The sanitized task 'scriptcoding' / 'coding' no longer reflects raw <> chars;
+    // matched_category still resolves because 'coding' survives sanitization.
+    const body = r.body as any;
+    expect(body.matched_category).toBe('Coding & Engineering');
+  });
+
+  test('valid limit caps the number of recommendations', async () => {
+    const quote = await serveProRecommend({ preimage: null, callerId: 'a', params: params('task=coding&limit=2') });
+    const ph = (quote.body as any).payment.payment_hash;
+    const preimage = getMockBackend().settle(ph);
+    const r = await serveProRecommend({ preimage, callerId: 'a', params: params('task=coding&limit=2') });
+    expect(r.status).toBe(200);
+    expect((r.body as any).recommendations.length).toBeLessThanOrEqual(2);
+  });
 });

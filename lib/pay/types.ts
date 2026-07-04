@@ -54,6 +54,7 @@ export interface FundingProposal {
 
 export type ProOutcome =
   | 'quote'            // 402 + invoice issued (no payment presented)
+  | 'invalid_input'    // 400 malformed query parameter (validated before payment)
   | 'invalid_preimage' // 400 malformed X-Preimage
   | 'unsettled'        // 402 no settled invoice matches the preimage
   | 'underpaid'        // 402 paid less than the price
