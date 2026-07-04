@@ -1,14 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getModels, getCategories, getSiteConfig } from '@/data';
-import { getCorsHeaders } from '@/lib/cors';
+import { apiHeaders } from '@/lib/api';
 
 export async function GET(req: NextRequest) {
   const origin = req.headers.get('origin');
-  const HEADERS = {
-    'Content-Type': 'application/json',
-    'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=120',
-    ...getCorsHeaders(origin),
-  };
+  const HEADERS = apiHeaders(origin, 'public, s-maxage=60, stale-while-revalidate=120');
   const config = getSiteConfig();
   const models = getModels();
   const categories = getCategories();

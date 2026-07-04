@@ -1,13 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getCorsHeaders } from '@/lib/cors';
+import { apiHeaders } from '@/lib/api';
 import { serveProRecommend } from '@/lib/pay/pro_service';
 
 export async function GET(req: NextRequest) {
   const origin = req.headers.get('origin');
-  const HEADERS: Record<string, string> = {
-    'Content-Type': 'application/json',
-    ...getCorsHeaders(origin),
-  };
+  const HEADERS: Record<string, string> = apiHeaders(origin);
 
   const result = await serveProRecommend({
     preimage: req.headers.get('x-preimage'),

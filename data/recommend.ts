@@ -6,12 +6,37 @@ export interface Recommendation {
   reasons: string[];
 }
 
+// Weighted-score configuration. Values are pinned here (not env-driven) so the
+// ranking is deterministic and reproducible. __tests__/recommend.test.ts locks
+// these exact numbers — any change is a conscious decision reviewed against the
+// test expectations.
+//
+// With a matched task, the task match dominates (40%) followed by Elo (35%),
+// then cost efficiency (15%) and context size (10%).
+// With no task, the task weight redistributes to Elo (55%), cost (25%), context (20%).
+export const SCORING_WEIGHTS = {
+  withTask: { task: 0.40, elo: 0.35, cost: 0.15, context: 0.10 },
+  withoutTask: { task: 0.00, elo: 0.55, cost: 0.25, context: 0.20 },
+} as const;
+
+// Match a free-text task to a category. Two-clause fallback:
+//   1. category name contains the task string (e.g. "reasoning" → "Hard Reasoning
+//      & Science"), OR
+//   2. task string contains the first word of the category name (e.g. "hard" →
+//      "Hard Reasoning & Science"). The first word is used because category
+//      names are multi-word and users typically type only the distinguishing
+//      token. The `firstWord.length > 0` guard protects against categories
+//      whose name has no space (already a single token) or is empty.
+// Order matters: clause 1 is the precise match, clause 2 is the loose fallback.
 export function findMatchingCategory(task: string, categories: Category[]): Category | null {
   const t = task.toLowerCase().trim();
   if (!t) return null;
   return (
     categories.find((c) => c.name.toLowerCase().includes(t)) ??
-    categories.find((c) => t.includes(c.name.toLowerCase().split(' ')[0])) ??
+    categories.find((c) => {
+      const firstWord = c.name.toLowerCase().split(' ')[0];
+      return firstWord.length > 0 && t.includes(firstWord);
+    }) ??
     null
   );
 }
@@ -30,7 +55,11 @@ export function scoreAndRank(
 
   const matchedCategory = task ? findMatchingCategory(task, categories) : null;
 
-  // Hard filters
+  // Hard filters — models failing any active filter are excluded entirely.
+  // NOTE: cost_per_million_tokens_output (output price) is intentionally NOT
+  // used as a filter or scoring signal here. It is surfaced in API responses
+  // for caller information only. Cost efficiency is scored on the input price
+  // (cost_per_million_tokens) to keep the ranking stable and predictable.
   const candidates = models.filter((m) => {
     if (maxCost !== null && maxCost !== undefined && m.cost_per_million_tokens > maxCost) return false;
     if (minContext !== null && minContext !== undefined && m.context_window < minContext) return false;
@@ -40,12 +69,13 @@ export function scoreAndRank(
 
   const excluded = models.length - candidates.length;
 
+  // Empty-candidates guard: without this, Math.min(...[]) → Infinity and
+  // Math.max(...[]) → -Infinity would produce NaN scores. Returning early keeps
+  // the normalization below well-defined.
   if (candidates.length === 0) return { recommendations: [], excluded, matchedCategory };
 
   const hasTask = matchedCategory !== null;
-  const weights = hasTask
-    ? { task: 0.40, elo: 0.35, cost: 0.15, context: 0.10 }
-    : { task: 0.00, elo: 0.55, cost: 0.25, context: 0.20 };
+  const weights = hasTask ? SCORING_WEIGHTS.withTask : SCORING_WEIGHTS.withoutTask;
 
   const elos = candidates.map((m) => m.elo);
   const costs = candidates.map((m) => m.cost_per_million_tokens);
@@ -69,6 +99,8 @@ export function scoreAndRank(
       }
     }
 
+    // When all candidates share a value, min === max and the division would
+    // be 0/0 → NaN; the explicit equality check returns a uniform 1.0 instead.
     const eloScore = maxElo === minElo ? 1 : (m.elo - minElo) / (maxElo - minElo);
     if (m.elo === maxElo) reasons.push(`Highest Elo (${m.elo})`);
     else reasons.push(`Elo ${m.elo}`);

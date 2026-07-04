@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getModels, getCategories, getSiteConfig } from '@/data';
 import { scoreAndRank } from '@/data/recommend';
-import { getCorsHeaders } from '@/lib/cors';
+import { toRecommendationDTO, type RecommendResponseBody } from '@/data/api-types';
+import { apiHeaders } from '@/lib/api';
 
 // ---------------------------------------------------------------------------
 // SOL-002 / SOL-005: input sanitization + cache-key safety.
@@ -52,13 +53,10 @@ export async function GET(req: NextRequest) {
     providerParam !== null ||
     limitParam !== null;
 
-  const HEADERS = {
-    'Content-Type': 'application/json',
-    'Cache-Control': isParameterized
-      ? 'private, no-store'
-      : 'public, s-maxage=300, stale-while-revalidate=600',
-    ...getCorsHeaders(origin),
-  };
+  const CACHE_CONTROL = isParameterized
+    ? 'private, no-store'
+    : 'public, s-maxage=300, stale-while-revalidate=600';
+  const HEADERS = apiHeaders(origin, CACHE_CONTROL);
 
   const maxCost = maxCostParam ? parseFloat(maxCostParam) : null;
   const minContext = minContextParam ? parseInt(minContextParam) : null;
@@ -118,33 +116,17 @@ export async function GET(req: NextRequest) {
     providerParam && `provider=${providerParam}`,
   ].filter(Boolean) as string[];
 
-  const output = recommendations.slice(0, limit).map(({ model, score, reasons }, i) => ({
-    rank: i + 1,
-    score,
-    reasons,
-    model: {
-      id: model.id,
-      name: model.name,
-      provider: model.provider,
-      url: model.url,
-      tag: model.tag,
-      elo: model.elo,
-      cost_per_million_tokens: model.cost_per_million_tokens,
-      cost_per_million_tokens_output: model.cost_per_million_tokens_output,
-      context_window: model.context_window,
-    },
-  }));
+  const output = recommendations.slice(0, limit).map((rec, i) => toRecommendationDTO(rec, i + 1));
 
-  return NextResponse.json(
-    {
-      query: { task, max_cost: maxCost, min_context: minContext, provider: providerParam ?? null, limit },
-      recommendations: output,
-      filters_applied: filtersApplied,
-      models_considered: models.length,
-      models_excluded: excluded,
-      matched_category: matchedCategory?.name ?? null,
-      last_updated: config.lastUpdated,
-    },
-    { headers: HEADERS }
-  );
+  const body: RecommendResponseBody = {
+    query: { task, max_cost: maxCost, min_context: minContext, provider: providerParam ?? null, limit },
+    recommendations: output,
+    filters_applied: filtersApplied,
+    models_considered: models.length,
+    models_excluded: excluded,
+    matched_category: matchedCategory?.name ?? null,
+    last_updated: config.lastUpdated,
+  };
+
+  return NextResponse.json(body, { headers: HEADERS });
 }
