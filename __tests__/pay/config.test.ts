@@ -50,6 +50,13 @@ describe('getConfig default-secret guard', () => {
     expect(() => getConfig()).toThrow(/LEDGER_SIGNING_KEY/);
   });
 
+  test('throws when LN_BACKEND is non-mock and both secrets are empty strings', () => {
+    process.env.LN_BACKEND = 'lnd';
+    process.env.LEDGER_SIGNING_KEY = '';
+    process.env.ACCUMULATION_ADDRESS = '';
+    expect(() => getConfig()).toThrow(/LEDGER_SIGNING_KEY/);
+  });
+
   test('throws when MAINNET_ENABLED=true with default secrets', () => {
     process.env.MAINNET_ENABLED = 'true';
     delete process.env.LEDGER_SIGNING_KEY;

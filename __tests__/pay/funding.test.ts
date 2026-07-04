@@ -16,6 +16,7 @@ beforeEach(() => {
   process.env.FUNDING_THRESHOLD_SATS = '1000';
   process.env.MAX_SWEEP_SATS = '100000';
   delete process.env.MAINNET_ENABLED;
+  delete process.env.ACCUMULATION_ADDRESS;
   __resetLightningBackend();
 });
 afterEach(() => rmSync(dir, { recursive: true, force: true }));

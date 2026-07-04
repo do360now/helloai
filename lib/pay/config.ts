@@ -33,9 +33,13 @@ export function getConfig(): PayConfig {
     mainnetEnabled: (process.env.MAINNET_ENABLED ?? 'false') === 'true',
   };
 
+  // Empty string is treated the same as the default: an operator setting
+  // LEDGER_SIGNING_KEY= (empty) must not bypass the guard.
   const usingDefaultSecrets =
     cfg.ledgerSigningKey === DEFAULT_SIGNING_KEY ||
-    cfg.accumulationAddress === DEFAULT_ACCUMULATION_ADDRESS;
+    cfg.ledgerSigningKey === '' ||
+    cfg.accumulationAddress === DEFAULT_ACCUMULATION_ADDRESS ||
+    cfg.accumulationAddress === '';
   if ((cfg.mainnetEnabled || cfg.lnBackend !== 'mock') && usingDefaultSecrets) {
     throw new Error(
       'Refusing to run outside mock mode with default secrets: set LEDGER_SIGNING_KEY and ACCUMULATION_ADDRESS'
