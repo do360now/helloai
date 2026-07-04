@@ -1,4 +1,4 @@
-VERSION=2.14.40
+VERSION=2.14.41
 
 # ─── Rootless Docker ─────────────────────────────────────
 # Point at the rootless per-user socket. ?= preserves any DOCKER_HOST
@@ -183,15 +183,26 @@ open_kimi_code_cli:
 open_fireconnect_install:
 	@echo "📦 Installing Fireconnect..."
 	curl -fsSL https://raw.githubusercontent.com/fw-ai/fireconnect/main/install.sh | bash
-	@echo "✅ Fireconnect installed. Set FIREWORKS_API_KEY=fw_... then run make open_fireconnect_tiered"
+	@echo "✅ Fireconnect installed. Run: make open_fireconnect_tiered"
 
 open_fireconnect_tiered:
 	@command -v fireconnect >/dev/null || (echo "❌ fireconnect not found — run: make open_fireconnect_install"; exit 1)
-	@test -n "$$FIREWORKS_API_KEY" || (echo "❌ Set FIREWORKS_API_KEY=fw_... (https://app.fireworks.ai/settings/users/api-keys)"; exit 1)
+	@if [ -z "$$FIREWORKS_API_KEY" ] && ! python3 -c "import json,pathlib; c=json.loads(pathlib.Path('$$HOME/.fireconnect/config.json').read_text()); exit(0 if c.get('apiKey') else 1)" 2>/dev/null; then \
+		echo "❌ No Fireworks API key found."; \
+		echo "   Run make open_fireconnect_install, or set FIREWORKS_API_KEY=fw_..."; \
+		echo "   https://app.fireworks.ai/settings/users/api-keys"; \
+		exit 1; \
+	fi
 	@echo "⚙️  Tiered routing: main/opus=glm-latest, sonnet=glm-5p1, haiku/subagent=deepseek-v4-flash"
-	fireconnect claude on --api-key "$$FIREWORKS_API_KEY" \
-		--main glm-latest --sonnet glm-5p1 \
-		--haiku deepseek-v4-flash --subagent deepseek-v4-flash
+	@if [ -n "$$FIREWORKS_API_KEY" ]; then \
+		fireconnect claude on --api-key "$$FIREWORKS_API_KEY" \
+			--main glm-latest --sonnet glm-5p1 \
+			--haiku deepseek-v4-flash --subagent deepseek-v4-flash; \
+	else \
+		fireconnect claude on \
+			--main glm-latest --sonnet glm-5p1 \
+			--haiku deepseek-v4-flash --subagent deepseek-v4-flash; \
+	fi
 	@echo "✅ Configured. Start a new Claude Code session: claude"
 
 open_claude_fireconnect_tiered: open_fireconnect_tiered
