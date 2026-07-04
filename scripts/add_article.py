@@ -10,17 +10,29 @@ Usage:
   python scripts/add_article.py --file article.json
   echo '{...}' | python scripts/add_article.py
   python scripts/add_article.py --file article.json --dry-run
+  python scripts/add_article.py --file article.json --lenient   # relax range gates
 
 Input JSON schema (all fields except title/excerpt/category/content are optional):
   {
     "title":    "Article title (required)",
-    "excerpt":  "Short hook for article card (required)",
-    "category": "One of: Analysis, Opinion, Discovery, Review, Tutorial (required)",
-    "content":  ["paragraph 1", "paragraph 2", ...] (required, non-empty list),
+    "excerpt":  "Short hook for article card (required, 100–200 chars)",
+    "category": "One of: Analysis, Opinion, Discovery, Review (required)",
+    "content":  ["paragraph 1", "paragraph 2", ...] (required, 4–5 paragraphs, 350–500 words),
     "slug":     "url-slug"       (optional, default = slugify(title)),
     "date":     "YYYY-MM-DD"     (optional, default = today),
     "readTime": "N min"          (optional, default = estimated from content)
   }
+
+Validation gates (strict, default on):
+  - Required fields present
+  - category in the 4-value set
+  - content: non-empty list of strings, each ≥ 40 chars
+  - 4–5 paragraphs, 350–500 words total
+  - excerpt 100–200 chars (SEO meta-description bound)
+  - prompt-injection scan (always on, even in --lenient)
+
+The article-writer agent already targets these ranges; this script enforces
+them so a malformed submission can never land in articles.json.
 """
 
 import argparse
@@ -41,20 +53,68 @@ from utils import (
 
 log = setup_logger("add-article")
 
-VALID_CATEGORIES = {"Analysis", "Opinion", "Discovery", "Review", "Tutorial"}
+# Match the agent spec (.claude/agents/article-idea-generator.md,
+# article-writer.md): four categories. "Tutorial" was previously accepted here
+# but never produced by any agent and no article uses it — dropped to prevent
+# silent drift between the validator and the agent handoff contract.
+VALID_CATEGORIES = {"Analysis", "Opinion", "Discovery", "Review"}
 MIN_PARAGRAPH_CHARS = 40
+
+# Range gates (strict mode). Encode the SKILL.md / article-writer contract.
+PARAGRAPH_COUNT_MIN = 4
+PARAGRAPH_COUNT_MAX = 5
+WORD_COUNT_MIN = 350
+WORD_COUNT_MAX = 500
+EXCERPT_MIN = 100
+EXCERPT_MAX = 200
+
+# Prompt-injection / agent-directive patterns. Same "untrusted input" posture
+# as article-writer.md's input contract: content that looks like an imperative
+# aimed at the model is rejected, not obeyed. Checked in title, excerpt, and
+# every content paragraph (case-insensitive).
+_INJECTION_PATTERNS = (
+    "ignore previous",
+    "ignore the above",
+    "ignore all previous",
+    "disregard the",
+    "disregard previous",
+    "</system",
+    "<|im",
+    "<|endoftext",
+    "system prompt",
+    "you are now",
+    "new instructions:",
+    "override your",
+)
 
 
 # ─── Helpers ────────────────────────────────────────────────────────────────
 
+def word_count(content: list[str]) -> int:
+    return sum(len(p.split()) for p in content)
+
+
 def estimate_read_time(content: list[str]) -> str:
     """Estimate read time from paragraph list."""
-    word_count = sum(len(p.split()) for p in content)
-    minutes = max(1, math.ceil(word_count / 250))
+    minutes = max(1, math.ceil(word_count(content) / 250))
     return f"{minutes} min"
 
 
-def validate_input(data: dict) -> list[str]:
+def _scan_injection(data: dict) -> list[str]:
+    """Return a list of injection-pattern hits found in the article text."""
+    hits: list[str] = []
+    blobs = [str(data.get("title", "")), str(data.get("excerpt", ""))]
+    content = data.get("content")
+    if isinstance(content, list):
+        blobs.extend(str(p) for p in content)
+    haystack = "\n".join(blobs).lower()
+    for pat in _INJECTION_PATTERNS:
+        if pat.lower() in haystack:
+            hits.append(pat)
+    return hits
+
+
+def validate_input(data: dict, strict: bool = True) -> list[str]:
     """Validate the incoming article JSON. Returns list of error strings."""
     errors = []
 
@@ -83,6 +143,38 @@ def validate_input(data: dict) -> list[str]:
             f"'category' must be one of {sorted(VALID_CATEGORIES)}, "
             f"got: {data.get('category')!r}"
         )
+
+    # Prompt-injection scan — always on, even in --lenient (safety, not style).
+    injections = _scan_injection(data)
+    if injections:
+        errors.append(
+            f"Possible prompt-injection patterns in article text: {injections} "
+            f"— refusing per untrusted-input policy"
+        )
+
+    # Range gates — strict mode only. --lenient relaxes these for one-off
+    # inserts (e.g. editorially-justified short pieces) while keeping the
+    # safety + structural checks above.
+    if strict and isinstance(data["content"], list) and data["content"]:
+        nparas = len(data["content"])
+        if nparas < PARAGRAPH_COUNT_MIN or nparas > PARAGRAPH_COUNT_MAX:
+            errors.append(
+                f"'content' must have {PARAGRAPH_COUNT_MIN}–{PARAGRAPH_COUNT_MAX} paragraphs, "
+                f"got {nparas}"
+            )
+        wc = word_count(data["content"])
+        if wc < WORD_COUNT_MIN or wc > WORD_COUNT_MAX:
+            errors.append(
+                f"word count must be {WORD_COUNT_MIN}–{WORD_COUNT_MAX}, got {wc}"
+            )
+
+    if strict:
+        exc_len = len(str(data.get("excerpt", "")))
+        if exc_len < EXCERPT_MIN or exc_len > EXCERPT_MAX:
+            errors.append(
+                f"'excerpt' length must be {EXCERPT_MIN}–{EXCERPT_MAX} chars "
+                f"(SEO meta-description bound), got {exc_len}"
+            )
 
     return errors
 
@@ -114,12 +206,15 @@ def add_article(article: dict, dry_run: bool = False) -> None:
     # Prepend (newest first)
     articles.insert(0, article)
 
-    # Trim to max
+    # Trim to max — surface what's being dropped so it's never silent.
+    removed: list[dict] = []
     if len(articles) > config.max_articles:
         removed = articles[config.max_articles:]
         articles = articles[:config.max_articles]
+        summary = ", ".join(f"'{r['title']}' ({r['slug']})" for r in removed)
+        log.warning(f"  Trimmed {len(removed)} old article(s) to stay at max_articles={config.max_articles}: {summary}")
         for r in removed:
-            log.info(f"  Trimmed old article: '{r['title']}'")
+            log.info(f"    dropped: '{r['title']}'  ({r['date']})")
 
     if dry_run:
         log.info("[DRY RUN] Would write article:")
@@ -129,6 +224,9 @@ def add_article(article: dict, dry_run: bool = False) -> None:
         log.info(f"  Date:       {article['date']}")
         log.info(f"  Read time:  {article['readTime']}")
         log.info(f"  Paragraphs: {len(article['content'])}")
+        log.info(f"  Words:      {word_count(article['content'])}")
+        if removed:
+            log.warning(f"  Would trim {len(removed)} article(s): {', '.join(r['slug'] for r in removed)}")
         print("\n--- PREVIEW ---")
         print(f"\n# {article['title']}\n")
         print(f"*{article['excerpt']}*\n")
@@ -162,7 +260,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--dry-run",
         action="store_true",
-        help="Preview the article without writing to file",
+        help="Preview the article (and any trim) without writing to file",
+    )
+    parser.add_argument(
+        "--lenient",
+        action="store_true",
+        help="Relax range gates (paragraph count, word count, excerpt length). "
+             "Required-field, category, paragraph-char, and injection checks stay on.",
     )
     return parser.parse_args()
 
@@ -186,7 +290,7 @@ def main() -> None:
         sys.exit(1)
 
     # Validate
-    errors = validate_input(data)
+    errors = validate_input(data, strict=not args.lenient)
     if errors:
         for err in errors:
             log.error(f"Validation error: {err}")

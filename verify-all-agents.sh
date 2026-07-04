@@ -1,15 +1,17 @@
 #!/usr/bin/env bash
 # verify-all-agents.sh — Verify all agent frontmatter SHA-256 hashes
 # Run before deploy to detect unauthorized modifications to agent files.
-# Exit 0 = all pass, Exit 1 = one or more fail
+# Exit 0 = all pass, Exit 1 = one or more fail (hash mismatch OR missing hash)
 
 set -euo pipefail
 FAIL_COUNT=0
+MISSING_COUNT=0
 
 for agent in .claude/agents/*.md; do
     EXPECTED=$(sed -n '/^---$/,/^---$/p' "$agent" | sed '1d;$d' | grep 'integrity-hash-sha256:' | awk '{print $2}' | tr -d ' ' || true)
     if [[ -z "$EXPECTED" ]]; then
-        echo "WARN: No hash found in $agent — skipping"
+        echo "FAIL: No integrity-hash-sha256 found in $agent — every agent must declare a hash" >&2
+        MISSING_COUNT=$((MISSING_COUNT+1))
         continue
     fi
     FRONTMATTER=$(sed -n '/^---$/,/^---$/p' "$agent" | sed '1d;$d')
@@ -24,8 +26,9 @@ for agent in .claude/agents/*.md; do
     fi
 done
 
-if [[ $FAIL_COUNT -gt 0 ]]; then
-    echo "ERROR: $FAIL_COUNT agent(s) failed hash verification — review changes before deploying" >&2
+TOTAL_FAIL=$((FAIL_COUNT + MISSING_COUNT))
+if [[ $TOTAL_FAIL -gt 0 ]]; then
+    echo "ERROR: $FAIL_COUNT hash mismatch(es), $MISSING_COUNT missing hash(es) — review agent changes before deploying" >&2
     exit 1
 fi
 echo "All agents verified."
