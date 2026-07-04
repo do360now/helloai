@@ -20,7 +20,7 @@ An unbiased, curated directory of frontier AI models — with Elo rankings, cate
 
 ## API
 
-All endpoints are public. No auth required. CORS open.
+All endpoints are public. No auth required. Browser CORS is restricted to helloai.com origins (non-browser clients such as agents and curl are unaffected). Rate limit: 100 requests/minute per IP.
 
 ```
 GET /api/status                              # Health, version, data freshness

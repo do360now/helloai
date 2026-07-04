@@ -82,7 +82,7 @@ verify-all-agents.sh   # Verify agent frontmatter integrity hashes
 
 ## API Endpoints
 
-All endpoints are public, no auth, CORS open. Base: `https://helloai.com`
+All endpoints are public, no auth. Browser CORS restricted to helloai.com origins (agents/curl unaffected); rate limit 100 req/min/IP. Base: `https://helloai.com`
 
 | Endpoint | Params | Description |
 |----------|--------|-------------|
