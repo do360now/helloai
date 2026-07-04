@@ -26,9 +26,18 @@ const getAllowedOrigins = (): string[] => {
 };
 
 /**
- * Get CORS headers for a given origin
+ * Get CORS headers for a given origin.
+ *
+ * Responses vary by request Origin (the allowed origin is echoed back), so
+ * shared caches must key on it: without `Vary: Origin`, a CDN would cache one
+ * origin's Access-Control-Allow-Origin and serve it to another, breaking CORS
+ * for the second origin.
  */
 export function getCorsHeaders(origin: string | null): Record<string, string> {
+  return { ...corsHeadersFor(origin), Vary: 'Origin' };
+}
+
+function corsHeadersFor(origin: string | null): Record<string, string> {
   const allowedOrigins = getAllowedOrigins();
 
   // If no origin header, allow based on environment

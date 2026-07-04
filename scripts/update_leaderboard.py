@@ -66,7 +66,7 @@ def update_category_leaders(
     keyword_fallback = {
         "Overall": models[0]["name"],
         "Coding": next(
-            (m["name"] for m in models if "claude" in m["id"].lower() or m["id"] == "fable"),
+            (m["name"] for m in models if "claude" in m["id"].lower()),
             models[0]["name"],
         ),
         "Reasoning": next(
@@ -81,10 +81,16 @@ def update_category_leaders(
 
     for cat in categories:
         cat_name = cat["name"]
-        leader = next(
-            (m["name"] for m in models if cat_name in m.get("strengths", [])),
-            None,
-        )
+        if "overall" in cat_name.lower():
+            # "Overall" means the Elo leader by definition (its insight says
+            # "Highest Elo in the tracked set"), so it must track models[0]
+            # even when a lower-Elo model still declares the strength.
+            leader = models[0]["name"]
+        else:
+            leader = next(
+                (m["name"] for m in models if cat_name in m.get("strengths", [])),
+                None,
+            )
         if leader is None:
             for keyword, fallback in keyword_fallback.items():
                 if keyword.lower() in cat_name.lower():
@@ -92,6 +98,11 @@ def update_category_leaders(
                     break
         if leader and cat["leader"] != leader:
             log.info(f"  Category '{cat_name}': {cat['leader']} → {leader}")
+            log.warning(
+                f"  ⚠ '{cat_name}' insight still describes {cat['leader']} — "
+                f"regenerate it (weekly-update pipeline) before deploying, or the "
+                f"site will attribute the old leader's stats to {leader}."
+            )
             cat["leader"] = leader
             has_changes = True
 

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getModels, getSiteConfig } from '@/data';
-import { apiHeaders } from '@/lib/api';
+import { apiHeaders, publicUnlessParameterized } from '@/lib/api';
 
 export async function GET(req: NextRequest) {
   const origin = req.headers.get('origin');
@@ -9,12 +9,7 @@ export async function GET(req: NextRequest) {
   // Parameterized requests are user-controlled (and could be used for
   // cache-key probing), so don't share-cache them. The unfiltered list stays
   // public+cacheable — parity with /api/recommend.
-  const HEADERS = apiHeaders(
-    origin,
-    providerFilter
-      ? 'private, no-store'
-      : 'public, s-maxage=300, stale-while-revalidate=600'
-  );
+  const HEADERS = apiHeaders(origin, publicUnlessParameterized(searchParams));
 
   let models = getModels();
 

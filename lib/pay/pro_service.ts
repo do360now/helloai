@@ -1,6 +1,6 @@
 import { getModels, getCategories, getSiteConfig } from '@/data';
 import { scoreAndRank } from '@/data/recommend';
-import { sanitizeTask } from '@/lib/sanitize';
+import { parseRecommendParams } from '@/lib/api';
 import { getConfig } from './config';
 import { getLightningBackend } from './lightning';
 import { sha256OfHex } from './hash';
@@ -34,42 +34,15 @@ export async function serveProRecommend(input: {
 
   // --- Input validation (parity with public /api/recommend) -----------------
   // Validated BEFORE payment so a caller is never charged for a malformed
-  // request. Same SOL-002/SOL-005 sanitization + provider/numeric guards as
-  // the public route; limit is optional (omitted → return all recommendations,
-  // preserving the Pro perk).
-  const task = sanitizeTask(params.get('task'));
-  const maxCostParam = params.get('max_cost');
-  const minContextParam = params.get('min_context');
-  const providerParam = params.get('provider');
-  const limitParam = params.get('limit');
-
-  const maxCost = maxCostParam ? parseFloat(maxCostParam) : null;
-  const minContext = minContextParam ? parseInt(minContextParam, 10) : null;
-  let limit: number | null = null;
-  if (limitParam !== null) {
-    const parsed = parseInt(limitParam, 10);
-    if (isNaN(parsed) || parsed < 1 || parsed > 10) {
-      recordProRequest({ ...meta, outcome: 'invalid_input', status: 400, latencyMs: Date.now() - startedAt });
-      return { status: 400, body: { error: 'Invalid parameter', details: 'limit must be an integer between 1 and 10' } };
-    }
-    limit = parsed;
-  }
-  if (maxCostParam && (isNaN(maxCost!) || maxCost! <= 0)) {
+  // request. parseRecommendParams (lib/api.ts) is the same parser the public
+  // route uses, so the two contracts cannot drift; limit is optional here
+  // (omitted → return all recommendations, preserving the Pro perk).
+  const parsed = parseRecommendParams(params, { defaultLimit: null });
+  if (!parsed.ok) {
     recordProRequest({ ...meta, outcome: 'invalid_input', status: 400, latencyMs: Date.now() - startedAt });
-    return { status: 400, body: { error: 'Invalid parameter', details: 'max_cost must be a positive number' } };
+    return { status: 400, body: parsed.body };
   }
-  if (minContextParam && (isNaN(minContext!) || minContext! <= 0)) {
-    recordProRequest({ ...meta, outcome: 'invalid_input', status: 400, latencyMs: Date.now() - startedAt });
-    return { status: 400, body: { error: 'Invalid parameter', details: 'min_context must be a positive integer' } };
-  }
-  const knownProviders = [...new Set(getModels().map((m) => m.provider.toLowerCase()))];
-  if (providerParam && !knownProviders.includes(providerParam.toLowerCase())) {
-    recordProRequest({ ...meta, outcome: 'invalid_input', status: 400, latencyMs: Date.now() - startedAt });
-    return {
-      status: 400,
-      body: { error: 'Invalid parameter', details: `provider must be one of: ${knownProviders.join(', ')}`, valid_providers: knownProviders },
-    };
-  }
+  const { task, maxCost, minContext, provider: providerParam, limit } = parsed.params;
 
   if (!preimage) {
     const inv = await backend.createInvoice(cfg.proPriceSats, 'helloai pro/recommend', 300);

@@ -18,6 +18,39 @@ const nextConfig = {
   poweredByHeader: false,      // SOL-007: remove x-powered-by: Next.js
 
   // ---------------------------------------------------------------------------
+  // SOL-001 belt-and-braces: HTTP→HTTPS at the framework level (Azure's
+  // "HTTPS Only" toggle remains the primary control). Matches on the
+  // x-forwarded-proto header set by the Azure front end; the host is captured
+  // so www./apex are preserved. Also 301s article URLs whose entries were
+  // trimmed from data/articles.json by the max_articles cap — those pages were
+  // live, and dropping them without a redirect would 404 every backlink.
+  // ---------------------------------------------------------------------------
+  async redirects() {
+    const trimmedArticleSlugs = [
+      'agentic-ai-is-failing-in-production',
+      'mythos-too-dangerous-to-ship',
+      'gemini-3-5-flash-faster-cheaper-and-beating-3-1-pro',
+      'glm-46-the-mit-licensed-model-closing-the-open-gap',
+    ];
+    return [
+      {
+        source: '/:path*',
+        has: [
+          { type: 'header', key: 'x-forwarded-proto', value: 'http' },
+          { type: 'host', value: '(?<host>.*)' },
+        ],
+        destination: 'https://:host/:path*',
+        permanent: true,
+      },
+      ...trimmedArticleSlugs.map((slug) => ({
+        source: `/articles/${slug}`,
+        destination: '/articles',
+        permanent: true,
+      })),
+    ];
+  },
+
+  // ---------------------------------------------------------------------------
   // SOL-001 + SOL-002 + SOL-006: security headers applied to every route.
   // Next.js merges these with any per-route headers set in the handler.
   // ---------------------------------------------------------------------------

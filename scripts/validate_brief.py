@@ -22,9 +22,17 @@ import re
 import sys
 from pathlib import Path
 
-# Match the agent spec + add_article.py. Single source of truth for the
-# category set across the pipeline.
-VALID_CATEGORIES = {"Analysis", "Opinion", "Discovery", "Review"}
+sys.path.insert(0, str(Path(__file__).parent))
+# Single source of truth: the category set, word-count contract, and injection
+# patterns live in add_article.py (the insert-stage gate). Importing them here
+# means the brief stage and the insert stage can never drift — a brief this
+# script approves is never rejected later for a rule it didn't know about.
+from add_article import (
+    VALID_CATEGORIES,
+    WORD_COUNT_MIN as TARGET_WORD_MIN,
+    WORD_COUNT_MAX as TARGET_WORD_MAX,
+    scan_injection,
+)
 
 REQUIRED_FIELDS = (
     "slug",
@@ -37,16 +45,12 @@ REQUIRED_FIELDS = (
     "voice_guidelines",
 )
 
-# article-writer contract: 4–5 paragraphs, 350–500 words. The brief's
-# target_word_count should target that range.
-TARGET_WORD_MIN = 350
-TARGET_WORD_MAX = 500
 TITLE_MAX = 70
 KEY_FACTS_MIN = 3
 SLUG_RE = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
 
 
-def validate_brief(brief: dict) -> list[str]:
+def validate_brief(brief: dict, allow_phrases: tuple[str, ...] = ()) -> list[str]:
     """Return a list of schema-violation strings; empty list = valid."""
     errors: list[str] = []
 
@@ -59,8 +63,10 @@ def validate_brief(brief: dict) -> list[str]:
     if not isinstance(brief["slug"], str) or not SLUG_RE.match(brief["slug"]):
         errors.append(f"'slug' must be lowercase-hyphenated (a-z0-9-), got: {brief['slug']!r}")
 
-    if not isinstance(brief["title"], str) or len(brief["title"]) > TITLE_MAX:
-        errors.append(f"'title' must be a string ≤ {TITLE_MAX} chars, got len={len(brief.get('title', ''))}")
+    if not isinstance(brief["title"], str):
+        errors.append(f"'title' must be a string, got {type(brief['title']).__name__}")
+    elif len(brief["title"]) > TITLE_MAX:
+        errors.append(f"'title' must be ≤ {TITLE_MAX} chars, got len={len(brief['title'])}")
 
     if brief["category"] not in VALID_CATEGORIES:
         errors.append(
@@ -91,15 +97,24 @@ def validate_brief(brief: dict) -> list[str]:
     if not isinstance(vg, list) or len(vg) == 0 or not all(isinstance(x, str) and x.strip() for x in vg):
         errors.append("'voice_guidelines' must be a non-empty list of non-empty strings")
 
-    # Prompt-injection posture (parity with add_article.py / article-writer).
-    blobs = [str(brief.get("angle", "")), str(brief.get("news_hook", ""))]
+    # Prompt-injection posture: the exact pattern set add_article.py enforces
+    # at insert time (imported — see top of file), applied at the brief stage
+    # so an injection is caught BEFORE the article-writer consumes it.
+    blobs = [str(brief.get("title", "")), str(brief.get("angle", "")), str(brief.get("news_hook", ""))]
     if isinstance(kf, list):
         blobs.extend(str(x) for x in kf)
-    haystack = "\n".join(blobs).lower()
-    for pat in ("ignore previous", "ignore the above", "disregard the", "</system", "<|im", "you are now", "new instructions:"):
-        if pat in haystack:
-            errors.append(f"possible prompt-injection pattern in brief: '{pat}' — refusing per untrusted-input policy")
-            break
+    hard_hits, soft_hits = scan_injection(blobs, allow_phrases)
+    if hard_hits:
+        errors.append(
+            f"prompt-injection patterns in brief: {hard_hits} — refusing per "
+            f"untrusted-input policy (not overridable)"
+        )
+    if soft_hits:
+        errors.append(
+            f"editorial phrases matching injection patterns: {soft_hits} — review "
+            f"the brief, then re-run with --allow-phrase '<pattern>' for each "
+            f"phrase you accept"
+        )
 
     return errors
 
@@ -107,6 +122,14 @@ def validate_brief(brief: dict) -> list[str]:
 def main() -> None:
     parser = argparse.ArgumentParser(description="Validate an article brief against the idea-generator→writer handoff schema.")
     parser.add_argument("--file", type=Path, help="Path to brief JSON (default: read from stdin)")
+    parser.add_argument(
+        "--allow-phrase",
+        action="append",
+        default=[],
+        metavar="PATTERN",
+        help="Accept a reviewed SOFT injection pattern (e.g. 'system prompt') "
+             "for this brief. Repeatable; exact pattern match.",
+    )
     args = parser.parse_args()
 
     try:
@@ -120,7 +143,7 @@ def main() -> None:
         print("ERROR: brief must be a JSON object", file=sys.stderr)
         sys.exit(1)
 
-    errors = validate_brief(brief)
+    errors = validate_brief(brief, allow_phrases=tuple(args.allow_phrase))
     if errors:
         for err in errors:
             print(f"VALIDATION ERROR: {err}", file=sys.stderr)

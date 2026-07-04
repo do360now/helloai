@@ -79,6 +79,23 @@ describe('serveProRecommend', () => {
     expect(r.status).toBe(400);
   });
 
+  // parseInt prefix-parsing regressions: these previously slipped through as
+  // 2 and 1 respectively; the shared parser must reject them outright.
+  test('non-integer limit (2.9) → 400 before payment', async () => {
+    const r = await serveProRecommend({ preimage: null, callerId: 'a', params: params('task=coding&limit=2.9') });
+    expect(r.status).toBe(400);
+  });
+
+  test('scientific-notation min_context (1e6) → 400 before payment', async () => {
+    const r = await serveProRecommend({ preimage: null, callerId: 'a', params: params('task=coding&min_context=1e6') });
+    expect(r.status).toBe(400);
+  });
+
+  test('empty limit value is treated as absent, not invalid', async () => {
+    const r = await serveProRecommend({ preimage: null, callerId: 'a', params: params('task=coding&limit=') });
+    expect(r.status).toBe(402); // quote issued — input was acceptable
+  });
+
   test('unknown provider → 400 before payment', async () => {
     const r = await serveProRecommend({ preimage: null, callerId: 'a', params: params('task=coding&provider=NoSuchProvider') });
     expect(r.status).toBe(400);

@@ -29,7 +29,8 @@ Validation gates (strict, default on):
   - content: non-empty list of strings, each ≥ 40 chars
   - 4–5 paragraphs, 350–500 words total
   - excerpt 100–200 chars (SEO meta-description bound)
-  - prompt-injection scan (always on, even in --lenient)
+  - prompt-injection scan (always on, even in --lenient; reviewed editorial
+    phrases like "system prompt" can be accepted with --allow-phrase)
 
 The article-writer agent already targets these ranges; this script enforces
 them so a malformed submission can never land in articles.json.
@@ -71,20 +72,32 @@ EXCERPT_MAX = 200
 # Prompt-injection / agent-directive patterns. Same "untrusted input" posture
 # as article-writer.md's input contract: content that looks like an imperative
 # aimed at the model is rejected, not obeyed. Checked in title, excerpt, and
-# every content paragraph (case-insensitive).
-_INJECTION_PATTERNS = (
+# every content paragraph (case-insensitive substring match). Two tiers:
+#
+#  - HARD: imperative injection phrasing with no legitimate editorial use.
+#    Always rejected, in every mode — no override.
+#  - SOFT: phrases that also occur in ordinary AI-news prose ("...leaked its
+#    system prompt...", "you are now able to..."). Rejected by default; an
+#    operator who has reviewed the text can accept a specific phrase with
+#    --allow-phrase "<pattern>" (repeatable, exact pattern match).
+#
+# Both tuples are imported by validate_brief.py (via scan_injection) so the
+# brief stage and the insert stage can never drift.
+INJECTION_PATTERNS_HARD = (
     "ignore previous",
     "ignore the above",
     "ignore all previous",
-    "disregard the",
     "disregard previous",
     "</system",
     "<|im",
     "<|endoftext",
-    "system prompt",
-    "you are now",
     "new instructions:",
     "override your",
+)
+INJECTION_PATTERNS_SOFT = (
+    "system prompt",
+    "you are now",
+    "disregard the",
 )
 
 
@@ -100,21 +113,26 @@ def estimate_read_time(content: list[str]) -> str:
     return f"{minutes} min"
 
 
-def _scan_injection(data: dict) -> list[str]:
-    """Return a list of injection-pattern hits found in the article text."""
-    hits: list[str] = []
-    blobs = [str(data.get("title", "")), str(data.get("excerpt", ""))]
-    content = data.get("content")
-    if isinstance(content, list):
-        blobs.extend(str(p) for p in content)
-    haystack = "\n".join(blobs).lower()
-    for pat in _INJECTION_PATTERNS:
-        if pat.lower() in haystack:
-            hits.append(pat)
-    return hits
+def scan_injection(
+    texts: list[str], allow_phrases: tuple[str, ...] = ()
+) -> tuple[list[str], list[str]]:
+    """Scan texts for injection patterns.
+
+    Returns (hard_hits, soft_hits). Soft hits already exclude any pattern the
+    operator explicitly accepted via allow_phrases; hard patterns cannot be
+    allowed. Shared with validate_brief.py so both pipeline stages apply the
+    same pattern set.
+    """
+    haystack = "\n".join(str(t) for t in texts).lower()
+    allowed = {a.lower() for a in allow_phrases}
+    hard = [p for p in INJECTION_PATTERNS_HARD if p in haystack]
+    soft = [p for p in INJECTION_PATTERNS_SOFT if p in haystack and p not in allowed]
+    return hard, soft
 
 
-def validate_input(data: dict, strict: bool = True) -> list[str]:
+def validate_input(
+    data: dict, strict: bool = True, allow_phrases: tuple[str, ...] = ()
+) -> list[str]:
     """Validate the incoming article JSON. Returns list of error strings."""
     errors = []
 
@@ -145,11 +163,20 @@ def validate_input(data: dict, strict: bool = True) -> list[str]:
         )
 
     # Prompt-injection scan — always on, even in --lenient (safety, not style).
-    injections = _scan_injection(data)
-    if injections:
+    texts = [str(data.get("title", "")), str(data.get("excerpt", ""))]
+    if isinstance(data.get("content"), list):
+        texts.extend(str(p) for p in data["content"])
+    hard_hits, soft_hits = scan_injection(texts, allow_phrases)
+    if hard_hits:
         errors.append(
-            f"Possible prompt-injection patterns in article text: {injections} "
-            f"— refusing per untrusted-input policy"
+            f"Prompt-injection patterns in article text: {hard_hits} "
+            f"— refusing per untrusted-input policy (not overridable)"
+        )
+    if soft_hits:
+        errors.append(
+            f"Editorial phrases matching injection patterns: {soft_hits} "
+            f"— review the text, then re-run with --allow-phrase '<pattern>' "
+            f"for each phrase you accept"
         )
 
     # Range gates — strict mode only. --lenient relaxes these for one-off
@@ -268,6 +295,15 @@ def parse_args() -> argparse.Namespace:
         help="Relax range gates (paragraph count, word count, excerpt length). "
              "Required-field, category, paragraph-char, and injection checks stay on.",
     )
+    parser.add_argument(
+        "--allow-phrase",
+        action="append",
+        default=[],
+        metavar="PATTERN",
+        help="Accept a reviewed SOFT injection pattern (e.g. 'system prompt') "
+             "for this article. Repeatable; exact pattern match. HARD patterns "
+             "cannot be allowed.",
+    )
     return parser.parse_args()
 
 
@@ -290,7 +326,9 @@ def main() -> None:
         sys.exit(1)
 
     # Validate
-    errors = validate_input(data, strict=not args.lenient)
+    errors = validate_input(
+        data, strict=not args.lenient, allow_phrases=tuple(args.allow_phrase)
+    )
     if errors:
         for err in errors:
             log.error(f"Validation error: {err}")

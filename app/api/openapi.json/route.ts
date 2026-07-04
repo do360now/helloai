@@ -101,7 +101,8 @@ export async function GET(req: NextRequest) {
               name: 'limit',
               in: 'query',
               required: false,
-              description: 'Maximum number of recommendations to return (1–10). Default: 3.',
+              description:
+                'Maximum number of recommendations to return. Must be a plain integer 1–10 (non-integer or out-of-range values are rejected with 400). Default: 3.',
               schema: { type: 'integer', minimum: 1, maximum: 10, default: 3 },
             },
           ],
@@ -174,6 +175,25 @@ export async function GET(req: NextRequest) {
             },
           },
         },
+        // Model subset serialized in /api/recommend responses. Mirrors
+        // RecommendModelDTO (data/api-types.ts): no desc/color/strengths —
+        // fetch /api/models for the full record.
+        RecommendModel: {
+          type: 'object',
+          description:
+            'Lean model projection returned by /api/recommend. For desc, color, and strengths, fetch /api/models.',
+          properties: {
+            id: { type: 'string', example: exampleModel.id },
+            name: { type: 'string', example: exampleModel.name },
+            provider: { type: 'string', example: exampleModel.provider },
+            url: { type: 'string', format: 'uri', example: exampleModel.url },
+            tag: { type: 'string', example: exampleModel.tag },
+            elo: { type: 'integer', example: exampleModel.elo },
+            cost_per_million_tokens: { type: 'number', example: exampleModel.cost_per_million_tokens, description: 'USD per 1M input tokens' },
+            cost_per_million_tokens_output: { type: 'number', example: exampleModel.cost_per_million_tokens_output, description: 'USD per 1M output tokens' },
+            context_window: { type: 'integer', example: exampleModel.context_window, description: 'Max context window in tokens' },
+          },
+        },
         Recommendation: {
           type: 'object',
           properties: {
@@ -184,7 +204,7 @@ export async function GET(req: NextRequest) {
               items: { type: 'string' },
               example: ['Category leader for Coding & Engineering', 'Highest Elo rating (1503)'],
             },
-            model: { $ref: '#/components/schemas/Model' },
+            model: { $ref: '#/components/schemas/RecommendModel' },
           },
         },
         RecommendResponse: {
@@ -204,6 +224,12 @@ export async function GET(req: NextRequest) {
             filters_applied: { type: 'array', items: { type: 'string' } },
             models_considered: { type: 'integer' },
             models_excluded: { type: 'integer' },
+            matched_category: {
+              type: 'string',
+              nullable: true,
+              example: 'Coding & Engineering',
+              description: 'Category the task param matched, or null when no task was given/matched',
+            },
             last_updated: { type: 'string', format: 'date' },
           },
         },
