@@ -25,8 +25,7 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // Get IP - in Vercel/production, use request.ip; locally use forwarded header
-  const ip = (request as unknown as { ip?: string }).ip || request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
+  const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
   const userAgent = request.headers.get('user-agent') || '';
   const now = Date.now();
 
@@ -70,8 +69,13 @@ export function middleware(request: NextRequest) {
   const record = rateLimitMap.get(ip);
 
   if (!record || now > record.resetTime) {
-    rateLimitMap.set(ip, { count: 1, resetTime: now + WINDOW_MS });
-    return NextResponse.next();
+    const resetTime = now + WINDOW_MS;
+    rateLimitMap.set(ip, { count: 1, resetTime });
+    const response = NextResponse.next();
+    response.headers.set('X-RateLimit-Limit', RATE_LIMIT.toString());
+    response.headers.set('X-RateLimit-Remaining', (RATE_LIMIT - 1).toString());
+    response.headers.set('X-RateLimit-Reset', resetTime.toString());
+    return response;
   }
 
   if (record.count >= RATE_LIMIT) {
