@@ -11,7 +11,7 @@ An unbiased, curated directory of frontier AI models — with Elo rankings, cate
 ## Features
 
 - **Interactive directory**: Filter and rank models by task, cost, and context window — live on the homepage
-- **Leaderboard**: Elo ratings from Chatbot Arena blind votes, updated weekly
+- **Leaderboard**: Elo ratings are curated from Chatbot Arena blind-vote data, cross-checked weekly; when the upstream snapshot is stale, curated values are kept
 - **Category insights**: Which model leads for coding, reasoning, daily use, and more
 - **Weekly articles**: Honest editorial — no hype, no affiliate links
 - **Public API**: Machine-readable endpoints for developers and AI agents

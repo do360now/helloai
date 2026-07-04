@@ -29,10 +29,16 @@ import json
 import logging
 import re
 from dataclasses import dataclass
+from datetime import datetime, timezone
 
 import requests
 
 log = logging.getLogger("arena")
+
+# Reject upstream snapshots older than this many days — the nakasyou source
+# has been known to freeze for months at a time; a stale snapshot should
+# never silently overwrite curated Elos.
+MAX_SNAPSHOT_AGE_DAYS = 30
 
 
 # ─── INTERNAL: LMArena-specific knowledge ──────────────────────────────────
@@ -132,6 +138,16 @@ def _fetch_from_nakasyou() -> dict[str, "_ArenaEntry"]:
         return {}
 
     latest = max(data.keys())  # "YYYYMMDD" keys — lexicographic == chronological
+
+    snap = datetime.strptime(latest, "%Y%m%d").replace(tzinfo=timezone.utc)
+    age_days = (datetime.now(timezone.utc) - snap).days
+    if age_days > MAX_SNAPSHOT_AGE_DAYS:
+        log.warning(
+            f"Arena snapshot {latest} is {age_days} days old "
+            f"(max {MAX_SNAPSHOT_AGE_DAYS}); keeping curated Elos"
+        )
+        return {}  # empty dict == "no data" shape used throughout this module
+
     board = data[latest].get("text", {}).get("overall") or {}
 
     entries: dict[str, _ArenaEntry] = {
