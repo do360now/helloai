@@ -1,4 +1,4 @@
-VERSION=2.14.38
+VERSION=2.14.40
 
 # ─── Rootless Docker ─────────────────────────────────────
 # Point at the rootless per-user socket. ?= preserves any DOCKER_HOST
@@ -68,6 +68,158 @@ deploy:
 	$(MAKE) bump_version
 	$(MAKE) build_helloai_app build_helloai_image push_helloai_image az_deploy
 
+# ─── Open AI Stacks (Ollama / Fireconnect) ─────────────────
+# Launch open-weight agent stacks for real-world testing.
+# Run `make open_stacks_help` for the full menu.
+#
+# Prerequisites:
+#   - ollama (https://ollama.com) — `make open_signin` for cloud models
+#   - claude / hermes on PATH (installed by `ollama launch` on first run)
+#   - fireconnect (optional) — `make open_fireconnect_install`
+
+OPEN_MODEL_GLM52        ?= glm-5.2:cloud
+OPEN_MODEL_DEEPSEEK_PRO ?= deepseek-v4-pro:cloud
+OPEN_MODEL_DEEPSEEK_FLASH ?= deepseek-v4-flash:cloud
+OPEN_MODEL_KIMI_CODE    ?= kimi-k2.7-code:cloud
+OPEN_MODEL_MINIMAX_M3   ?= minimax-m3:cloud
+
+.PHONY: open_stacks_help open_signin open_pull_models \
+	open_hermes_glm52 open_claude_glm52 open_claude_deepseek_pro \
+	open_claude_deepseek_flash open_claude_kimi_code open_claude_minimax_m3 \
+	open_cline_glm52 open_kimi_code_cli \
+	open_fireconnect_install open_fireconnect_tiered open_fireconnect_off \
+	open_fireconnect_status open_claude_fireconnect_tiered \
+	open_aider_install open_aider_deepseek_flash
+
+open_stacks_help:
+	@echo "Open-weight agent stacks — launch targets:"
+	@echo ""
+	@echo "  Setup"
+	@echo "    make open_signin                  Ollama cloud auth (required for :cloud models)"
+	@echo "    make open_pull_models             Pre-pull all cloud models used below"
+	@echo "    make open_fireconnect_install     Install Fireconnect CLI (Claude Code + Fireworks)"
+	@echo "    make open_aider_install           Install Aider (pip, cost-optimized coding)"
+	@echo ""
+	@echo "  Convenience (article stack)"
+	@echo "    make open_hermes_glm52            Hermes + GLM-5.2:cloud"
+	@echo ""
+	@echo "  Peak open coding (Claude Code harness — recommended)"
+	@echo "    make open_claude_fireconnect_tiered  OPTIMUM: GLM-latest main + DeepSeek Flash subagents"
+	@echo "    make open_fireconnect_tiered         Configure tiered routing only (then run: claude)"
+	@echo "    make open_claude_glm52               Claude Code + GLM-5.2:cloud (long-horizon planning)"
+	@echo "    make open_claude_deepseek_pro        Claude Code + DeepSeek V4 Pro (peak SWE-bench open)"
+	@echo "    make open_claude_deepseek_flash      Claude Code + DeepSeek V4 Flash (best \$$/quality)"
+	@echo "    make open_claude_kimi_code           Claude Code + Kimi K2.7 Code (MCP/tool agents)"
+	@echo ""
+	@echo "  Other harnesses"
+	@echo "    make open_cline_glm52               Cline (VS Code) + GLM-5.2:cloud"
+	@echo "    make open_kimi_code_cli             Kimi Code CLI + Kimi K2.7 Code"
+	@echo "    make open_claude_minimax_m3         Claude Code + MiniMax M3 (multimodal)"
+	@echo "    make open_aider_deepseek_flash      Aider + DeepSeek V4 Flash via Ollama"
+	@echo ""
+	@echo "  Fireconnect management"
+	@echo "    make open_fireconnect_status        Show current Claude Code provider + model map"
+	@echo "    make open_fireconnect_off           Restore native Anthropic routing"
+
+open_signin:
+	@command -v ollama >/dev/null || (echo "❌ ollama not found — install from https://ollama.com"; exit 1)
+	@echo "🔐 Signing in to Ollama cloud (required for :cloud models)..."
+	ollama signin
+
+open_pull_models:
+	@command -v ollama >/dev/null || (echo "❌ ollama not found"; exit 1)
+	@echo "📥 Pulling cloud models..."
+	ollama pull $(OPEN_MODEL_GLM52)
+	ollama pull $(OPEN_MODEL_DEEPSEEK_PRO)
+	ollama pull $(OPEN_MODEL_DEEPSEEK_FLASH)
+	ollama pull $(OPEN_MODEL_KIMI_CODE)
+	ollama pull $(OPEN_MODEL_MINIMAX_M3)
+	@echo "✅ Models ready"
+
+# ── Hermes + GLM (convenience; not peak coding performance) ──
+open_hermes_glm52:
+	@command -v ollama >/dev/null || (echo "❌ ollama not found"; exit 1)
+	@echo "🚀 Hermes + $(OPEN_MODEL_GLM52)"
+	ollama launch hermes --model $(OPEN_MODEL_GLM52)
+
+# ── Claude Code + single open model (via Ollama cloud) ──
+open_claude_glm52:
+	@command -v ollama >/dev/null || (echo "❌ ollama not found"; exit 1)
+	@echo "🚀 Claude Code + $(OPEN_MODEL_GLM52) — long-horizon planning"
+	ollama launch claude --model $(OPEN_MODEL_GLM52)
+
+open_claude_deepseek_pro:
+	@command -v ollama >/dev/null || (echo "❌ ollama not found"; exit 1)
+	@echo "🚀 Claude Code + $(OPEN_MODEL_DEEPSEEK_PRO) — peak open SWE-bench (~80.6%)"
+	ollama launch claude --model $(OPEN_MODEL_DEEPSEEK_PRO)
+
+open_claude_deepseek_flash:
+	@command -v ollama >/dev/null || (echo "❌ ollama not found"; exit 1)
+	@echo "🚀 Claude Code + $(OPEN_MODEL_DEEPSEEK_FLASH) — best cost/quality Pareto frontier"
+	ollama launch claude --model $(OPEN_MODEL_DEEPSEEK_FLASH)
+
+open_claude_kimi_code:
+	@command -v ollama >/dev/null || (echo "❌ ollama not found"; exit 1)
+	@echo "🚀 Claude Code + $(OPEN_MODEL_KIMI_CODE) — MCP/tool-heavy agents"
+	ollama launch claude --model $(OPEN_MODEL_KIMI_CODE)
+
+open_claude_minimax_m3:
+	@command -v ollama >/dev/null || (echo "❌ ollama not found"; exit 1)
+	@echo "🚀 Claude Code + $(OPEN_MODEL_MINIMAX_M3) — multimodal + 1M context"
+	ollama launch claude --model $(OPEN_MODEL_MINIMAX_M3)
+
+# ── Other Ollama-integrated harnesses ──
+open_cline_glm52:
+	@command -v ollama >/dev/null || (echo "❌ ollama not found"; exit 1)
+	@echo "🚀 Cline + $(OPEN_MODEL_GLM52) — VS Code agent with approval gates"
+	ollama launch cline --model $(OPEN_MODEL_GLM52)
+
+open_kimi_code_cli:
+	@command -v ollama >/dev/null || (echo "❌ ollama not found"; exit 1)
+	@echo "🚀 Kimi Code CLI + $(OPEN_MODEL_KIMI_CODE)"
+	ollama launch kimi --model $(OPEN_MODEL_KIMI_CODE)
+
+# ── Fireconnect: optimum tiered open stack (Claude Code harness) ──
+open_fireconnect_install:
+	@echo "📦 Installing Fireconnect..."
+	curl -fsSL https://raw.githubusercontent.com/fw-ai/fireconnect/main/install.sh | bash
+	@echo "✅ Fireconnect installed. Set FIREWORKS_API_KEY=fw_... then run make open_fireconnect_tiered"
+
+open_fireconnect_tiered:
+	@command -v fireconnect >/dev/null || (echo "❌ fireconnect not found — run: make open_fireconnect_install"; exit 1)
+	@test -n "$$FIREWORKS_API_KEY" || (echo "❌ Set FIREWORKS_API_KEY=fw_... (https://app.fireworks.ai/settings/users/api-keys)"; exit 1)
+	@echo "⚙️  Tiered routing: main/opus=glm-latest, sonnet=glm-5p1, haiku/subagent=deepseek-v4-flash"
+	fireconnect claude on --api-key "$$FIREWORKS_API_KEY" \
+		--main glm-latest --sonnet glm-5p1 \
+		--haiku deepseek-v4-flash --subagent deepseek-v4-flash
+	@echo "✅ Configured. Start a new Claude Code session: claude"
+
+open_claude_fireconnect_tiered: open_fireconnect_tiered
+	@command -v claude >/dev/null || (echo "❌ claude not found on PATH"; exit 1)
+	@echo "🚀 Launching Claude Code with Fireconnect tiered open models..."
+	claude
+
+open_fireconnect_status:
+	@command -v fireconnect >/dev/null || (echo "❌ fireconnect not found — run: make open_fireconnect_install"; exit 1)
+	fireconnect claude status
+
+open_fireconnect_off:
+	@command -v fireconnect >/dev/null || (echo "❌ fireconnect not found"; exit 1)
+	fireconnect claude off
+	@echo "✅ Restored native Anthropic Claude Code routing"
+
+# ── Aider: lowest-cost agentic coding ──
+open_aider_install:
+	@echo "📦 Installing Aider..."
+	pip3 install --user aider-chat
+	@echo "✅ Aider installed. Ensure Ollama is running, then: make open_aider_deepseek_flash"
+
+open_aider_deepseek_flash:
+	@command -v aider >/dev/null || (echo "❌ aider not found — run: make open_aider_install"; exit 1)
+	@command -v ollama >/dev/null || (echo "❌ ollama not found"; exit 1)
+	@echo "🚀 Aider + Ollama $(OPEN_MODEL_DEEPSEEK_FLASH) — lowest-cost open coding"
+	aider --model ollama_chat/$(OPEN_MODEL_DEEPSEEK_FLASH)
+
 # ─── Weekly Update ────────────────────────────────────────
 # Article generation is handled by the /weekly-update Claude Code skill.
 weekly_update:
@@ -120,3 +272,5 @@ test_azure_access:
 test_deploy: test_azure_auth test_azure_access
 	@echo "✅ All Azure credentials and access validated!"
 	@echo "   The weekly cronjob should work correctly."
+
+
