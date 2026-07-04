@@ -25,3 +25,7 @@ export async function GET(req: NextRequest) {
     );
   }
 }
+
+export function OPTIONS(req: NextRequest) {
+  return new NextResponse(null, { status: 204, headers: apiHeaders(req.headers.get('origin')) });
+}

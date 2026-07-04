@@ -257,3 +257,7 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.json(spec, { headers: HEADERS });
 }
+
+export function OPTIONS(req: NextRequest) {
+  return new NextResponse(null, { status: 204, headers: apiHeaders(req.headers.get('origin')) });
+}

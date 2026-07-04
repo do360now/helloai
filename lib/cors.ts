@@ -64,7 +64,6 @@ function corsHeadersFor(origin: string | null): Record<string, string> {
       'Access-Control-Allow-Origin': origin,
       'Access-Control-Allow-Methods': 'GET, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type',
-      'Access-Control-Allow-Credentials': 'true',
     };
   }
 
@@ -94,12 +93,3 @@ export function isOriginAllowed(origin: string | null): boolean {
   const allowedOrigins = getAllowedOrigins();
   return allowedOrigins.includes(origin);
 }
-
-/**
- * Default CORS headers (backward compatible with existing code)
- */
-export const DEFAULT_CORS_HEADERS: Record<string, string> = {
-  'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Methods': 'GET, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
-};
