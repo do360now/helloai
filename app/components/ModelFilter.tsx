@@ -34,6 +34,7 @@ export default function ModelFilter({
         <input
           type="text"
           className="model-filter-input"
+          aria-label="Search models"
           placeholder="What do you need a model for? (e.g. coding, reasoning)"
           value={task}
           onChange={(e) => onTaskChange(e.target.value)}

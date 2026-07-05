@@ -20,6 +20,8 @@ export default function CategoryIcon({ icon, color }: { icon: string; color: str
         strokeWidth="1.8"
         strokeLinecap="round"
         strokeLinejoin="round"
+        aria-hidden="true"
+        focusable="false"
       >
         <path d={PATHS[icon] || PATHS.chat} />
       </svg>
