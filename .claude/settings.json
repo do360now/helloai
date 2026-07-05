@@ -10,6 +10,16 @@
             "statusMessage": "Updating site lastUpdated..."
           }
         ]
+      },
+      {
+        "matcher": "Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/home/cmc/git/grok/helloai/.claude/hooks/post-edit.sh $CLAUDE_TOOL_ARGUMENTS",
+            "statusMessage": "Running linter"
+          }
+        ]
       }
     ]
   }

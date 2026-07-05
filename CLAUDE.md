@@ -166,7 +166,8 @@ Manual one-off data edits:
 | `.claude/agents/data-validator.md` | Haiku — structural + semantic checks on all data/*.json |
 | `.claude/agents/leaderboard-updater.md` | Original (Claude Code) version. Grok is now the default executor for this role in the weekly update. |
 | `.claude/agents/seo-auditor.md` | Sonnet — audits live pages for title, OG, canonical, structured data |
-| `.claude/hooks/post-edit.sh` | Post-edit ESLint guardrail on app/**/*.ts(x) |
+| `.claude/hooks/post-edit.sh` | Post-edit ESLint guardrail on app/**/*.ts(x); wired as a `PostToolUse` hook in `.claude/settings.json` |
+| `.claude/settings.json` (`PostToolUse` → site.json bumper) | Auto-bumps `data/site.json → lastUpdated` to today's date whenever an Edit/Write touches `data/articles.json` or `data/models.json` |
 | `.claude/agent-memory/leaderboard-updater.md` | Cross-session memory: verified models, staleness streaks, candidate verdicts |
 | `.claude/agent-memory/article-idea-generator.md` | Cross-session memory: brief queue, recurring gaps, angles to avoid |
 | `.claude/state/leaderboard-changes.jsonl` | Append-only audit log of every change `leaderboard-updater` has proposed (including rejected ones); `applied` field flipped only by appending a new record, never by rewriting |
