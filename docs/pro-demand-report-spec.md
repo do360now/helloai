@@ -1,6 +1,6 @@
 # Implementation spec: `scripts/pro_demand_report.py`
 
-**Author:** Opus (advisor) · **Executor:** Sonnet or Haiku · **Status:** ready to implement
+**Author:** Opus (advisor) · **Executor:** Sonnet or Haiku · **Status:** DONE — implemented and deployed in v2.14.42 (2026-07)
 **Depends on:** `docs/pro-metrics-spec.md` (the `[pro-metrics]` events must exist first)
 
 ## Goal

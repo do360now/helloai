@@ -17,7 +17,7 @@ Deploying helloai.com to Azure. Always run `make bump_version` as a **separate**
 5. `make az_deploy` — updates Azure container tag and restarts the web app
 
 ## After deploy
-Run `/agent api-smoke-tester` to verify all 7 endpoints are healthy.
+Run `/agent api-smoke-tester` to verify all 5 public endpoints are healthy.
 
 ## Do NOT use
-`make deploy` — it chains bump+build in one invocation (version bug) and also runs `weekly_update` which may overwrite manual data changes.
+`make deploy` also runs the full `weekly_update` (auto-commit/push) — use the individual targets when you only want build+push+deploy.

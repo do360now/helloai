@@ -70,7 +70,7 @@ If you ever want to use the original Claude Code agents:
 
 ## Future Evolution
 
-- We can create dedicated Grok-optimized versions of the agent prompts in `.claude/grok-agents/` if we want to diverge further from the Claude Code format.
+- We can create dedicated Grok-optimized versions of the agent prompts in `.claude/docs/grok-agent-migration/grok-agents/` if we want to diverge further from the Claude Code format.
 - Additional agents can be evaluated for Grok migration using the same parallel + scoring methodology.
 
 ---

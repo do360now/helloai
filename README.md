@@ -4,7 +4,7 @@ An unbiased, curated directory of frontier AI models — with Elo rankings, cate
 
 **Live**: [helloai.com](https://helloai.com)
 
-![Next.js](https://img.shields.io/badge/Next.js-16.1.6-black)
+![Next.js](https://img.shields.io/badge/Next.js-16.2.3-black)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4-cyan)
 
@@ -114,10 +114,11 @@ public/
     ai-plugin.json     # Agent discovery manifest
 .claude/
   skills/
-    deploy.md                  # Deploy workflow
-    advisor-pattern.md         # Executor+Advisor pattern reference
+    deploy/SKILL.md                  # Deploy workflow
+    advisor-pattern/SKILL.md         # Executor+Advisor pattern reference
+    weekly-update/SKILL.md           # Orchestrates the weekly pipeline
   agents/
-    article-writer.md          # Sonnet (advisor: Opus) — writes article prose
+    article-writer.md          # Opus — writes article prose
     article-idea-generator.md  # Sonnet (advisor: Opus) — weekly editorial scouting
     api-smoke-tester.md        # Haiku (advisor: Sonnet) — post-deploy API validation
     data-validator.md          # Haiku (advisor: Sonnet) — data integrity + semantic drift
@@ -201,17 +202,19 @@ Run these via Claude Code (`/agent <name>`):
 | Agent | Executor | Advisor | When to run | What it does |
 |-------|----------|---------|-------------|--------------|
 | `data-validator` | Haiku | Sonnet | After any data change | Structural + semantic checks on all `data/*.json` |
-| `api-smoke-tester` | Haiku | Sonnet | After every deploy | Validates all 7 API endpoints are healthy |
+| `api-smoke-tester` | Haiku | Sonnet | After every deploy | Validates all 5 public API endpoints are healthy |
 | `leaderboard-updater` | Sonnet | Opus | Weekly | Detects stale model versions, pricing, arena name map drift; tracks staleness streaks across runs |
 | `article-idea-generator` | Sonnet | Opus | Weekly | Scouts AI news, returns 5 prioritized article briefs; maintains brief queue across runs |
 | `seo-auditor` | Sonnet | Opus | Before major deploys | Audits live pages for title, OG, canonical, structured data |
-| `article-writer` | Sonnet | Opus | On demand | Writes polished article prose (pass a brief, get JSON content array) |
+| `article-writer` | Opus | — | On demand | Writes polished article prose (pass a brief, get JSON content array) |
+
+As of late May 2026, **Grok** is the default executor for the `leaderboard-updater` and `article-idea-generator` roles (the Claude Code agent definitions above remain available as fallback) — see `.claude/skills/weekly-update/SKILL.md`.
 
 All agents use a **generator-verifier pattern**: the executor does the work, the advisor is consulted at explicit decision points with concrete, testable criteria — prompted with "Think carefully and step-by-step" to leverage Opus 4.7 adaptive thinking. Weekly agents (`leaderboard-updater`, `article-idea-generator`) persist state between runs via `.claude/agent-memory/`. Each agent's frontmatter includes an `integrity-hash-sha256` field; run `./verify-all-agents.sh` to confirm no agent file has been tampered with.
 
 ## Stack
 
-- **Framework**: Next.js 16.1.6 (App Router, standalone Docker output)
+- **Framework**: Next.js 16.2.3 (App Router, standalone Docker output)
 - **Language**: TypeScript strict
 - **UI**: React 19, Tailwind CSS v4
 - **Hosting**: Azure Web App (Docker)

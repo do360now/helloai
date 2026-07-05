@@ -101,7 +101,7 @@ Fix any TypeScript or lint errors before proceeding.
 Stage data files and commit:
 
 ```bash
-git add data/
+git add data/ .claude/agent-memory/ .claude/state/
 git commit -m "data: weekly update $(date +%Y-%m-%d)"
 ```
 

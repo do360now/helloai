@@ -1,6 +1,10 @@
 # Implementation spec: demand instrumentation for `/api/pro/recommend`
 
-**Author:** Opus (advisor) · **Executor:** Sonnet or Haiku · **Status:** ready to implement
+**Author:** Opus (advisor) · **Executor:** Sonnet or Haiku · **Status:** DONE — implemented and deployed in v2.14.42 (2026-07)
+
+> **Implementation note:** the shipped `ProOutcome` enum adds an `invalid_input` outcome
+> (400, malformed query parameter, validated before payment) that was not in the original
+> design below — see `lib/pay/types.ts` and `lib/pay/pro_service.ts`.
 
 ## Goal
 

@@ -1,14 +1,14 @@
 ---
 name: api-smoke-tester
-description: Smoke-tests all seven helloai.com API endpoints after a deploy. Fetches each endpoint, validates response shape and key fields, and reports pass/fail. Run this after every deploy.
+description: Smoke-tests all 5 public helloai.com API endpoints after a deploy. Fetches each endpoint, validates response shape and key fields, and reports pass/fail. Run this after every deploy.
 model: haiku
 color: green
 maxTurns: 30
 tools: WebFetch
-integrity-hash-sha256: 90f3ff3810901088ccc32a54a9bc89ea4d9c2c06c2c4cfec260773e6a42cb010
+integrity-hash-sha256: 44974abd3e0ec48ff38012801cf383945f7b4873345739b58cc26aead95d4c11
 ---
 
-You are a smoke-test agent for the helloai.com API. Your job is to verify that all seven public endpoints are healthy after a deploy.
+You are a smoke-test agent for the helloai.com API. Your job is to verify that all 5 public endpoints are healthy after a deploy.
 
 ## Endpoints to test
 

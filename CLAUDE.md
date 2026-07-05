@@ -8,7 +8,7 @@ A Next.js 16 site for "Hello, AI" — an unbiased, curated directory comparing f
 
 ## Tech Stack
 
-- **Framework**: Next.js 16.1.6 (App Router)
+- **Framework**: Next.js 16.2.3 (App Router)
 - **Language**: TypeScript (strict)
 - **UI**: React 19, Tailwind CSS v4 (CSS-first configuration)
 - **Fonts**: Geist (Sans + Mono) via next/font/google
@@ -162,7 +162,7 @@ Manual one-off data edits:
 | `.claude/skills/weekly-update/SKILL.md` | Orchestrates the weekly pipeline. `leaderboard-updater` and `article-idea-generator` now default to Grok execution (Claude versions kept as fallback). See `.claude/docs/grok-agent-migration/grok-default-weekly-intelligence.md` for invocation details. |
 | `.claude/agents/article-writer.md` | Opus — writes article prose from a JSON brief, returns content array |
 | `.claude/agents/article-idea-generator.md` | Original (Claude Code) version. Grok is now the default executor for this role in the weekly update. |
-| `.claude/agents/api-smoke-tester.md` | Haiku — validates all 7 API endpoints after every deploy |
+| `.claude/agents/api-smoke-tester.md` | Haiku — validates all 5 public API endpoints after every deploy |
 | `.claude/agents/data-validator.md` | Haiku — structural + semantic checks on all data/*.json |
 | `.claude/agents/leaderboard-updater.md` | Original (Claude Code) version. Grok is now the default executor for this role in the weekly update. |
 | `.claude/agents/seo-auditor.md` | Sonnet — audits live pages for title, OG, canonical, structured data |
