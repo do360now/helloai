@@ -186,6 +186,7 @@ def build_image(tag: str, dry_run: bool = False) -> str:
     run(
         [
             "docker", "build",
+            "--network=host",
             "--build-arg", f"APP_VERSION={version}",
             "-t", full_tag, "-t", latest_tag, ".",
         ],
