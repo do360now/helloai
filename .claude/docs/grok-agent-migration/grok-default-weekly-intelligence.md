@@ -23,6 +23,7 @@ Article prose writing (`article-writer` / Opus) and all deterministic steps rema
 > "Run the leaderboard-updater for this week's update. Follow the specification in `.claude/agents/leaderboard-updater.md`, using the latest memory and state files. Append proposals correctly to the audit log before showing the report."
 
 Grok will:
+- **First** run `scripts/check_provider_catalog.py` (deterministic catalog guard — catches version bumps memory misses)
 - Read current state (`models.json`, `arena.py`, memory, `leaderboard-changes.jsonl`)
 - Perform research
 - Produce the structured report

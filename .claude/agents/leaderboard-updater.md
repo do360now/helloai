@@ -17,6 +17,19 @@ Read these files first:
 - `scripts/arena.py` — the `_NAME_MAP` dict, which maps our model IDs to LMArena model name strings
 - `.claude/state/leaderboard-changes.jsonl` (if it exists) — every change you've ever proposed, including ones the user rejected. Skip re-proposing changes that were rejected within the last 30 days unless new evidence has emerged. See [Step 5](#step-5--append-every-proposed-change-to-the-audit-log) for the schema.
 
+## Step 1b — Provider catalog sweep (mandatory, deterministic)
+
+**Run before web searches.** Memory and prior rejection lists are hints only — never substitutes for the catalog check.
+
+```bash
+/home/cmc/git/grok/helloai/.venv/bin/python3 scripts/check_provider_catalog.py
+```
+
+- **Exit 0** — proceed to Step 2.
+- **Exit 1** — one or more providers list a newer recommended/API version than `models.json`. Fetch the cited `catalog_url` / `news_url` from the log, verify pricing and context, and patch `models.json` + `arena.py` before continuing. Do **not** dismiss drift because memory expected a different version number (e.g. watching for Grok 4.4 while 4.5 shipped).
+
+Catalog sources live in `scripts/provider_catalog.json`. Extend that file when adding providers — do not hardcode version expectations in agent memory.
+
 ## Step 2 — Search for changes
 
 Run targeted searches. For each currently tracked model (Claude, Gemini, Grok, GPT), search for:

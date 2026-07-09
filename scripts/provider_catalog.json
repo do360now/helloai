@@ -1,0 +1,57 @@
+{
+  "providers": [
+    {
+      "model_id": "fable",
+      "provider": "Anthropic",
+      "catalog_url": "https://platform.claude.com/docs/en/about-claude/pricing",
+      "news_url": "https://www.anthropic.com/news",
+      "tracked_name_pattern": "Claude Fable ([0-9]+)",
+      "catalog_name_patterns": ["Claude Fable ([0-9]+)"]
+    },
+    {
+      "model_id": "claude",
+      "provider": "Anthropic",
+      "catalog_url": "https://platform.claude.com/docs/en/about-claude/pricing",
+      "news_url": "https://www.anthropic.com/news",
+      "tracked_name_pattern": "Claude Opus ([0-9.]+)",
+      "catalog_name_patterns": ["Claude Opus ([0-9.]+)"]
+    },
+    {
+      "model_id": "gemini",
+      "provider": "Google",
+      "catalog_url": "https://ai.google.dev/gemini-api/docs/pricing",
+      "news_url": "https://blog.google/technology/ai/",
+      "tracked_name_pattern": "Gemini ([0-9.]+) Pro",
+      "catalog_name_patterns": ["Gemini ([0-9.]+) Pro"]
+    },
+    {
+      "model_id": "grok",
+      "provider": "xAI",
+      "catalog_url": "https://docs.x.ai/docs/models",
+      "news_url": "https://x.ai/news",
+      "tracked_name_pattern": "Grok ([0-9.]+)",
+      "catalog_name_patterns": ["Grok ([0-9.]+)"],
+      "recommendation_patterns": [
+        "use Grok ([0-9.]+)",
+        "Chat:.*Grok ([0-9.]+)",
+        "Introducing Grok ([0-9.]+)"
+      ]
+    },
+    {
+      "model_id": "gpt",
+      "provider": "OpenAI",
+      "catalog_url": "https://openai.com/api/pricing/",
+      "news_url": "https://openai.com/news/",
+      "tracked_name_pattern": "GPT-([0-9.]+)",
+      "catalog_name_patterns": ["GPT-([0-9.]+)", "gpt-([0-9.]+)"]
+    },
+    {
+      "model_id": "qwen",
+      "provider": "Alibaba",
+      "catalog_url": "https://qwen.ai/blog",
+      "news_url": "https://qwen.ai/blog",
+      "tracked_name_pattern": "Qwen([0-9.]+)-Max",
+      "catalog_name_patterns": ["Qwen([0-9.]+)-Max", "qwen([0-9.]+)-max"]
+    }
+  ]
+}

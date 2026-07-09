@@ -88,6 +88,7 @@ _NAME_MAP: dict[str, list[str]] = {
         "gemini-3-flash",
     ],
     "grok": [
+        "grok-4.5",
         "grok-4.3",
         "grok-4.20",
         "grok-4.1-thinking",

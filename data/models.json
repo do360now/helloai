@@ -51,17 +51,18 @@
   },
   {
     "id": "grok",
-    "name": "Grok 4.3",
+    "name": "Grok 4.5",
     "provider": "xAI",
     "url": "https://grok.x.ai",
-    "tag": "Truth Machine",
-    "desc": "Multi-agent architecture with 1M context and built-in reasoning on every query. Now the cheapest frontier-quality option in the set — best for high-stakes research without the sugarcoating.",
+    "tag": "Engineering Speed",
+    "desc": "xAI's recommended chat and code model: 83.3% on Terminal-Bench 2.1, 4.2× fewer output tokens than Opus 4.8 on SWE Bench Pro, served at 80 TPS. $2/$6 with 500K context.",
     "color": "#EF4444",
     "elo": 1490,
-    "cost_per_million_tokens": 1.25,
-    "cost_per_million_tokens_output": 2.5,
-    "context_window": 1000000,
+    "cost_per_million_tokens": 2,
+    "cost_per_million_tokens_output": 6,
+    "context_window": 500000,
     "strengths": [
+      "Coding & Engineering",
       "Honest Daily Use"
     ]
   },

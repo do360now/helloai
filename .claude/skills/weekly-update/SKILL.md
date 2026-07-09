@@ -19,9 +19,18 @@ See the "Grok Execution" notes in each relevant step below.
 
 ### 1. Leaderboard drift (judgment)
 
-**Default (Grok):** Ask Grok to run the `leaderboard-updater` role, following the specification in `.claude/agents/leaderboard-updater.md` (plus any refinements documented in recent Grok scoring runs and updated memory).
+**1a. Catalog guard (deterministic, run first):**
+
+```bash
+/home/cmc/git/grok/helloai/.venv/bin/python3 scripts/check_provider_catalog.py
+```
+
+Non-zero exit means official provider catalogs list a newer version than `models.json` — patch before proceeding.
+
+**1b. Judgment pass — Default (Grok):** Ask Grok to run the `leaderboard-updater` role, following the specification in `.claude/agents/leaderboard-updater.md` (plus any refinements documented in recent Grok scoring runs and updated memory).
 
 Grok will:
+- Run the catalog guard and act on any drift it reports
 - Search for model version, pricing, and context-window changes
 - Evaluate new model candidates against the admission decision tree
 - Produce a change report in the required format

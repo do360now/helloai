@@ -22,8 +22,8 @@
   },
   {
     "name": "Honest Daily Use",
-    "leader": "Grok 4.3",
-    "insight": "Shines for maximally truthful, witty conversation. Great for brainstorming without corporate polish.",
+    "leader": "Grok 4.5",
+    "insight": "xAI's default chat model — direct answers without corporate polish, now with coding-grade speed at 80 TPS and 4.2× token efficiency on engineering tasks.",
     "icon": "chat",
     "color": "#F472B6"
   }

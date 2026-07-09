@@ -23,7 +23,15 @@ Article prose may be written in-session by Grok following `.claude/agents/articl
 
 ### 1. Leaderboard drift (judgment)
 
-Read `data/models.json`, `scripts/arena.py`, `.claude/agent-memory/leaderboard-updater.md`, and `.claude/state/leaderboard-changes.jsonl`.
+**1a. Catalog guard (deterministic, run first):**
+
+```bash
+/home/cmc/git/grok/helloai/.venv/bin/python3 scripts/check_provider_catalog.py
+```
+
+If exit 1, investigate every flagged provider and apply evidence-backed patches before continuing. Do not rely on memory/version guesses alone.
+
+**1b. Judgment pass:** Read `data/models.json`, `scripts/arena.py`, `.claude/agent-memory/leaderboard-updater.md`, and `.claude/state/leaderboard-changes.jsonl`.
 
 Search for version, pricing, and context-window changes. Evaluate new candidates via the admission decision tree. Apply only evidence-backed patches. Append every proposal to `.claude/state/leaderboard-changes.jsonl` with `>>` (never overwrite). Update `.claude/agent-memory/leaderboard-updater.md`.
 

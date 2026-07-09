@@ -79,6 +79,15 @@ def main() -> None:
 
     success = True
 
+    # ── Step 0: Provider catalog drift guard ────────────
+    log.info("\nStep 0: Checking provider catalog drift...")
+    catalog_cmd = [sys.executable, str(SCRIPTS_DIR / "check_provider_catalog.py"), "--ok"]
+    if not run_command(catalog_cmd, "Provider catalog check", dry_run=args.dry_run):
+        log.warning(
+            "Catalog drift detected — run leaderboard-updater judgment pass "
+            "and patch models.json before deploying."
+        )
+
     # ── Step 1: Update leaderboard ──────────────────────
     log.info("\nStep 1: Updating leaderboard...")
     cmd = [sys.executable, str(SCRIPTS_DIR / "update_leaderboard.py")]

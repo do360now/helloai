@@ -1,5 +1,20 @@
 [
   {
+    "slug": "grok-4-5-ships-as-xai-default",
+    "title": "Grok 4.5 Ships as xAI's Default Chat Model",
+    "excerpt": "xAI launched Grok 4.5 on July 8 — 83.3% on Terminal-Bench 2.1, 4.2× token efficiency, and $2/$6 pricing. helloai's tracked Grok entry moves from 4.3 to 4.5.",
+    "date": "2026-07-09",
+    "category": "Discovery",
+    "readTime": "2 min",
+    "content": [
+      "On July 8, xAI shipped Grok 4.5 — and helloai's weekly drift check missed it. The updater was watching memory for a Grok 4.4 release that never came, while xAI's docs and news page already listed 4.5 as the recommended chat and code model. Grok 4.5 replaces Grok 4.3 in models.json today: $2/$6 per million tokens, 500K context, and xAI's explicit guidance to use it for everything except dedicated voice, image, and video APIs.",
+      "The capability story is engineering speed, not arena rank. xAI claims 83.3% on Terminal-Bench 2.1, 64.7% on SWE Bench Pro, and 29.0% resolution on SWE Marathon — competitive with GPT-5.6 Sol and Claude Opus 4.8 on agentic coding slices. The sharper claim is token efficiency: Grok 4.5 averages 15,954 output tokens per SWE Bench Pro task versus 67,020 for Opus 4.8 (max), a 4.2× gap that compounds in production agent loops. xAI serves the model at 80 tokens per second, positioning it as a fast-model-speed flagship rather than a budget tier.",
+      "The economics shift matters for helloai's tracked set. Grok 4.3 was the cheapest frontier option at $1.25/$2.50 with 1M context — the cost floor that made it the Honest Daily Use leader. Grok 4.5 trades that for higher nominal rates and half the context window. Effective cost may still beat headline comparisons when output tokens dominate, because 4.5 burns far fewer tokens per resolved task. Teams routing on nominal leaderboard rates alone will mis-rank Grok against Gemini 3.1 Pro and Qwen3.7-Max until they profile output volume.",
+      "Availability is broad but not universal. Grok 4.5 is live in Grok Build, Cursor on all plans, and the xAI API console as of launch day. EU API access is delayed to mid-July per xAI's release notes. Grok 4.3 remains on the pricing table for workloads that need 1M context at the lower rate card. helloai tracks one xAI entry per admission rules — 4.5 wins because the provider docs steer new chat and code traffic there, not because 4.3 vanished.",
+      "The miss exposed a process gap, not a data gap. Memory listed rejected candidates like Grok 4.4; official catalogs moved faster. helloai now runs scripts/check_provider_catalog.py at the start of every weekly update — fetching each provider's catalog and news URLs and comparing parsed versions against models.json before judgment-heavy web search. The structural fix is boring and reliable: if docs.x.ai recommends Grok 4.5 and models.json still says 4.3, the pipeline stops until someone patches it."
+    ]
+  },
+  {
     "slug": "gpt-5-6-sol-general-availability",
     "title": "GPT-5.6 Sol Reaches General Availability",
     "excerpt": "OpenAI ends the partner-only preview on July 9. GPT-5.6 Sol replaces GPT-5.5 in helloai's tracked set at the same $5/$30 rate — the upgrade path teams waited on since June 26.",
@@ -132,21 +147,6 @@
       "Pricing doubles the previous tier: ten dollars per million input tokens and fifty for output. Context stays at one million tokens with no long-context surcharge. The model is slower and burns more tokens during heavy reasoning, so real workloads cost several times an Opus 4.8 session even before the rate card. Teams that only need occasional frontier performance will route most traffic elsewhere.",
       "The safeguards are deliberately broad for launch. Cybersecurity, high-risk biology and chemistry, and distillation attempts trigger fallback; the average session sees no swap, but some innocent prompts still route to the older model and users receive notice. Anthropic states this keeps the dangerous edges contained while the rest of the model runs at full strength. The trade-off is a small consistency tax for users who never touch an edge case.",
       "Fable 5 closes the loop that started with the April Mythos Preview decision to withhold the model. The same underlying engine is now priced for paid users with guardrails that are tunable over time. What changes for builders is access to a higher capability band for the hardest slices of agentic work, at a cost that forces explicit choices about when the extra performance is worth the spend. For now, the capability is accessible enough to benchmark and bounded enough to ship."
-    ]
-  },
-  {
-    "slug": "qwen-3-7-max-joins-the-tracked-frontier",
-    "title": "Qwen3.7-Max Joins the Tracked Frontier",
-    "excerpt": "Qwen3.7-Max becomes the fifth tracked frontier model after clearing helloai's admission bar. The first new-provider entrant brings strong agentic coding at roughly half the price of closed leaders.",
-    "date": "2026-06-04",
-    "category": "Discovery",
-    "readTime": "2 min",
-    "content": [
-      "Qwen3.7-Max from Alibaba has cleared helloai's complete admission bar to become the fifth tracked frontier model and the first from any provider outside Anthropic, Google, xAI, and OpenAI. The release dated May 19 to 21 2026 earned its place only after this week's leaderboard drift analysis confirmed sufficient sustained Arena data together with strong real-agent benchmark results. Its text Elo of approximately 1474 rests on more than 3,750 votes collected as of early June. That score falls within ten points of the previous lowest tracked model at 1484. Set-size rules permit the collection to grow from four to five models when a new-provider entrant meets every hard and soft requirement.",
-      "Agentic performance on established benchmarks provided the key differentiation that secured the model's admission to the tracked set. The model scores about 80.4 percent on SWE-bench Verified and 1541 on the WebDev and code arena slices. These figures indicate capability on software engineering and web development tasks. The model has also completed documented autonomous multi-agent runs lasting a full 35 hours.",
-      "Pricing and context make the capabilities practical for a broader range of teams than the closed models alone have served. Public API rates stand at approximately $2.50 per million input tokens and $7.50 per million output tokens, with lower prices available on some routers. The context window reaches one million tokens, satisfying the 200,000-token minimum with substantial headroom. This package supplies frontier-adjacent agentic performance at half the price of the closed leaders.",
-      "The tracked set now stands at five models rather than four. This expansion follows the explicit set-size rules that allow new providers to join the list once they clear the hard filters on Elo, public API and pricing, provider status, and context size plus the required soft differentiation. No model from any other outside provider has previously satisfied the full list of criteria at once. Developers therefore gain an additional option that has passed the same objective evaluation applied to the original four. The rules treat new providers the same way once the data thresholds are met.",
-      "Production teams focused on agentic systems can now consider a lower-cost alternative that still meets the identical admission standards used for the dominant labs. Additional providers will need to demonstrate comparable sustained Arena participation and benchmark strength before they can expand the set further. Over the coming release cycles the set of models that have cleared the full bar may grow beyond the current five. The result is a gradually widening set of verified choices that reduces dependence on any single group of labs while maintaining consistent quality gates."
     ]
   }
 ]
