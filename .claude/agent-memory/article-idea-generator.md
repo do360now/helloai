@@ -1,7 +1,10 @@
 # Article Idea Generator — Cross-Session Memory
 
 ## Last Run
-- Date: 2026-07-04 (weekly update, second pass)
+- Date: 2026-07-09 (weekly update)
+
+## Article WRITTEN this cycle (2026-07-09, weekly update)
+- **gpt-5-6-sol-general-availability** — "GPT-5.6 Sol Reaches General Availability" (Discovery). OpenAI ends partner-only preview July 9; Sol replaces GPT-5.5 in tracked set at same $5/$30; 88.8% Terminal-Bench 2.1. Fills queued gpt-5-6-general-availability brief; follow-up to government-gated-frontier-releases without duplicating it.
 
 ## Article WRITTEN this cycle (2026-07-04, weekly update second pass)
 - **how-caching-and-batching-cut-frontier-costs-90-percent** — "How Caching and Batching Cut Frontier API Costs by 90%" (Analysis). Anthropic cache read 0.1× + batch 50% stacks to $0.25/MTok on Opus 4.8 cached input; OpenAI/Gemini mirror pattern; helloai nominal rates are ceiling not quote. Fills long-queued cost-optimization gap.
@@ -15,32 +18,24 @@
 ## Article WRITTEN this cycle (2026-07-01)
 - **government-gated-frontier-releases** — "Frontier Releases Now Run Through Government Gates" (Opinion). Fable 5 returns July 1 after 18-day export-control suspension; GPT-5.6 Sol limited to vetted partners June 26. Fills Opinion cadence gap; timely follow-up to Fable suspension article without duplicating it.
 
-## Article WRITTEN this cycle (2026-06-22 v2)
-- **grok-4-3-now-on-amazon-bedrock** — "Grok 4.3 Lands on Amazon Bedrock" (Discovery). xAI GA on Amazon Bedrock June 17; first xAI model on Bedrock; Mantle inference; configurable reasoning effort; same $1.25/$2.50 pricing; enterprise distribution for cheapest tracked frontier model.
-
-## Article WRITTEN this cycle (2026-06-22, first pass)
-- **best-model-for-coding-right-now** — "Best Model for Coding Right Now" (Analysis). First practical "model for X" guide using /api/recommend scoring weights on live models.json data. Covers Opus 4.8 default win, Qwen cost trade-off, Grok as cost firewall, GPT-5.5 output-premium trap. Fills long-standing guide-format gap.
-
-## Brief Queue (reconciled 2026-07-04)
+## Brief Queue (reconciled 2026-07-09)
 
 **CONSUMED / RETIRED:**
+- ~~gpt-5-6-general-availability~~ — WRITTEN 2026-07-09.
 - ~~arc-agi-3-frontier-models-under-1-percent~~ — WRITTEN 2026-07-04.
-- ~~government-gated-frontier-releases~~ — WRITTEN 2026-07-01 (supersedes queued fable-5-suspension-aftermath angle with GPT-5.6 addition).
-- ~~agentic-ai-is-failing-in-production~~ — WRITTEN & PUBLISHED 2026-05-26.
-- ~~flash-beats-pro-is-becoming-a-pattern~~ — RETIRE: redundant with published `gemini-3-5-flash-faster-cheaper-and-beating-3-1-pro` (05-22).
-- ~~long-horizon-agents-reality-vs-hype~~ — RETIRE: overlaps published `agentic-ai-is-failing-in-production` (05-26).
-- ~~qwen-3-7-max-the-new-agentic-benchmark~~ — covered by published `qwen-3-7-max-joins-the-tracked-frontier` (2026-06-04).
+- ~~government-gated-frontier-releases~~ — WRITTEN 2026-07-01.
 - ~~best-model-for-coding-right-now~~ — WRITTEN 2026-06-22.
 - ~~grok-4-3-now-on-amazon-bedrock~~ — WRITTEN 2026-06-22 v2.
 
 **REMAINING / CARRY-FORWARD:**
 1. **llama-4-open-source-but-benchmarks-contested** (rank 1) — Llama 4 Scout/Maverick April 2026; independent evaluators could not reproduce Meta's benchmark claims. Discovery/Analysis. TOP candidate for next run.
-3. **best-model-for-reasoning-right-now** — companion guide format; HOLD until Gemini 3.5 Pro ships GA.
-4. **gemini-3-5-pro-2m-context-deep-think** — WRITE WHEN GA CONFIRMED.
-5. **gpt-5-6-general-availability** — WRITE WHEN general API GA confirmed (partner-only as of July 4).
-6. **chinese-labs-are-no-longer-the-underdogs** — multi-lab synthesis. Partially covered; reframe to avoid overlap before writing.
+2. **best-model-for-reasoning-right-now** — companion guide format; HOLD until Gemini 3.5 Pro ships GA.
+3. **gemini-3-5-pro-2m-context-deep-think** — WRITE WHEN GA CONFIRMED.
+4. **chinese-labs-are-no-longer-the-underdogs** — multi-lab synthesis. Partially covered; reframe to avoid overlap before writing.
+5. **best-model-for-daily-use-right-now** — Honest Daily Use category has no dedicated guide; Grok 4.3 leads that category.
 
 ## Angles Already Covered (avoid repeating within 30 days)
+- GPT-5.6 Sol general availability / replaces GPT-5.5 in tracked set (2026-07-09)
 - Prompt caching + batch API cost stacking / nominal vs effective rates (2026-07-04)
 - ARC-AGI-3 interactive benchmark gap / frontier under 1% (2026-07-04)
 - Government-gated frontier releases / export controls (2026-07-01)
@@ -58,23 +53,15 @@
 - GPT-5.5 price hike / Spud positioning (2026-04-24)
 - Claude Opus 4.7 release & Elo leadership (2026-04-16)
 - Claude Opus 4.6 price cut 67% (2026-04-15)
-- Advisor Strategy / executor-advisor pattern (2026-04-10)
-- Claude Mythos backstory & Glasswing restricted access (2026-04-10) — reinforced by May 25 article
-- Mistral 7B open-source discovery (2026-04-09)
-- Grok xAI model review (2026-04-09)
-- Gemini 3.5 Flash review (May 22 published article)
-- GLM-4.6 open-weight Discovery (May 22 published article)
-- DeepSeek V4 open-source frontier parity (earlier published)
 
 ## Recurring Gaps to Watch
 - "Honest Daily Use" category has no dedicated analysis article — still open
-- Opinion cadence: last Opinion 2026-07-01. Next Opinion due ~late July.
+- Opinion cadence: last Opinion 2026-07-04 (ollama-hermes). Next Opinion due ~late July.
 - "Model for X task" guide series: coding filled (2026-06-22). Reasoning guide on hold pending Gemini 3.5 Pro GA. Daily use guide still open.
-- Llama 4 / Meta open-source angle: still uncovered (brief queued as rank 2)
+- Llama 4 / Meta open-source angle: still uncovered (brief queued as rank 1)
 - Context window economics: Gemini 3.5 Pro 2M context will reopen this gap — brief queued, write when GA confirmed
-- Tokenizer economics (effective cost vs. nominal per-token rates) — overlaps with caching/batching brief queued as rank 1
 
-## Notes (2026-07-04 Grok weekly update, second pass)
-- Leaderboard drift: no models.json patches. GPT-5.6 partner-only; Gemini 3.5 Pro still delayed; nakasyou snapshot 20250522.
+## Notes (2026-07-09 Grok weekly update)
+- Leaderboard drift: GPT-5.5 → GPT-5.6 Sol (version + desc + arena name map). Gemini 3.5 Pro still delayed; nakasyou snapshot 20250522.
 - Elo scraper kept curated values.
 - Next article candidate: llama-4-open-source-but-benchmarks-contested.

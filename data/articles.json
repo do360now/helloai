@@ -1,5 +1,20 @@
 [
   {
+    "slug": "gpt-5-6-sol-general-availability",
+    "title": "GPT-5.6 Sol Reaches General Availability",
+    "excerpt": "OpenAI ends the partner-only preview on July 9. GPT-5.6 Sol replaces GPT-5.5 in helloai's tracked set at the same $5/$30 rate — the upgrade path teams waited on since June 26.",
+    "date": "2026-07-09",
+    "category": "Discovery",
+    "readTime": "2 min",
+    "content": [
+      "On July 9, OpenAI ends the partner-only preview that held GPT-5.6 Sol behind government gates since June 26. Sol, Terra, and Luna roll out globally — the upgrade path helloai deferred when it wrote on July 1 that GPT-5.5 would remain the tracked OpenAI entry until general API availability. That condition is met. GPT-5.6 Sol replaces GPT-5.5 in models.json at the same $5/$30 per-million-token rate, with curated Elo held at 1484 until LMArena sources refresh.",
+      "The capability jump is real but narrow. OpenAI's June 26 preview puts Sol at 88.8 percent on Terminal-Bench 2.1 — up from GPT-5.5's 82.7 percent on Terminal-Bench 2.0. Sol Ultra mode, which coordinates subagents, reaches 91.9 percent. Terra lands at 84.3 percent at half the price; Luna at 82.5 percent at $1/$6. Sol matches Mythos 5 on Terminal-Bench while using roughly a third of the output tokens, per OpenAI's claims. For agentic pipelines already on OpenAI contracts, Sol is a same-price upgrade, not a procurement event.",
+      "The release arc matters as much as the benchmarks. CNBC reported July 8 that OpenAI would publicly release the GPT-5.6 series on Thursday, ending the government-requested limits from June 26. OpenAI CEO Sam Altman posted \"Happy building\" on X. The timing follows Anthropic's July 1 global redeploy of Claude Fable 5 after export controls lifted — two labs, two release patterns, both converging on broader access within two weeks. OpenAI also shipped GPT-Live voice models on July 9, a separate product line from the Sol/Terra/Luna text stack.",
+      "For helloai's tracked set, the competitive picture shifts modestly. Claude Fable 5 still leads at 1508 Elo. Opus 4.8 holds 1503. Gemini 3.1 Pro, Grok 4.3, and Qwen3.7-Max fill out the six-model set. GPT-5.6 Sol does not change the nineteen-point Elo spread — arena data remains frozen on a May 2025 nakasyou snapshot — but it does change which OpenAI model /api/recommend returns for provider-filtered queries. Teams that standardized on GPT-5.5 for Terminal-Bench-shaped workloads should retest on Sol before assuming rank parity.",
+      "The government-gated release pattern helloai flagged in early July may be shortening, not entrenching. OpenAI called the partner-only preview a short-term step; thirteen days later, general access is open. Whether that cadence becomes the default for every frontier launch is still unresolved — the June 2 executive order's evaluation framework has no public calendar. But for this week, the practical answer is simple: GPT-5.6 Sol is the OpenAI flagship helloai tracks, and the gate is down."
+    ]
+  },
+  {
     "slug": "how-caching-and-batching-cut-frontier-costs-90-percent",
     "title": "How Caching and Batching Cut Frontier API Costs by 90%",
     "excerpt": "helloai's leaderboard shows nominal per-token rates. Prompt caching and batch APIs stack underneath — turning a $5/MTok flagship into $0.25 on repeated context.",
@@ -132,21 +147,6 @@
       "Pricing and context make the capabilities practical for a broader range of teams than the closed models alone have served. Public API rates stand at approximately $2.50 per million input tokens and $7.50 per million output tokens, with lower prices available on some routers. The context window reaches one million tokens, satisfying the 200,000-token minimum with substantial headroom. This package supplies frontier-adjacent agentic performance at half the price of the closed leaders.",
       "The tracked set now stands at five models rather than four. This expansion follows the explicit set-size rules that allow new providers to join the list once they clear the hard filters on Elo, public API and pricing, provider status, and context size plus the required soft differentiation. No model from any other outside provider has previously satisfied the full list of criteria at once. Developers therefore gain an additional option that has passed the same objective evaluation applied to the original four. The rules treat new providers the same way once the data thresholds are met.",
       "Production teams focused on agentic systems can now consider a lower-cost alternative that still meets the identical admission standards used for the dominant labs. Additional providers will need to demonstrate comparable sustained Arena participation and benchmark strength before they can expand the set further. Over the coming release cycles the set of models that have cleared the full bar may grow beyond the current five. The result is a gradually widening set of verified choices that reduces dependence on any single group of labs while maintaining consistent quality gates."
-    ]
-  },
-  {
-    "slug": "the-frontier-is-a-near-tie",
-    "title": "The Entire Frontier Now Fits in Nineteen Elo Points",
-    "excerpt": "The top of the leaderboard is now four flagships inside a 19-point Elo band, and Opus 4.8 added barely a point over its predecessor. Capability has converged; price and fit are the whole decision now.",
-    "date": "2026-05-30",
-    "category": "Opinion",
-    "readTime": "2 min",
-    "content": [
-      "The entire frontier now fits inside nineteen Elo points. Claude Opus 4.8 sits at 1503, Gemini 3.1 Pro at 1493, Grok 4.3 at 1490, and GPT-5.5 at 1484. That is the whole top of the leaderboard — four flagships from four labs — separated by less than the margin you would expect from a single good fine-tuning pass. The smartest model in the world is barely smarter than the fourth-smartest, and the gap is closing faster than any of these labs would like to admit.",
-      "The launch that triggered this was telling. Opus 4.8 shipped on May 28, forty-one days after 4.7, at the same price, for roughly a one-point SWE-bench gain. That is the shape of diminishing returns made concrete: a flagship release that moves the frontier by a rounding error. When the marginal intelligence from a six-week development cycle is indistinguishable from noise, the headline capability number stops being the thing you optimize a procurement decision around.",
-      "Meanwhile the economics have not converged at all — they have spread out. All four leaders now offer a 1M-token context window, so the one spec that used to separate them is now table stakes. But input price varies 4x across the four, from Grok 4.3 at $1.25 per million to Opus 4.8 and GPT-5.5 at $5. Output price varies 12x: $2.50 per million for Grok against $30 for GPT-5.5. The capability gap is nineteen points; the cost gap is an order of magnitude. For any workload that runs at scale, the bill will dominate the benchmark every time.",
-      "A near-tie at the top does not mean the models are interchangeable, and that is the trap. Each still carries a distinct shape: Opus is the Coding King, Gemini the Multimodal Leader, Grok the Truth Machine, GPT-5.5 the Agentic Leap. Those profiles describe how a model behaves inside a real pipeline — how it handles tool calls, long-horizon tasks, images, refusals — and they diverge far more than the Elo spread suggests. The ranking tells you almost nothing useful; the shape tells you everything.",
-      "So the honest question for developers in mid-2026 is no longer which model is smartest. It is which one fits the price, the context economics, and the agentic shape of the job in front of you. As the capability lines keep flattening, the labs that win the next year will not be the ones that squeeze out another Elo point — they will be the ones that make their distinct shape legible enough that an engineer can pick correctly in five minutes. The leaderboard is becoming a tie. The decision is moving somewhere else."
     ]
   }
 ]

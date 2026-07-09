@@ -67,11 +67,11 @@
   },
   {
     "id": "gpt",
-    "name": "GPT-5.5",
+    "name": "GPT-5.6 Sol",
     "provider": "OpenAI",
     "url": "https://chatgpt.com",
     "tag": "Agentic Leap",
-    "desc": "First fully retrained base since GPT-4.5. Leads agentic coding benchmarks with 82.7% on Terminal-Bench 2.0 and 73.1% on Expert-SWE. The enterprise default for autonomous multi-step work.",
+    "desc": "OpenAI's strongest agentic model, released globally July 9 after a partner-only preview. 88.8% on Terminal-Bench 2.1; Ultra mode reaches 91.9%. Same $5/$30 pricing as GPT-5.5.",
     "color": "#10B981",
     "elo": 1484,
     "cost_per_million_tokens": 5,

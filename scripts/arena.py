@@ -95,6 +95,8 @@ _NAME_MAP: dict[str, list[str]] = {
         "grok-4.20-beta1",
     ],
     "gpt": [
+        "gpt-5.6-sol",
+        "gpt-5.6",
         "gpt-5.5",
         "gpt-5.5-instant",
         "gpt-5.5-pro",
