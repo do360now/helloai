@@ -113,6 +113,20 @@ _NAME_MAP: dict[str, list[str]] = {
     ],
 }
 
+# Open-weight models use a separate map — IDs may overlap with frontier models
+# (e.g. "qwen" is Qwen3.7-Max API vs Qwen3 32B open weights).
+_OPEN_WEIGHT_NAME_MAP: dict[str, list[str]] = {
+    "gemma": [
+        "gemma-4-31b-it",
+    ],
+    "qwen32b": [
+        "qwen3-32b",
+    ],
+    "mistral": [
+        "mistral-small-3.2-24b-instruct-2506",
+    ],
+}
+
 # CSV column names vary across sources. We try each in order.
 _CSV_NAME_COLUMNS = ["Model", "model", "model_name", "name", "key", "Key"]
 _CSV_SCORE_COLUMNS = [
@@ -275,17 +289,20 @@ def _fetch_all_scores() -> dict[str, "_ArenaEntry"]:
 def _resolve_model_id(
     model_id: str,
     arena_entries: dict[str, "_ArenaEntry"],
+    name_map: dict[str, list[str]] | None = None,
 ) -> "_ArenaEntry | None":
     """
     Match one of our model IDs to an arena entry.
     Uses exact name-map match only — no fuzzy fallback (curated Elos are authoritative).
     Returns None if no name-map candidate is found in arena_entries.
     """
+    active_map = name_map if name_map is not None else _NAME_MAP
+
     # Normalize arena keys for case-insensitive lookup
     lower_map = {k.lower(): v for k, v in arena_entries.items()}
 
     # Exact candidates from the name map only
-    for candidate in _NAME_MAP.get(model_id, []):
+    for candidate in active_map.get(model_id, []):
         if candidate.lower() in lower_map:
             return lower_map[candidate.lower()]
 
@@ -296,6 +313,7 @@ def _resolve_model_id(
 
 def fetch_scores(
     our_model_ids: list[str] | None = None,
+    name_map: dict[str, list[str]] | None = None,
 ) -> dict[str, float]:
     """
     Fetch current Elo scores for our models from LMArena.
@@ -303,14 +321,16 @@ def fetch_scores(
     Args:
         our_model_ids: List of our internal model IDs (e.g. ["claude", "gemini"]).
                        If None, resolves all IDs defined in the name map.
+        name_map: Arena alias map to use. Defaults to frontier _NAME_MAP.
 
     Returns:
         Dict mapping our model IDs to their Elo scores.
         Only includes IDs that were successfully matched.
         Example: {"claude": 1504, "gemini": 1486, "grok": 1473, "gpt": 1479}
     """
+    active_map = name_map if name_map is not None else _NAME_MAP
     if our_model_ids is None:
-        our_model_ids = list(_NAME_MAP.keys())
+        our_model_ids = list(active_map.keys())
 
     arena_entries = _fetch_all_scores()
     if not arena_entries:
@@ -327,13 +347,20 @@ def fetch_scores(
     # Resolve each of our model IDs
     scores: dict[str, float] = {}
     for mid in our_model_ids:
-        entry = _resolve_model_id(mid, arena_entries)
+        entry = _resolve_model_id(mid, arena_entries, active_map)
         if entry:
             scores[mid] = entry.score
         else:
             log.info(f"  '{mid}' not on public LMArena — keeping curated Elo")
 
     return scores
+
+
+def fetch_open_weight_scores(
+    our_model_ids: list[str] | None = None,
+) -> dict[str, float]:
+    """Fetch LMArena Elos for open-weight models via _OPEN_WEIGHT_NAME_MAP."""
+    return fetch_scores(our_model_ids=our_model_ids, name_map=_OPEN_WEIGHT_NAME_MAP)
 
 
 def add_model_names(model_id: str, arena_names: list[str]) -> None:

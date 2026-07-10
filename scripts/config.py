@@ -19,6 +19,7 @@ DATA_DIR = PROJECT_ROOT / "data"
 class Config:
     # Paths
     models_path: Path = DATA_DIR / "models.json"
+    open_weight_models_path: Path = DATA_DIR / "open_weight_models.json"
     categories_path: Path = DATA_DIR / "categories.json"
     articles_path: Path = DATA_DIR / "articles.json"
     site_path: Path = DATA_DIR / "site.json"
@@ -31,6 +32,10 @@ class Config:
         issues = []
         if not self.models_path.exists():
             issues.append(f"Models file not found: {self.models_path}")
+        if not self.open_weight_models_path.exists():
+            issues.append(
+                f"Open-weight models file not found: {self.open_weight_models_path}"
+            )
         if not self.articles_path.exists():
             issues.append(f"Articles file not found: {self.articles_path}")
         return issues

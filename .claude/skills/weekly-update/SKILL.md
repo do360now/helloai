@@ -31,8 +31,9 @@ Non-zero exit means official provider catalogs list a newer version than `models
 
 Grok will:
 - Run the catalog guard and act on any drift it reports
-- Search for model version, pricing, and context-window changes
-- Evaluate new model candidates against the admission decision tree
+- Search for frontier version, pricing, and context-window changes
+- Review open-weight release drift, hardware metadata, and `_OPEN_WEIGHT_NAME_MAP` freshness
+- Evaluate new candidates against both admission decision trees (frontier + open-weight)
 - Produce a change report in the required format
 
 Apply only evidence-backed changes (skip anything marked "⚠️ verify manually"). Grok appends every proposal to `.claude/state/leaderboard-changes.jsonl` using the correct append-only contract.
@@ -47,7 +48,7 @@ Run the Python Elo scraper:
 /home/cmc/git/grok/helloai/.venv/bin/python3 scripts/update_leaderboard.py
 ```
 
-This updates `data/models.json` Elo fields from LMArena data. Curated Elos are authoritative; the script only updates on exact LMArena name match (controlled via `_NAME_MAP` in `scripts/arena.py`).
+This updates Elo fields in `data/models.json` and `data/open_weight_models.json` from LMArena. Curated Elos are authoritative; the script only updates on exact name match (`_NAME_MAP` for frontier, `_OPEN_WEIGHT_NAME_MAP` for open-weight). Manual overrides: `--set ID=ELO` (frontier), `--set-ow ID=ELO` (open-weight).
 
 ### 3. New article (advisor pattern, judgment)
 

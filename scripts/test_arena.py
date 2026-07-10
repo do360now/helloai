@@ -7,7 +7,12 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from arena import _resolve_model_id, _ArenaEntry, _NAME_MAP
+from arena import (
+    _resolve_model_id,
+    _ArenaEntry,
+    _NAME_MAP,
+    _OPEN_WEIGHT_NAME_MAP,
+)
 
 
 def main() -> None:
@@ -44,6 +49,22 @@ def main() -> None:
         failures.append(
             "FAIL: _resolve_model_id('claude', {'claude-3-opus-20240229': ...}) "
             f"returned '{result2.name}' — fuzzy match must be gone"
+        )
+
+    # Test 3: open-weight map resolves independently of frontier map
+    OW_QWEN_ARENA_NAME = _OPEN_WEIGHT_NAME_MAP["qwen32b"][0]
+    ow_entries = {OW_QWEN_ARENA_NAME: _ArenaEntry(name=OW_QWEN_ARENA_NAME, score=1323.0)}
+    ow_result = _resolve_model_id("qwen32b", ow_entries, _OPEN_WEIGHT_NAME_MAP)
+    if ow_result is None or ow_result.name != OW_QWEN_ARENA_NAME:
+        failures.append(
+            "FAIL: open-weight _resolve_model_id('qwen32b', ...) did not match qwen3-32b"
+        )
+
+    # Frontier qwen should NOT match qwen3-32b (API flagship uses different aliases)
+    frontier_result = _resolve_model_id("qwen", ow_entries)
+    if frontier_result is not None:
+        failures.append(
+            "FAIL: frontier qwen must not resolve against open-weight arena names"
         )
 
     if failures:

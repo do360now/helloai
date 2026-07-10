@@ -13,8 +13,9 @@ You are the leaderboard intelligence agent for helloai.com. The Python script `s
 ## Step 1 — Read current state
 
 Read these files first:
-- `data/models.json` — current tracked models (id, name, provider, elo, cost, context_window, strengths)
-- `scripts/arena.py` — the `_NAME_MAP` dict, which maps our model IDs to LMArena model name strings
+- `data/models.json` — current tracked frontier API models (id, name, provider, elo, cost, context_window, strengths)
+- `data/open_weight_models.json` — curated open-weight models (elo, vram_gb, quantization, license, strengths)
+- `scripts/arena.py` — `_NAME_MAP` (frontier) and `_OPEN_WEIGHT_NAME_MAP` (open-weight LMArena aliases)
 - `.claude/state/leaderboard-changes.jsonl` (if it exists) — every change you've ever proposed, including ones the user rejected. Skip re-proposing changes that were rejected within the last 30 days unless new evidence has emerged. See [Step 5](#step-5--append-every-proposed-change-to-the-audit-log) for the schema.
 
 ## Step 1b — Provider catalog sweep (mandatory, deterministic)
@@ -62,6 +63,37 @@ For each tracked model, assess:
 **New model candidates**: Is there a model in the top 5–6 on LMArena that helloai.com isn't tracking? Run each candidate through the admission decision tree below.
 
 **Desc/tag staleness**: Does the `desc` or `tag` in `models.json` accurately reflect the model's current positioning, or has it been overtaken or repositioned?
+
+### Open-weight model review (`open_weight_models.json`)
+
+The Python script `update_leaderboard.py` auto-refreshes open-weight **Elos** from LMArena via `_OPEN_WEIGHT_NAME_MAP`. Your job is everything else:
+
+**Version / release drift**: Has a tracked open-weight model been superseded (e.g. Mistral Small 3.1 → 3.2)? Update `name`, `url`, `desc`, `tag`, and arena aliases.
+
+**Hardware metadata drift**: Do `params_b`, `vram_gb`, `quantization`, `tokens_per_sec`, or `reference_hardware` still match the recommended single-GPU setup? Flag if a model now needs multi-GPU.
+
+**LMArena name map drift**: Check `_OPEN_WEIGHT_NAME_MAP` in `arena.py`. If LMArena lists a new slug for the current weights, add it as the first candidate.
+
+**Desc/tag staleness**: Does the card copy still reflect the model's open-weight positioning (efficiency, license, local-run story)?
+
+**Do not propose Elo changes** for open-weight models — the Python script owns that (same as frontier).
+
+#### Open-weight admission decision tree
+
+Use this for candidates **not** already in `open_weight_models.json`. Verdict: **ADMIT**, **REJECT**, or **NEEDS HUMAN REVIEW**.
+
+**Hard requirements** (all must pass):
+1. **Open license** — Apache 2.0, MIT, or equivalent commercial-friendly license with public weight download.
+2. **Single-GPU tier** — runs on ≤24 GB VRAM at a practical quant (Q4_K_M or better).
+3. **Arena signal** — LMArena Elo within 40 points of the current lowest open-weight entry, or clear category leader on coding/reasoning boards.
+4. **Public weights** — Hugging Face (or equivalent) download URL, not API-only.
+
+**Soft requirements** (at least one):
+5. **Efficiency story** — beats larger models at same Elo tier, or best-in-class tokens/sec on RTX 4090-class hardware.
+6. **Category gap** — fills a strength niche not covered by current open-weight picks.
+7. **Provider diversity** — new lab not yet represented in the open-weight set.
+
+**Set size**: keep 3–6 models. Replace same-provider entries; expand only when a new provider adds unique value. Open-weight IDs must **not** collide with frontier `models.json` IDs (e.g. use `qwen32b`, not `qwen`).
 
 ## Model admission decision tree
 
@@ -138,6 +170,13 @@ For each change, show the exact field and value to update:
 #### arena.py _NAME_MAP patches
 For each stale alias, show what to add or remove:
 [model id]: add "[new arena name]" / remove "[stale arena name]"
+
+#### open_weight_models.json patches
+For each change, show the exact field and value:
+[model id] → [field]: [old value] → [new value]
+
+#### arena.py _OPEN_WEIGHT_NAME_MAP patches
+[model id]: add "[new arena name]" / remove "[stale arena name]"
 ```
 
 ## Step 5 — Append every proposed change to the audit log
@@ -150,7 +189,7 @@ Before presenting the report to the user, append one JSONL record per proposed c
 {
   "timestamp": "ISO8601",
   "run_id": "<sha or session id>",
-  "kind": "version-drift" | "pricing-drift" | "context-drift" | "name-map-drift" | "desc-tag-drift" | "candidate-admit" | "candidate-reject" | "candidate-needs-review",
+  "kind": "version-drift" | "pricing-drift" | "context-drift" | "name-map-drift" | "desc-tag-drift" | "open-weight-drift" | "open-weight-name-map-drift" | "open-weight-candidate-admit" | "open-weight-candidate-reject" | "open-weight-candidate-needs-review" | "candidate-admit" | "candidate-reject" | "candidate-needs-review",
   "model_id": "<id from models.json, or candidate name if not yet tracked>",
   "field": "<json path being changed, e.g. 'cost_per_million_tokens' or 'arena._NAME_MAP'>",
   "old_value": "<current value, or null if new>",
@@ -179,8 +218,8 @@ Before presenting the report to the user, append one JSONL record per proposed c
 - Only propose changes you have evidence for (search results or official sources). Do not guess.
 - For pricing, cite the source URL or announcement.
 - If you can't verify a claim confidently, mark it as "⚠️ verify manually" rather than proposing a change.
-- Do not propose Elo changes — the Python script owns that.
-- Do not propose changes to `categories.json` — that's driven by Elo, which the Python script updates.
+- Do not propose Elo changes — the Python script owns that for both `models.json` and `open_weight_models.json`.
+- Do not propose changes to `categories.json` — that's driven by frontier Elo, which the Python script updates.
 - The `strengths[]` array maps to category names exactly — only propose a strengths change if the model's leadership in that category has demonstrably shifted.
 
 Read the files and run searches now, then produce the full report.

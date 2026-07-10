@@ -31,9 +31,9 @@ Article prose may be written in-session by Grok following `.claude/agents/articl
 
 If exit 1, investigate every flagged provider and apply evidence-backed patches before continuing. Do not rely on memory/version guesses alone.
 
-**1b. Judgment pass:** Read `data/models.json`, `scripts/arena.py`, `.claude/agent-memory/leaderboard-updater.md`, and `.claude/state/leaderboard-changes.jsonl`.
+**1b. Judgment pass:** Read `data/models.json`, `data/open_weight_models.json`, `scripts/arena.py` (`_NAME_MAP` + `_OPEN_WEIGHT_NAME_MAP`), `.claude/agent-memory/leaderboard-updater.md`, and `.claude/state/leaderboard-changes.jsonl`.
 
-Search for version, pricing, and context-window changes. Evaluate new candidates via the admission decision tree. Apply only evidence-backed patches. Append every proposal to `.claude/state/leaderboard-changes.jsonl` with `>>` (never overwrite). Update `.claude/agent-memory/leaderboard-updater.md`.
+Search for version, pricing, and context-window changes on frontier models. Review open-weight release drift, hardware metadata, and arena alias freshness. Evaluate new candidates via both admission decision trees. Apply only evidence-backed patches. Append every proposal to `.claude/state/leaderboard-changes.jsonl` with `>>` (never overwrite). Update `.claude/agent-memory/leaderboard-updater.md`.
 
 ### 2. Elo refresh (deterministic)
 

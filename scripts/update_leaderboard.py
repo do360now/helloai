@@ -5,7 +5,8 @@ update_leaderboard.py — Fetch latest Elo ratings and update models/categories.
 Usage:
   python scripts/update_leaderboard.py                    # Auto-fetch from Arena
   python scripts/update_leaderboard.py --dry-run          # Preview without writing
-  python scripts/update_leaderboard.py --set gemini=1510  # Manual Elo override
+  python scripts/update_leaderboard.py --set gemini=1510  # Manual frontier Elo override
+  python scripts/update_leaderboard.py --set-ow qwen32b=1323 # Manual open-weight Elo override
   python scripts/update_leaderboard.py --add-model        # Interactive: add new model
 """
 
@@ -154,6 +155,18 @@ def add_model_interactive(models: list[dict]) -> list[dict]:
 
 # ─── CLI ────────────────────────────────────────────────────────────────────
 
+def _parse_elo_overrides(items: list[str], label: str) -> dict[str, float]:
+    overrides: dict[str, float] = {}
+    for item in items:
+        if "=" not in item:
+            log.error(f"Invalid format: '{item}' (expected ID=ELO)")
+            sys.exit(1)
+        mid, elo = item.split("=", 1)
+        overrides[mid.strip()] = float(elo.strip())
+    log.info(f"Manual overrides ({label}): {overrides}")
+    return overrides
+
+
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Update HelloAi leaderboard data"
@@ -164,7 +177,11 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--set", nargs="+", metavar="ID=ELO",
-        help="Manual Elo overrides (e.g. --set gemini=1510 claude=1508)",
+        help="Manual frontier Elo overrides (e.g. --set gemini=1510 claude=1508)",
+    )
+    parser.add_argument(
+        "--set-ow", nargs="+", metavar="ID=ELO",
+        help="Manual open-weight Elo overrides (e.g. --set-ow qwen32b=1323)",
     )
     parser.add_argument(
         "--add-model", action="store_true",
@@ -187,19 +204,18 @@ def main() -> None:
 
     # Load current data
     models = read_json(config.models_path)
+    open_weight_models = read_json(config.open_weight_models_path)
     categories = read_json(config.categories_path)
     old_models = [m.copy() for m in models]
+    old_open_weight_models = [m.copy() for m in open_weight_models]
 
-    # Parse manual overrides
+    # Parse manual overrides (frontier vs open-weight are separate namespaces)
     manual_overrides: dict[str, float] = {}
+    open_weight_overrides: dict[str, float] = {}
     if args.set:
-        for item in args.set:
-            if "=" not in item:
-                log.error(f"Invalid format: '{item}' (expected ID=ELO)")
-                sys.exit(1)
-            mid, elo = item.split("=", 1)
-            manual_overrides[mid.strip()] = float(elo.strip())
-        log.info(f"Manual overrides: {manual_overrides}")
+        manual_overrides = _parse_elo_overrides(args.set, "frontier --set")
+    if args.set_ow:
+        open_weight_overrides = _parse_elo_overrides(args.set_ow, "open-weight --set-ow")
 
     # Add model interactively
     if args.add_model:
@@ -207,22 +223,40 @@ def main() -> None:
 
     # Fetch scores — the arena module handles all scraping complexity
     scores: dict[str, float] = {}
+    open_weight_scores: dict[str, float] = {}
     if not args.skip_fetch:
         model_ids = [m["id"] for m in models]
         scores = arena.fetch_scores(our_model_ids=model_ids)
 
+        open_weight_ids = [m["id"] for m in open_weight_models]
+        log.info("Fetching open-weight Elos...")
+        open_weight_scores = arena.fetch_open_weight_scores(
+            our_model_ids=open_weight_ids
+        )
+
     # Update models
     models, models_changed = update_models(models, scores, manual_overrides)
+    open_weight_models, ow_changed = update_models(
+        open_weight_models, open_weight_scores, open_weight_overrides
+    )
 
     # Update categories
     categories, cats_changed = update_category_leaders(categories, models)
 
     # Report
-    changes = report_changes(old_models, models, "models.json")
-    for line in changes:
+    for line in report_changes(old_models, models, "models.json"):
+        log.info(line)
+    for line in report_changes(
+        old_open_weight_models, open_weight_models, "open_weight_models.json"
+    ):
         log.info(line)
 
-    if not models_changed and not cats_changed and not args.add_model:
+    if (
+        not models_changed
+        and not ow_changed
+        and not cats_changed
+        and not args.add_model
+    ):
         log.info("No changes detected.")
         return
 
@@ -230,11 +264,15 @@ def main() -> None:
     if args.dry_run:
         log.info("[DRY RUN] Would write changes to:")
         log.info(f"  - {config.models_path}")
+        log.info(f"  - {config.open_weight_models_path}")
         log.info(f"  - {config.categories_path}")
         log.info(f"  - {config.site_path}")
     else:
         write_json(config.models_path, models)
         log.info(f"✅ Wrote {config.models_path}")
+
+        write_json(config.open_weight_models_path, open_weight_models)
+        log.info(f"✅ Wrote {config.open_weight_models_path}")
 
         write_json(config.categories_path, categories)
         log.info(f"✅ Wrote {config.categories_path}")

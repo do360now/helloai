@@ -18,7 +18,7 @@
     "license": "Apache 2.0"
   },
   {
-    "id": "qwen",
+    "id": "qwen32b",
     "name": "Qwen3 32B",
     "provider": "Qwen Team",
     "url": "https://huggingface.co/Qwen/Qwen3-32B",
