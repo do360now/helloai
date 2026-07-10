@@ -67,6 +67,22 @@
     ]
   },
   {
+    "id": "muse",
+    "name": "Muse Spark 1.1",
+    "provider": "Meta",
+    "url": "https://www.meta.ai/",
+    "tag": "Budget Agentic",
+    "desc": "Meta's first paid frontier API: native multi-agent orchestration, MCP and computer use, 1M self-managed context. #6 on LMArena text overall at 1487 Elo — cheapest agentic option helloai tracks at $1.25/$4.25.",
+    "color": "#0668E1",
+    "elo": 1487,
+    "cost_per_million_tokens": 1.25,
+    "cost_per_million_tokens_output": 4.25,
+    "context_window": 1000000,
+    "strengths": [
+      "Coding & Engineering"
+    ]
+  },
+  {
     "id": "gpt",
     "name": "GPT-5.6 Sol",
     "provider": "OpenAI",
@@ -79,21 +95,5 @@
     "cost_per_million_tokens_output": 30,
     "context_window": 1000000,
     "strengths": []
-  },
-  {
-    "id": "qwen",
-    "name": "Qwen3.7-Max",
-    "provider": "Alibaba",
-    "url": "https://qwen.ai",
-    "tag": "Agent Frontier",
-    "desc": "Purpose-built for sustained agentic execution and long-horizon coding workflows. 80.4% SWE-bench Verified and top-tier code arena slices at roughly half the price of closed flagships.",
-    "color": "#FF6B35",
-    "elo": 1475,
-    "cost_per_million_tokens": 2.5,
-    "cost_per_million_tokens_output": 7.5,
-    "context_window": 1000000,
-    "strengths": [
-      "Coding & Engineering"
-    ]
   }
 ]

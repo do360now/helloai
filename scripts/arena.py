@@ -106,15 +106,13 @@ _NAME_MAP: dict[str, list[str]] = {
         "gpt-5.2-high",
         "gpt-5.1-high",
     ],
-    "qwen": [
-        "qwen3.7-max-preview",
-        "qwen3.7-max-20260517",
-        "qwen3.7-max",
+    "muse": [
+        "muse-spark-1.1",
+        "muse-spark",
     ],
 }
 
-# Open-weight models use a separate map — IDs may overlap with frontier models
-# (e.g. "qwen" is Qwen3.7-Max API vs Qwen3 32B open weights).
+# Open-weight models use a separate map — frontier and open-weight IDs are disjoint.
 _OPEN_WEIGHT_NAME_MAP: dict[str, list[str]] = {
     "gemma": [
         "gemma-4-31b-it",

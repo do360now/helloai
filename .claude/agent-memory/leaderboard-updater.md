@@ -13,7 +13,7 @@
 - **gemini**: Gemini 3.1 Pro — Gemini 3.5 Pro still not GA on pricing page July 9. No drift.
 - **grok**: **UPDATED** Grok 4.3 → **Grok 4.5** — $2/$6, 500K context, xAI recommended chat/code model July 8. Arena map: grok-4.5 primary.
 - **gpt**: GPT-5.6 Sol — GA July 9. No further drift.
-- **qwen**: Qwen3.7-Max — stable. No drift.
+- **muse**: Muse Spark 1.1 — admitted July 9 replacing Qwen3.7-Max. $1.25/$4.25, 1M ctx, arena muse-spark 1487 Elo. Meta Model API US preview.
 
 ### Applied patches (confirmed this run)
 - **grok**: version, pricing, context, desc/tag, strengths, arena _NAME_MAP, categories Honest Daily Use leader/insight.
@@ -22,7 +22,7 @@
 - **gemini-3.5-pro**: not GA as of July 9.
 - **DeepSeek V4**: Elo below threshold (nakasyou stale 20250522).
 - **claude-mythos-preview / Mythos 5**: limited availability.
-- **muse-spark** (Meta): no public API.
+- **qwen3.7-max** (Alibaba): dropped July 9 — Muse Spark 1.1 supersedes budget agentic slot. Open-weight Qwen3 32B still tracked separately.
 
 ### Pending manual verifications for next run
 - Monitor Gemini 3.5 Pro GA.

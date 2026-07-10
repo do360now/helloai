@@ -60,11 +60,11 @@ def main() -> None:
             "FAIL: open-weight _resolve_model_id('qwen32b', ...) did not match qwen3-32b"
         )
 
-    # Frontier qwen should NOT match qwen3-32b (API flagship uses different aliases)
-    frontier_result = _resolve_model_id("qwen", ow_entries)
+    # Frontier muse must NOT match open-weight qwen3-32b arena slug
+    frontier_result = _resolve_model_id("muse", ow_entries)
     if frontier_result is not None:
         failures.append(
-            "FAIL: frontier qwen must not resolve against open-weight arena names"
+            "FAIL: frontier muse must not resolve against open-weight arena names"
         )
 
     if failures:

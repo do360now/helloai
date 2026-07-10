@@ -46,12 +46,12 @@
       "catalog_name_patterns": ["GPT-([0-9.]+)", "gpt-([0-9.]+)"]
     },
     {
-      "model_id": "qwen",
-      "provider": "Alibaba",
-      "catalog_url": "https://qwen.ai/blog",
-      "news_url": "https://qwen.ai/blog",
-      "tracked_name_pattern": "Qwen([0-9.]+)-Max",
-      "catalog_name_patterns": ["Qwen([0-9.]+)-Max", "qwen([0-9.]+)-max"]
+      "model_id": "muse",
+      "provider": "Meta",
+      "catalog_url": "https://ai.meta.com/blog/",
+      "news_url": "https://ai.meta.com/blog/",
+      "tracked_name_pattern": "Muse Spark ([0-9.]+)",
+      "catalog_name_patterns": ["Muse Spark ([0-9.]+)", "muse-spark-([0-9.]+)"]
     }
   ]
 }
