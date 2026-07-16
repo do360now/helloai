@@ -539,6 +539,12 @@ body {
   white-space: nowrap;
 }
 
+.ow-spec-measured {
+  color: #00E5A0;
+  background: rgba(0, 229, 160, 0.06);
+  border-color: rgba(0, 229, 160, 0.25);
+}
+
 .ow-hardware {
   margin-top: 6px;
   font-size: 11px;

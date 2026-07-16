@@ -51,6 +51,14 @@ export default function OpenWeightCard({
         <span className="ow-spec">{model.vram_gb} GB VRAM</span>
         <span className="ow-spec">{model.tokens_per_sec} t/s</span>
         <span className="ow-spec">{model.license}</span>
+        {model.bench_source && (
+          <span
+            className="ow-spec ow-spec-measured"
+            title={`Measured on our test cluster, ${model.bench_source.date}`}
+          >
+            ⚡ Independently measured
+          </span>
+        )}
       </div>
       <div className="ow-hardware">{model.reference_hardware}</div>
 
