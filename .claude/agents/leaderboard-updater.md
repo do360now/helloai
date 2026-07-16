@@ -78,6 +78,20 @@ The Python script `update_leaderboard.py` auto-refreshes open-weight **Elos** fr
 
 **Do not propose Elo changes** for open-weight models — the Python script owns that (same as frontier).
 
+#### Cluster bench sync (local runs only)
+
+Run the deterministic guard:
+
+```bash
+/home/cmc/git/grok/helloai/.venv/bin/python3 scripts/check_cluster_bench.py
+```
+
+- **Exit 1** — first-party measurements in the local gpu-cluster `benchmarks/results.md` diverge from `open_weight_models.json`. Propose `tokens_per_sec` / `quantization` patches (kind: `open-weight-drift`, evidence_url: the results.md path) and bump the entry's `bench_source.date` to the bench table's date. Update `reference_hardware` only if the rig description changed.
+- **`[new bench candidate]` lines** — a model was benchmarked on the cluster but isn't tracked. Run it through the open-weight admission decision tree below; first-party throughput on 2×8GB-class hardware counts toward the "Efficiency story" soft requirement. Skip candidates results.md flags as unconfirmed-provenance ggufs.
+- **"source unavailable"** — remote run; note the last-integrated date in your report and move on.
+- Record the bench table's latest date in `.claude/agent-memory/leaderboard-updater.md` each run so bench staleness is visible across sessions.
+- Entries carrying a `bench_source` field hold first-party measured numbers — never replace them with vendor or community figures; only a newer first-party measurement via this guard updates them.
+
 #### Open-weight admission decision tree
 
 Use this for candidates **not** already in `open_weight_models.json`. Verdict: **ADMIT**, **REJECT**, or **NEEDS HUMAN REVIEW**.

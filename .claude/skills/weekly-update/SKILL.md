@@ -27,6 +27,14 @@ See the "Grok Execution" notes in each relevant step below.
 
 Non-zero exit means official provider catalogs list a newer version than `models.json` — patch before proceeding.
 
+Also run the local cluster-bench guard:
+
+```bash
+/home/cmc/git/grok/helloai/.venv/bin/python3 scripts/check_cluster_bench.py
+```
+
+Non-zero exit means the local gpu-cluster benchmarks (`/home/cmc/git/gpu-cluster/benchmarks/results.md`) diverge from `data/open_weight_models.json` — propose the JSON diffs through the normal change report + audit log before proceeding. `[new bench candidate]` lines feed the open-weight admission decision tree. When the source file is unavailable (remote runs), the guard logs the last integrated bench date and exits 0.
+
 **1b. Judgment pass — Default (Grok):** Ask Grok to run the `leaderboard-updater` role, following the specification in `.claude/agents/leaderboard-updater.md` (plus any refinements documented in recent Grok scoring runs and updated memory).
 
 Grok will:
