@@ -68,4 +68,13 @@ describe('Open Weight Models', () => {
     }
     expect(offenders).toEqual([]);
   });
+
+  test('bench_source, when present, is first-party with an ISO date', () => {
+    for (const m of models) {
+      if (m.bench_source) {
+        expect(m.bench_source.type).toBe('first-party');
+        expect(m.bench_source.date).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      }
+    }
+  });
 });

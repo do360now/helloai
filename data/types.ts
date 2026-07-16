@@ -58,4 +58,8 @@ export interface OpenWeightModel {
   tokens_per_sec: number;   // throughput on reference_hardware
   reference_hardware: string; // hardware used for tokens_per_sec benchmark
   license: string;          // e.g. "Apache 2.0", "Meta Llama 3 License"
+  bench_source?: {
+    type: 'first-party';    // absent field = vendor/community-reported numbers
+    date: string;           // YYYY-MM-DD the tokens_per_sec was measured
+  };
 }
