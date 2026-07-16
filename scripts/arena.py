@@ -123,6 +123,15 @@ _OPEN_WEIGHT_NAME_MAP: dict[str, list[str]] = {
     "mistral": [
         "mistral-small-3.2-24b-instruct-2506",
     ],
+    "qwen8b": [
+        "qwen3-8b",
+    ],
+    "qwen14b": [
+        "qwen3-14b",
+    ],
+    "qwen30ba3b": [
+        "qwen3-30b-a3b",
+    ],
 }
 
 # CSV column names vary across sources. We try each in order.

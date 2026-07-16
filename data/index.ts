@@ -10,7 +10,9 @@ export const getSiteConfig = (): SiteConfig => siteData;
 export const getModels = (): Model[] => modelsData;
 export const getCategories = (): Category[] => categoriesData;
 export const getArticles = (): Article[] => articlesData;
-export const getOpenWeightModels = (): OpenWeightModel[] => openWeightModelsData;
+// JSON imports widen "first-party" to string; the jest data suite enforces the literal value.
+export const getOpenWeightModels = (): OpenWeightModel[] =>
+  openWeightModelsData as OpenWeightModel[];
 
 export const getArticleBySlug = (slug: string): Article | undefined =>
   articlesData.find((a: Article) => a.slug === slug);
