@@ -38,20 +38,20 @@
       ]
     },
     {
-      "model_id": "gpt",
-      "provider": "OpenAI",
-      "catalog_url": "https://openai.com/api/pricing/",
-      "news_url": "https://openai.com/news/",
-      "tracked_name_pattern": "GPT-([0-9.]+)",
-      "catalog_name_patterns": ["GPT-([0-9.]+)", "gpt-([0-9.]+)"]
-    },
-    {
       "model_id": "muse",
       "provider": "Meta",
       "catalog_url": "https://ai.meta.com/blog/",
       "news_url": "https://ai.meta.com/blog/",
       "tracked_name_pattern": "Muse Spark ([0-9.]+)",
       "catalog_name_patterns": ["Muse Spark ([0-9.]+)", "muse-spark-([0-9.]+)"]
+    },
+    {
+      "model_id": "kimi",
+      "provider": "Moonshot AI",
+      "catalog_url": "https://platform.kimi.ai/docs/pricing/chat-k3",
+      "news_url": "https://www.kimi.com/blog/kimi-k3",
+      "tracked_name_pattern": "Kimi K([0-9]+)",
+      "catalog_name_patterns": ["Kimi K([0-9]+)", "kimi-k([0-9]+)"]
     }
   ]
 }

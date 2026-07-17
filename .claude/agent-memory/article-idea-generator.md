@@ -7,6 +7,7 @@
 Quiet model week after the July 8–9 triple launch (Grok 4.5, GPT-5.6 Sol, Muse Spark 1.1). The fresh story is product surfaces: Claude Cowork expanded to web/mobile (July 7) and OpenAI answered with ChatGPT Work (July 9). Anthropic usage data shows >90% of Cowork is non-coding knowledge work. Gemini 3.5 Pro still not GA. Fable 5 shifted toward usage credits after the included-window extensions.
 
 ## Article WRITTEN this cycle (2026-07-17)
+- **kimi-k3-replaces-gpt-in-helloai-set** — "Kimi K3 Replaces GPT-5.6 Sol in helloai's Frontier Set" (Discovery). Moonshot admit; GPT-5.6 Sol dropped under six-model cap.
 - **chatgpt-work-vs-claude-cowork-agentic-seat-war** — "ChatGPT Work vs Claude Cowork: The Agentic Seat War" (Analysis). Product-surface war; Elo still matters less than seat lock-in for day-to-day work.
 
 ## Article WRITTEN this cycle (2026-07-09, Grok 4.5 catch-up)
@@ -27,6 +28,7 @@ Quiet model week after the July 8–9 triple launch (Grok 4.5, GPT-5.6 Sol, Muse
 6. **chinese-labs-are-no-longer-the-underdogs** — reframe before writing.
 
 ## Angles Already Covered (avoid repeating within 30 days)
+- Kimi K3 replaces GPT-5.6 Sol / Moonshot admit (2026-07-17)
 - ChatGPT Work vs Claude Cowork agentic seat war (2026-07-17)
 - Muse Spark 1.1 replaces Qwen in tracked set (2026-07-09)
 - Grok 4.5 default chat model / replaces 4.3 / catalog guard fix (2026-07-09)
