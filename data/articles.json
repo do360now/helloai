@@ -1,5 +1,20 @@
 [
   {
+    "slug": "chatgpt-work-vs-claude-cowork-agentic-seat-war",
+    "title": "ChatGPT Work vs Claude Cowork: The Agentic Seat War",
+    "excerpt": "OpenAI and Anthropic are no longer fighting only on LMArena — ChatGPT Work and Claude Cowork compete for the surface where finished work ships.",
+    "date": "2026-07-17",
+    "category": "Analysis",
+    "readTime": "2 min",
+    "content": [
+      "The July 2026 fight between OpenAI and Anthropic is no longer about which model tops LMArena. It is about who owns the surface where finished work ships. On July 7, Anthropic took Claude Cowork to the web at claude.ai and to iOS and Android, with remote sessions that keep running when every device is offline. Two days later, OpenAI answered with ChatGPT Work — ChatGPT, Codex, and browser automation collapsed into one agent surface powered by the GPT-5.6 family.",
+      "The data Anthropic published with the Cowork expansion should end the \"coding agents only\" framing. From 1.2 million anonymized sessions across more than 600,000 organizations in a late-May sample, business process work took 33.4% of usage, content creation 16.4%, and software development only 8.7%. Over 90% of Cowork sessions are non-coding knowledge work: reports, onboarding checklists, decks, and spreadsheet reconciliation. OpenAI's ChatGPT Work aims at the same prize — finished documents, presentations, and web apps — and is rolling out first to Pro, Enterprise, and Edu users before Plus and Business.",
+      "Under the hood, helloai still tracks the models that power those surfaces. Claude Fable 5 leads text overall at 1508 Elo, Claude Opus 4.8 sits at 1503, and GPT-5.6 Sol is at 1484 with $5/$30 per million tokens. Those gaps matter for agentic coding and long-horizon runs. They matter less once a team standardizes on a single work surface that holds their files, context, and scheduled jobs. Product lock-in is becoming the durable moat as the model layer keeps leapfrogging week to week.",
+      "The trade-off is real. Cowork's remote sessions and Max-first mobile beta favor teams already deep in Anthropic's stack; ChatGPT Work's Codex-plus-browser pitch favors teams that want one super-app for artifacts. Neither product makes models interchangeable for free — routing a hard reasoning job to Gemini 3.1 Pro or a cheap agentic loop to Muse Spark 1.1 still means leaving the seat. Teams that treat this as pure productivity will love the leverage. Teams that treat the seat as architecture should keep data portable and a second surface live for anything mission-critical.",
+      "The next model release will still move the Elo board. The more consequential question for the rest of 2026 is which work surface accumulates the habits, connectors, and unfinished multi-hour jobs that are expensive to migrate. Model scores remain the right way to pick a brain. The seat is how that brain stays in the room."
+    ]
+  },
+  {
     "slug": "muse-spark-1-1-replaces-qwen-in-helloai-set",
     "title": "Muse Spark 1.1 Replaces Qwen3.7-Max in helloai's Frontier Set",
     "excerpt": "Meta ships Muse Spark 1.1 with a public API at $1.25/$4.25. helloai drops Qwen3.7-Max and adds Meta as its budget agentic pick at 1487 Elo.",
@@ -132,21 +147,6 @@
       "GPT-5.5 sits in an awkward middle. It posts strong agentic numbers — 82.7 percent on Terminal-Bench 2.0 and 73.1 percent on Expert-SWE — and matches Opus on input price at $5, but its $30 output rate is the highest in the set. The engine penalizes that on cost-weighted tasks unless you filter it in for provider reasons. Gemini 3.1 Pro is not a coding specialist in our taxonomy; it leads Hard Reasoning and Science, and it will not top a coding query even at $2/$12 unless your pipeline is multimodal or reasoning-heavy.",
       "Practical routing: reach for Opus 4.8 when the job is codebase-scale — migrations, parallel subagent workflows, or SWE-bench Pro-class problems. Switch to Qwen3.7-Max when you need sustained agentic execution and can accept a slightly lower rank for half the bill. Use Grok 4.3 as a cost firewall for iterative work that humans gate before merge. Reserve GPT-5.5 for terminal-native agent stacks where Terminal-Bench-shaped tool chains are the bottleneck and output cost is a rounding error. None require chasing a bigger Elo number; the frontier is already a near-tie.",
       "Coding procurement in mid-2026 has decoupled from the leaderboard. Nineteen to twenty-eight Elo points separate the models developers ship, while economics and task shape diverge by an order of magnitude. The honest workflow is to call /api/recommend?task=coding with your real budget and context constraints, then override only when you know your pipeline's shape — terminal agents, multimodal inputs, or subagent orchestration — that the generic weights underweight. The best model for coding is not the highest score; it is the one whose price and behavior match how your agents run overnight."
-    ]
-  },
-  {
-    "slug": "fable-5-suspended-us-government-directive",
-    "title": "Fable 5 Suspended: Government Directive Removes Mythos from All Users",
-    "excerpt": "Three days after public launch, a US export control order forced Anthropic to disable Fable 5 and Mythos 5 worldwide. A narrow reported jailbreak on vulnerability discovery triggered the recall.",
-    "date": "2026-06-13",
-    "category": "Analysis",
-    "readTime": "2 min",
-    "content": [
-      "Anthropic received the directive on June 12 at 5:21pm ET and immediately moved to suspend access to Fable 5 and Mythos 5 for all users. The order, issued under national security authorities, requires blocking access by any foreign national — inside or outside the United States, including Anthropic's own employees. Compliance meant disabling the models entirely rather than attempting per-user filtering.",
-      "The government's concern centers on a demonstrated bypass that lets the model identify software flaws when pointed at a specific codebase. Anthropic reviewed the report and concluded the capability shown is narrow, non-universal, and already available in other publicly deployed models including OpenAI's GPT-5.5. No universal jailbreak was presented, and the company had already invested thousands of red-team hours plus 30-day data retention for monitoring before launch.",
-      "Anthropic is complying with the legal requirement but publicly disagrees with the action. In their statement they argue that applying this standard across the industry would halt new frontier deployments, and that the model had been released with defense-in-depth safeguards after extensive review by US and UK safety institutes. They note they are working to restore access as soon as possible and believe the situation stems from a misunderstanding.",
-      "The impact lands hardest on teams that moved quickly to the new tier. Fable 5 had posted 95% on SWE-bench Verified and led GDPval-AA at 1932, with early reports of widening margins on long-horizon agentic work. Developers who converted production projects or evaluation pipelines to use the $10/$50 Mythos-class model now face sudden loss of access, with no equivalent substitute at that capability band. All other Anthropic models remain available.",
-      "This follows the earlier decision to withhold the raw Mythos 5 engine behind the Glasswing consortium. What began as restricted high-risk cyber tooling briefly became the first Mythos-class model cleared for ordinary paid users — only to be pulled three days later by government order. For the frontier, it underscores that even commercially-launched, safety-tuned models can be subject to abrupt, broad restrictions on short notice, regardless of the provider's monitoring investments or red-team results. The next question is whether the standard spreads, and whether any provider can ship a frontier model that is not one directive away from a global pause."
     ]
   }
 ]
