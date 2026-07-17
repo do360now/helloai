@@ -23,13 +23,16 @@ Article prose may be written in-session by Grok following `.claude/agents/articl
 
 ### 1. Leaderboard drift (judgment)
 
-**1a. Catalog guard (deterministic, run first):**
+**1a. Deterministic guards (run first):**
 
 ```bash
 /home/cmc/git/grok/helloai/.venv/bin/python3 scripts/check_provider_catalog.py
+/home/cmc/git/grok/helloai/.venv/bin/python3 scripts/check_cluster_bench.py
 ```
 
-If exit 1, investigate every flagged provider and apply evidence-backed patches before continuing. Do not rely on memory/version guesses alone.
+Catalog guard: if exit 1, investigate every flagged provider and apply evidence-backed patches before continuing. Do not rely on memory/version guesses alone.
+
+Cluster bench guard: if exit 1, first-party benchmarks in the local gpu-cluster repo diverge from `data/open_weight_models.json` — propose `tokens_per_sec`/`quantization` patches and bump `bench_source.date`. `[new bench candidate]` lines feed the open-weight admission decision tree. "source unavailable" (remote run) is fine — note the last-integrated date and move on. Entries with `bench_source` carry first-party measured numbers; never overwrite them with vendor figures.
 
 **1b. Judgment pass:** Read `data/models.json`, `data/open_weight_models.json`, `scripts/arena.py` (`_NAME_MAP` + `_OPEN_WEIGHT_NAME_MAP`), `.claude/agent-memory/leaderboard-updater.md`, and `.claude/state/leaderboard-changes.jsonl`.
 

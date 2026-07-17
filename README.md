@@ -12,6 +12,7 @@ An unbiased, curated directory of frontier AI models — with Elo rankings, cate
 
 - **Interactive directory**: Filter and rank models by task, cost, and context window — live on the homepage
 - **Leaderboard**: Elo ratings are curated from Chatbot Arena blind-vote data, cross-checked weekly; when the upstream snapshot is stale, curated values are kept
+- **Run it yourself**: Curated open-weight models with VRAM, quantization, and throughput specs — including first-party numbers measured on our own two-GPU llama.cpp cluster, badged "⚡ Independently measured" on the site
 - **Category insights**: Which model leads for coding, reasoning, daily use, and more
 - **Weekly articles**: Honest editorial — no hype, no affiliate links
 - **Public API**: Machine-readable endpoints for developers and AI agents
@@ -89,6 +90,7 @@ Full pipeline (data + article + version + deploy): `make deploy`
 ```
 data/
   models.json          # Models: elo, cost, context_window, strengths
+  open_weight_models.json  # Open-weight picks: vram_gb, tokens_per_sec, bench_source
   categories.json      # Use-case categories with leaders
   articles.json        # Articles sorted by date desc
   site.json            # Config + lastUpdated
@@ -130,13 +132,17 @@ public/
   hooks/
     post-edit.sh               # Post-edit ESLint guardrail
 __tests__/                     # Data integrity tests
-scripts/                       # Python automation scripts
+scripts/                       # Python automation (Elo refresh, drift guards, article insertion)
+  check_provider_catalog.py    # Guard: provider catalogs vs models.json
+  check_cluster_bench.py       # Guard: local GPU-cluster benchmarks vs open_weight_models.json
 verify-all-agents.sh           # Verify agent frontmatter integrity hashes
 ```
 
 ## Weekly update (leaderboard + article)
 
 The weekly pipeline checks model drift, refreshes Elo, writes a new article when there is something worth covering, validates, and commits. It does **not** deploy — that is a separate step.
+
+Two deterministic guards run first (step 1a of the skill): `scripts/check_provider_catalog.py` (provider catalogs vs `models.json`) and `scripts/check_cluster_bench.py` (first-party GPU-cluster benchmarks in `~/git/gpu-cluster/benchmarks/results.md` vs `open_weight_models.json` — local runs only; it exits 0 with a note when the file is unreachable). Non-zero exits mean drift that must be resolved before the judgment pass; `[new bench candidate]` lines feed the open-weight admission decision tree.
 
 ### Grok (recommended)
 
@@ -203,7 +209,7 @@ Run these via Claude Code (`/agent <name>`):
 |-------|----------|---------|-------------|--------------|
 | `data-validator` | Haiku | Sonnet | After any data change | Structural + semantic checks on all `data/*.json` |
 | `api-smoke-tester` | Haiku | Sonnet | After every deploy | Validates all 5 public API endpoints are healthy |
-| `leaderboard-updater` | Sonnet | Opus | Weekly | Detects stale model versions, pricing, arena name map drift; tracks staleness streaks across runs |
+| `leaderboard-updater` | Sonnet | Opus | Weekly | Detects stale model versions, pricing, arena name map drift; syncs first-party cluster benchmarks (local runs); tracks staleness streaks across runs |
 | `article-idea-generator` | Sonnet | Opus | Weekly | Scouts AI news, returns 5 prioritized article briefs; maintains brief queue across runs |
 | `seo-auditor` | Sonnet | Opus | Before major deploys | Audits live pages for title, OG, canonical, structured data |
 | `article-writer` | Opus | — | On demand | Writes polished article prose (pass a brief, get JSON content array) |

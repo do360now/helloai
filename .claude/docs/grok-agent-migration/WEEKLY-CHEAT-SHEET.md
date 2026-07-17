@@ -16,7 +16,12 @@ Use the latest memory and state. Append proposals to the audit log before showin
 - `.claude/agent-memory/leaderboard-updater.md`
 - `.claude/state/leaderboard-changes.jsonl`
 - `data/models.json`
+- `data/open_weight_models.json`
 - `scripts/arena.py`
+
+**Deterministic guards (Grok runs these first, per the spec):**
+- `scripts/check_provider_catalog.py` — provider catalog drift
+- `scripts/check_cluster_bench.py` — first-party cluster benchmark drift + new bench candidates (local runs only; exits 0 when the source file is unreachable)
 
 **After Grok responds:**
 - Review the report
