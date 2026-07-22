@@ -2,7 +2,7 @@
   {
     "name": "Overall Preference",
     "leader": "Claude Fable 5",
-    "insight": "Highest Elo in the tracked set at 1508 on LMArena text overall. Mythos-class capability with conservative safety fallbacks to Opus 4.8 on flagged queries.",
+    "insight": "Highest Elo in the tracked set at 1507 on LMArena text overall. Mythos-class capability with conservative safety fallbacks to Opus 4.8 on flagged queries.",
     "icon": "trophy",
     "color": "#FBBF24"
   },

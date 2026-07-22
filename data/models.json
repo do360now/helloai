@@ -5,9 +5,9 @@
     "provider": "Anthropic",
     "url": "https://claude.ai",
     "tag": "Mythos Class",
-    "desc": "First Mythos-class model cleared for general use. Leads LMArena text overall at 1508 Elo with 95% on SWE-bench Verified and top GDPval-AA knowledge-work scores — gains widen on long-horizon agentic runs.",
+    "desc": "First Mythos-class model cleared for general use. Leads LMArena text overall at 1507 Elo with 95% on SWE-bench Verified and top GDPval-AA knowledge-work scores — gains widen on long-horizon agentic runs.",
     "color": "#9333EA",
-    "elo": 1508,
+    "elo": 1507,
     "cost_per_million_tokens": 10,
     "cost_per_million_tokens_output": 50,
     "context_window": 1000000,
@@ -17,20 +17,19 @@
     ]
   },
   {
-    "id": "claude",
-    "name": "Claude Opus 4.8",
-    "provider": "Anthropic",
-    "url": "https://claude.ai",
-    "tag": "Coding King",
-    "desc": "Codebase-scale agentic coding: parallel-subagent dynamic workflows migrate hundreds of thousands of lines from kickoff to merge. 88.6% on SWE-bench Verified, same price as 4.7.",
-    "color": "#D97706",
-    "elo": 1503,
-    "cost_per_million_tokens": 5,
-    "cost_per_million_tokens_output": 25,
+    "id": "muse",
+    "name": "Muse Spark 1.1",
+    "provider": "Meta",
+    "url": "https://www.meta.ai/",
+    "tag": "Budget Agentic",
+    "desc": "Meta's first paid frontier API: native multi-agent orchestration, MCP and computer use, 1M self-managed context. #2 in helloai's tracked set at 1495 Elo — cheapest agentic option we track at $1.25/$4.25.",
+    "color": "#0668E1",
+    "elo": 1495,
+    "cost_per_million_tokens": 1.25,
+    "cost_per_million_tokens_output": 4.25,
     "context_window": 1000000,
     "strengths": [
-      "Coding & Engineering",
-      "Overall Preference"
+      "Coding & Engineering"
     ]
   },
   {
@@ -41,45 +40,12 @@
     "tag": "Multimodal Leader",
     "desc": "Dominates reasoning and multimodal tasks. Scored 77% on ARC-AGI-2 — double its predecessor — and leads on graduate-level science benchmarks.",
     "color": "#4285F4",
-    "elo": 1493,
+    "elo": 1486,
     "cost_per_million_tokens": 2,
     "cost_per_million_tokens_output": 12,
     "context_window": 1000000,
     "strengths": [
       "Hard Reasoning & Science"
-    ]
-  },
-  {
-    "id": "grok",
-    "name": "Grok 4.5",
-    "provider": "xAI",
-    "url": "https://grok.x.ai",
-    "tag": "Engineering Speed",
-    "desc": "xAI's recommended chat and code model: 83.3% on Terminal-Bench 2.1, 4.2× fewer output tokens than Opus 4.8 on SWE Bench Pro, served at 80 TPS. $2/$6 with 500K context.",
-    "color": "#EF4444",
-    "elo": 1490,
-    "cost_per_million_tokens": 2,
-    "cost_per_million_tokens_output": 6,
-    "context_window": 500000,
-    "strengths": [
-      "Coding & Engineering",
-      "Honest Daily Use"
-    ]
-  },
-  {
-    "id": "muse",
-    "name": "Muse Spark 1.1",
-    "provider": "Meta",
-    "url": "https://www.meta.ai/",
-    "tag": "Budget Agentic",
-    "desc": "Meta's first paid frontier API: native multi-agent orchestration, MCP and computer use, 1M self-managed context. #6 on LMArena text overall at 1487 Elo — cheapest agentic option helloai tracks at $1.25/$4.25.",
-    "color": "#0668E1",
-    "elo": 1487,
-    "cost_per_million_tokens": 1.25,
-    "cost_per_million_tokens_output": 4.25,
-    "context_window": 1000000,
-    "strengths": [
-      "Coding & Engineering"
     ]
   },
   {
@@ -96,6 +62,40 @@
     "context_window": 1000000,
     "strengths": [
       "Coding & Engineering"
+    ]
+  },
+  {
+    "id": "claude",
+    "name": "Claude Opus 4.8",
+    "provider": "Anthropic",
+    "url": "https://claude.ai",
+    "tag": "Coding King",
+    "desc": "Codebase-scale agentic coding: parallel-subagent dynamic workflows migrate hundreds of thousands of lines from kickoff to merge. 88.6% on SWE-bench Verified, same price as 4.7.",
+    "color": "#D97706",
+    "elo": 1484,
+    "cost_per_million_tokens": 5,
+    "cost_per_million_tokens_output": 25,
+    "context_window": 1000000,
+    "strengths": [
+      "Coding & Engineering",
+      "Overall Preference"
+    ]
+  },
+  {
+    "id": "grok",
+    "name": "Grok 4.5",
+    "provider": "xAI",
+    "url": "https://grok.x.ai",
+    "tag": "Engineering Speed",
+    "desc": "xAI's recommended chat and code model: 83.3% on Terminal-Bench 2.1, 4.2× fewer output tokens than Opus 4.8 on SWE Bench Pro, served at 80 TPS. $2/$6 with 500K context.",
+    "color": "#EF4444",
+    "elo": 1468,
+    "cost_per_million_tokens": 2,
+    "cost_per_million_tokens_output": 6,
+    "context_window": 500000,
+    "strengths": [
+      "Coding & Engineering",
+      "Honest Daily Use"
     ]
   }
 ]
