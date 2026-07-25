@@ -73,6 +73,8 @@ _NAME_MAP: dict[str, list[str]] = {
         "claude-fable-5",
     ],
     "claude": [
+        "claude-opus-5-thinking",
+        "claude-opus-5",
         "claude-opus-4-8-thinking",
         "claude-opus-4-8",
         "claude-opus-4-7-thinking",

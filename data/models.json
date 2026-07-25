@@ -66,11 +66,11 @@
   },
   {
     "id": "claude",
-    "name": "Claude Opus 4.8",
+    "name": "Claude Opus 5",
     "provider": "Anthropic",
     "url": "https://claude.ai",
     "tag": "Coding King",
-    "desc": "Codebase-scale agentic coding: parallel-subagent dynamic workflows migrate hundreds of thousands of lines from kickoff to merge. 88.6% on SWE-bench Verified, same price as 4.7.",
+    "desc": "Anthropic's July 2026 successor to Opus 4.8: 96% on SWE-bench Verified, doubles Frontier-Bench performance, and scores 3x the next-best model on ARC-AGI-3 — at the same $5/$25 price.",
     "color": "#D97706",
     "elo": 1484,
     "cost_per_million_tokens": 5,

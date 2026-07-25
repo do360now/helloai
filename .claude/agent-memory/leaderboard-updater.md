@@ -1,6 +1,20 @@
 # leaderboard-updater agent memory
 
-## Last run: 2026-07-22 weekly (Grok)
+## Last run: 2026-07-25 weekly (Claude Code fallback — no Grok tool available this session)
+
+### Applied
+- **claude** version-drift: Anthropic launched **Claude Opus 5** on 2026-07-24 (catalog guard caught it — pricing page listed "Anthropic 5" ahead of tracked Opus 4.8). Same lineage/id as before, same $5/$25 price, same 1M ctx. Rejected as rumor-only just 3 days earlier (2026-07-22 run) — now GA, confirmed via https://www.anthropic.com/news/claude-opus-5.
+  - name: "Claude Opus 4.8" → "Claude Opus 5"
+  - desc: updated — 96% SWE-bench Verified, doubles Frontier-Bench v0.1, 3x ARC-AGI-3 vs next-best
+  - `arena._NAME_MAP["claude"]`: prepended `claude-opus-5-thinking`, `claude-opus-5` (old 4.8/4.7/4.6/4.5 aliases kept as fallback)
+  - **No elo change** — LMArena has not listed claude-opus-5 yet (1 day old at check time); left at 1484 pending scraper/manual refresh once votes accumulate
+- Catalog guard: exit 1 → exit 0 after patch. Cluster bench guard: exit 0, no drift (same 7 candidates as 07-22, none newly admitted).
+- Broad sweep: Gemini 3.5 Pro still unconfirmed/not GA despite a rumored July 17 target (Google reportedly scrapped and rebuilt it); Grok 4.5 and GPT-5.6 Sol unchanged from 07-22 state. No other tracked-model drift found.
+
+### Note on execution path
+This run had no Grok tool/agent available in-session, so the `leaderboard-updater` role was executed directly by Claude Code (the documented fallback in `.claude/docs/grok-agent-migration/grok-default-weekly-intelligence.md`). Same output contract (audit log + memory) followed.
+
+## Previous run: 2026-07-22 weekly (Grok)
 
 ### Applied
 - **Elo refresh (manual)** from arena.ai Jul 21 — nakasyou still 426d stale:
