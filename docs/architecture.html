@@ -1,0 +1,1182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Hello, AI — Architecture Map</title>
+  <meta name="description" content="Single-page architecture map of helloai.com — layers, data flows, API, agents, and deploy." />
+  <style>
+    :root {
+      --bg: #080A12;
+      --bg-elevated: #0d111c;
+      --bg-card: rgba(255, 255, 255, 0.03);
+      --border: rgba(255, 255, 255, 0.08);
+      --border-strong: rgba(255, 255, 255, 0.14);
+      --text: #e8ecf4;
+      --muted: #8b93a7;
+      --primary: #00E5A0;
+      --secondary: #6366F1;
+      --tertiary: #F472B6;
+      --amber: #fbbf24;
+      --radius: 14px;
+      --font: "Geist", "Segoe UI", system-ui, -apple-system, sans-serif;
+      --mono: "Geist Mono", "SF Mono", "Fira Code", ui-monospace, monospace;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.55;
+      min-height: 100vh;
+      background-image:
+        radial-gradient(ellipse 80% 50% at 20% -10%, rgba(0, 229, 160, 0.12), transparent 50%),
+        radial-gradient(ellipse 60% 40% at 90% 10%, rgba(99, 102, 241, 0.14), transparent 45%),
+        radial-gradient(ellipse 50% 30% at 50% 100%, rgba(244, 114, 182, 0.08), transparent 50%);
+    }
+
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 4rem;
+    }
+
+    /* ── Header ── */
+    header.hero {
+      display: grid;
+      gap: 1.25rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .badge-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .badge {
+      font-family: var(--mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 0.28rem 0.65rem;
+      border-radius: 999px;
+      border: 1px solid var(--border-strong);
+      background: var(--bg-card);
+      color: var(--muted);
+    }
+
+    .badge.live {
+      color: var(--primary);
+      border-color: rgba(0, 229, 160, 0.35);
+      background: rgba(0, 229, 160, 0.08);
+    }
+
+    h1 {
+      font-size: clamp(1.75rem, 4vw, 2.5rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+    }
+
+    h1 span { color: var(--primary); }
+
+    .lede {
+      color: var(--muted);
+      max-width: 62ch;
+      font-size: 1.05rem;
+    }
+
+    .meta-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 0.75rem;
+    }
+
+    .meta-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
+      backdrop-filter: blur(12px);
+    }
+
+    .meta-card .k {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 0.25rem;
+    }
+
+    .meta-card .v {
+      font-size: 0.92rem;
+      font-weight: 600;
+    }
+
+    /* ── Nav ── */
+    nav.toc {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      padding: 0.75rem 0;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(to bottom, rgba(8, 10, 18, 0.95) 60%, transparent);
+      backdrop-filter: blur(10px);
+    }
+
+    nav.toc a {
+      font-size: 0.78rem;
+      font-family: var(--mono);
+      color: var(--muted);
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid transparent;
+      text-decoration: none;
+      transition: 0.15s ease;
+    }
+
+    nav.toc a:hover,
+    nav.toc a.active {
+      color: var(--primary);
+      border-color: rgba(0, 229, 160, 0.3);
+      background: rgba(0, 229, 160, 0.08);
+      text-decoration: none;
+    }
+
+    /* ── Sections ── */
+    section {
+      margin-bottom: 2.75rem;
+      scroll-margin-top: 3.5rem;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .section-head h2 {
+      font-size: 1.35rem;
+      letter-spacing: -0.02em;
+    }
+
+    .section-head .path {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--secondary);
+      background: rgba(99, 102, 241, 0.12);
+      border: 1px solid rgba(99, 102, 241, 0.25);
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+    }
+
+    .section-desc {
+      color: var(--muted);
+      margin-bottom: 1.1rem;
+      max-width: 75ch;
+    }
+
+    /* ── Layer stack diagram ── */
+    .stack {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .layer {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg-card);
+      overflow: hidden;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .layer:hover {
+      border-color: rgba(0, 229, 160, 0.35);
+      box-shadow: 0 0 0 1px rgba(0, 229, 160, 0.08);
+    }
+
+    .layer-head {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.85rem 1.1rem;
+      cursor: pointer;
+      user-select: none;
+      width: 100%;
+      background: transparent;
+      border: none;
+      color: inherit;
+      font: inherit;
+      text-align: left;
+    }
+
+    .layer-head:focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: -2px;
+    }
+
+    .layer-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .layer-title {
+      font-weight: 650;
+      flex: 1;
+    }
+
+    .layer-count {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+    }
+
+    .chev {
+      color: var(--muted);
+      transition: transform 0.2s ease;
+      font-size: 0.85rem;
+    }
+
+    .layer.open .chev { transform: rotate(90deg); color: var(--primary); }
+
+    .layer-body {
+      display: none;
+      padding: 0 1.1rem 1.1rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .layer.open .layer-body { display: block; padding-top: 1rem; }
+
+    .grid-cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 0.65rem;
+    }
+
+    .card {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 0.8rem 0.9rem;
+    }
+
+    .card h4 {
+      font-size: 0.92rem;
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+
+    .card .file {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--secondary);
+      margin-bottom: 0.4rem;
+      word-break: break-all;
+    }
+
+    .card p {
+      font-size: 0.82rem;
+      color: var(--muted);
+    }
+
+    /* ── API table ── */
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg-card);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 0.7rem 0.9rem;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    th {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--muted);
+      background: rgba(0, 0, 0, 0.2);
+    }
+
+    tr:last-child td { border-bottom: none; }
+
+    .method {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    .ep {
+      font-family: var(--mono);
+      font-size: 0.82rem;
+    }
+
+    .tag {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      padding: 0.12rem 0.4rem;
+      border-radius: 4px;
+      background: rgba(99, 102, 241, 0.15);
+      color: #a5b4fc;
+      margin: 0.1rem 0.15rem 0.1rem 0;
+    }
+
+    .tag.pro {
+      background: rgba(244, 114, 182, 0.15);
+      color: #f9a8d4;
+    }
+
+    /* ── Flows ── */
+    .flows {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 0.85rem;
+    }
+
+    .flow {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg-card);
+      padding: 1rem 1.1rem;
+    }
+
+    .flow h3 {
+      font-size: 0.95rem;
+      margin-bottom: 0.75rem;
+      color: var(--text);
+    }
+
+    .steps {
+      list-style: none;
+      counter-reset: step;
+    }
+
+    .steps li {
+      counter-increment: step;
+      position: relative;
+      padding: 0.45rem 0 0.45rem 2rem;
+      font-size: 0.85rem;
+      color: var(--muted);
+      border-left: 1px solid rgba(0, 229, 160, 0.2);
+      margin-left: 0.55rem;
+    }
+
+    .steps li:last-child { border-left-color: transparent; }
+
+    .steps li::before {
+      content: counter(step);
+      position: absolute;
+      left: -0.55rem;
+      top: 0.4rem;
+      width: 1.1rem;
+      height: 1.1rem;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 1px solid var(--primary);
+      color: var(--primary);
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* ── Scoring bars ── */
+    .weights {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    @media (max-width: 640px) {
+      .weights { grid-template-columns: 1fr; }
+    }
+
+    .weight-panel {
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg-card);
+      padding: 1rem;
+    }
+
+    .weight-panel h3 {
+      font-size: 0.88rem;
+      margin-bottom: 0.85rem;
+    }
+
+    .bar-row {
+      display: grid;
+      grid-template-columns: 5.5rem 1fr 2.5rem;
+      gap: 0.5rem;
+      align-items: center;
+      margin-bottom: 0.45rem;
+      font-size: 0.8rem;
+    }
+
+    .bar-row .label { color: var(--muted); font-family: var(--mono); font-size: 0.72rem; }
+    .bar-row .pct { font-family: var(--mono); font-size: 0.72rem; text-align: right; color: var(--primary); }
+
+    .bar-track {
+      height: 8px;
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.06);
+      overflow: hidden;
+    }
+
+    .bar-fill {
+      height: 100%;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+    }
+
+    /* ── Agents ── */
+    .agent-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 0.65rem;
+    }
+
+    .agent {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.9rem 1rem;
+      background: var(--bg-card);
+    }
+
+    .agent .name {
+      font-weight: 650;
+      font-size: 0.92rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .agent .exec {
+      font-family: var(--mono);
+      font-size: 0.68rem;
+      color: var(--tertiary);
+      margin-bottom: 0.4rem;
+    }
+
+    .agent p { font-size: 0.82rem; color: var(--muted); }
+
+    /* ── Tree ── */
+    .tree {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: rgba(0, 0, 0, 0.3);
+      padding: 1.1rem 1.25rem;
+      overflow-x: auto;
+      line-height: 1.7;
+    }
+
+    .tree .dir { color: var(--primary); }
+    .tree .desc { color: var(--muted); }
+
+    /* ── Relationships ── */
+    .rel-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+    }
+
+    .rel {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.82rem;
+      padding: 0.55rem 0.75rem;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-card);
+    }
+
+    .rel .node {
+      font-family: var(--mono);
+      font-size: 0.75rem;
+      color: var(--text);
+    }
+
+    .rel .arrow {
+      color: var(--primary);
+      font-family: var(--mono);
+      font-size: 0.72rem;
+    }
+
+    .rel .type {
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      color: var(--amber);
+      background: rgba(251, 191, 36, 0.1);
+      border: 1px solid rgba(251, 191, 36, 0.25);
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+    }
+
+    .rel .label {
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    /* ── Deploy steps ── */
+    .pipeline {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      align-items: center;
+    }
+
+    .pipe-step {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      padding: 0.45rem 0.7rem;
+      border-radius: 8px;
+      background: rgba(99, 102, 241, 0.12);
+      border: 1px solid rgba(99, 102, 241, 0.28);
+      color: #c7d2fe;
+    }
+
+    .pipe-arrow { color: var(--muted); font-size: 0.85rem; }
+
+    /* ── Footer ── */
+    footer {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.82rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: space-between;
+    }
+
+    .status-line {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 0.5rem;
+    }
+
+    .status-line.ok { color: var(--primary); }
+    .status-line.err { color: var(--tertiary); }
+
+    /* ── Search ── */
+    .search-box {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .search-box input {
+      flex: 1;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid var(--border-strong);
+      border-radius: 10px;
+      padding: 0.65rem 0.9rem;
+      color: var(--text);
+      font: inherit;
+      font-size: 0.9rem;
+    }
+
+    .search-box input:focus {
+      outline: none;
+      border-color: rgba(0, 229, 160, 0.5);
+      box-shadow: 0 0 0 3px rgba(0, 229, 160, 0.1);
+    }
+
+    .search-box input::placeholder { color: #5a6278; }
+
+    .hit-count {
+      font-family: var(--mono);
+      font-size: 0.72rem;
+      color: var(--muted);
+      align-self: center;
+      min-width: 4rem;
+    }
+
+    mark {
+      background: rgba(0, 229, 160, 0.25);
+      color: inherit;
+      border-radius: 2px;
+      padding: 0 2px;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header class="hero">
+      <div class="badge-row">
+        <span class="badge live">● live · helloai.com</span>
+        <span class="badge">architecture map</span>
+        <span class="badge" id="gen-date">2026-07-22</span>
+      </div>
+      <h1>Hello, <span>AI</span> — Architecture</h1>
+      <p class="lede" id="project-desc">
+        Unbiased frontier model directory: Next.js App Router, static JSON data layer,
+        shared scoring for UI + API, Lightning Pro endpoint, and a weekly agent pipeline.
+      </p>
+      <div class="meta-grid" id="meta-grid"></div>
+      <p class="status-line" id="data-status">Loading architecture.json…</p>
+    </header>
+
+    <nav class="toc" id="toc">
+      <a href="#layers">Layers</a>
+      <a href="#api">API</a>
+      <a href="#scoring">Scoring</a>
+      <a href="#flows">Flows</a>
+      <a href="#agents">Agents</a>
+      <a href="#deploy">Deploy</a>
+      <a href="#tree">Tree</a>
+      <a href="#relations">Relations</a>
+    </nav>
+
+    <div class="search-box">
+      <input type="search" id="search" placeholder="Filter nodes, paths, endpoints…" autocomplete="off" />
+      <span class="hit-count" id="hit-count"></span>
+    </div>
+
+    <!-- Layers -->
+    <section id="layers">
+      <div class="section-head">
+        <h2>System layers</h2>
+      </div>
+      <p class="section-desc">
+        Expand a layer for files and responsibilities. Data is imported statically;
+        scoring is shared between the homepage and all recommend routes.
+      </p>
+      <div class="stack" id="layer-stack"></div>
+    </section>
+
+    <!-- API -->
+    <section id="api">
+      <div class="section-head">
+        <h2>API surface</h2>
+        <span class="path">app/api/ · public/</span>
+      </div>
+      <p class="section-desc">
+        Public, no free-tier auth. Browser CORS limited to helloai.com origins.
+        Middleware enforces 100 req/min/IP on <code>/api/*</code>.
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Method</th>
+              <th>Path</th>
+              <th>Params / headers</th>
+              <th>Description</th>
+            </tr>
+          </thead>
+          <tbody id="api-tbody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Scoring -->
+    <section id="scoring">
+      <div class="section-head">
+        <h2>Recommendation scoring</h2>
+        <span class="path">data/recommend.ts</span>
+      </div>
+      <p class="section-desc">
+        Hard filters (cost input, context, provider) run first. Remaining models get
+        weighted scores. Output price is returned but not scored.
+      </p>
+      <div class="weights" id="weights"></div>
+    </section>
+
+    <!-- Flows -->
+    <section id="flows">
+      <div class="section-head">
+        <h2>Data flows</h2>
+      </div>
+      <div class="flows" id="flows-grid"></div>
+    </section>
+
+    <!-- Agents -->
+    <section id="agents">
+      <div class="section-head">
+        <h2>Agents &amp; weekly intelligence</h2>
+        <span class="path">.claude/agents/ · .grok/skills/</span>
+      </div>
+      <p class="section-desc">
+        Typed handoff: <strong>article-idea-generator → article-writer</strong> via JSON brief schema.
+        Grok is the default executor for leaderboard + idea generation; Opus writes prose.
+      </p>
+      <div class="agent-grid" id="agents-grid"></div>
+    </section>
+
+    <!-- Deploy -->
+    <section id="deploy">
+      <div class="section-head">
+        <h2>Deploy pipeline</h2>
+        <span class="path">Makefile · Dockerfile</span>
+      </div>
+      <p class="section-desc">
+        Multi-stage Docker (<code>standalone</code>) → Docker Hub → Azure App Service.
+        Always run <code>make bump_version</code> as a separate step before the image build.
+      </p>
+      <div class="pipeline" id="pipeline"></div>
+    </section>
+
+    <!-- Tree -->
+    <section id="tree">
+      <div class="section-head">
+        <h2>Directory map</h2>
+      </div>
+      <pre class="tree" id="tree-pre"></pre>
+    </section>
+
+    <!-- Relations -->
+    <section id="relations">
+      <div class="section-head">
+        <h2>Key relationships</h2>
+      </div>
+      <div class="rel-list" id="rel-list"></div>
+    </section>
+
+    <footer>
+      <div>
+        Source of truth: <a href="./architecture.json">docs/architecture.json</a>
+        · Live: <a href="https://helloai.com" target="_blank" rel="noopener">helloai.com</a>
+      </div>
+      <div>Design tokens: #00E5A0 · #6366F1 · #F472B6 · #080A12</div>
+    </footer>
+  </div>
+
+<script>window.__ARCHITECTURE__ = {"$schema":"https://json-schema.org/draft/2020-12/schema","meta":{"project":"helloai","title":"Hello, AI \u2014 Architecture Map","live":"https://helloai.com","repo":"https://github.com/do360now/HelloAiV2","description":"Unbiased, curated directory comparing frontier AI models \u2014 with Elo rankings, category insights, weekly articles, and a public agent-queryable API.","generated":"2026-07-22","version_source":"Makefile VERSION"},"stack":{"framework":"Next.js 16.2.3 (App Router)","language":"TypeScript (strict)","ui":["React 19","Tailwind CSS v4 (CSS-first)"],"fonts":"Geist Sans + Geist Mono via next/font/google","data":"Static JSON files in /data/ loaded at build/import time","runtime":"Node.js 20 (Docker Alpine)","output":"standalone (next.config.mjs \u2192 Docker)","hosting":"Azure App Service (container: do360now/helloai-web)","registry":"Docker Hub"},"design_system":{"background":"#080A12","primary":"#00E5A0","secondary":"#6366F1","tertiary":"#F472B6","notes":"Glass utility (backdrop blur) in app/globals.css; each model has a brand color in models.json"},"layers":[{"id":"edge","name":"Edge / Middleware","path":"middleware.ts","description":"Applies only to /api/* \u2014 rate limiting, AI user-agent detection, anomalous access logging.","components":[{"id":"middleware","name":"middleware","path":"middleware.ts","role":"Rate limit 100 req/min/IP; X-RateLimit-* headers; AI UA + anomaly alerts via lib/request-logger"},{"id":"security-headers","name":"Security headers","path":"next.config.mjs","role":"HSTS, CSP, X-Frame-Options DENY, nosniff, Referrer-Policy, Permissions-Policy; HTTP\u2192HTTPS redirect"}]},{"id":"presentation","name":"Presentation (App Router)","path":"app/","description":"Pages, layouts, SEO surfaces, and reusable UI components.","components":[{"id":"layout","name":"Root layout","path":"app/layout.tsx","role":"Global metadata, fonts, SEO defaults"},{"id":"home","name":"Homepage","path":"app/page.tsx","role":"Client component: interactive model filter using scoreAndRank; sections for models, open-weight, categories, articles"},{"id":"articles-index","name":"Articles index","path":"app/articles/page.tsx","role":"Lists articles from data/articles.json"},{"id":"article-slug","name":"Article page","path":"app/articles/[slug]/page.tsx","role":"Individual article (async params \u2014 Next.js 16); JSON-LD"},{"id":"og-home","name":"OG image (home)","path":"app/opengraph-image.tsx","role":"Dynamic 1200\u00d7630 OG image, edge runtime"},{"id":"og-article","name":"OG image (article)","path":"app/articles/[slug]/opengraph-image.tsx","role":"Per-article dynamic OG image"},{"id":"sitemap","name":"Sitemap","path":"app/sitemap.ts","role":"Auto-generated /sitemap.xml"},{"id":"robots","name":"Robots","path":"app/robots.ts","role":"Auto-generated /robots.txt"},{"id":"globals","name":"Global styles","path":"app/globals.css","role":"Tailwind v4 + glass utility + design tokens"}],"ui_components":[{"name":"Nav","path":"app/components/Nav.tsx"},{"name":"Hero","path":"app/components/Hero.tsx"},{"name":"ModelCard","path":"app/components/ModelCard.tsx"},{"name":"ModelFilter","path":"app/components/ModelFilter.tsx"},{"name":"OpenWeightCard","path":"app/components/OpenWeightCard.tsx"},{"name":"ArticleCard","path":"app/components/ArticleCard.tsx"},{"name":"CategoryIcon","path":"app/components/CategoryIcon.tsx"},{"name":"SectionHeader","path":"app/components/SectionHeader.tsx"},{"name":"ParticleCanvas","path":"app/components/ParticleCanvas.tsx"}]},{"id":"api","name":"Public API","path":"app/api/","description":"Public JSON endpoints. No auth on free tier. Browser CORS restricted to helloai.com origins. Rate limit via middleware.","base":"https://helloai.com","endpoints":[{"method":"GET","path":"/api/status","file":"app/api/status/route.ts","params":[],"description":"Health, version, data freshness, endpoint manifest"},{"method":"GET","path":"/api/models","file":"app/api/models/route.ts","params":["provider?"],"description":"All frontier models with full data"},{"method":"GET","path":"/api/recommend","file":"app/api/recommend/route.ts","params":["task?","max_cost?","min_context?","provider?","limit?"],"description":"Ranked recommendations via shared scoreAndRank"},{"method":"GET","path":"/api/openapi.json","file":"app/api/openapi.json/route.ts","params":[],"description":"Full OpenAPI 3.0 spec"},{"method":"GET","path":"/api/pro/recommend","file":"app/api/pro/recommend/route.ts","params":["task?","max_cost?","min_context?","provider?","limit?"],"headers":["X-Preimage","X-Agent-Id"],"description":"Lightning-paid Pro recommend \u2014 full result set, payment receipt header"},{"method":"GET","path":"/.well-known/ai-plugin.json","file":"public/.well-known/ai-plugin.json","params":[],"description":"Agent discovery manifest (static)"}]},{"id":"lib","name":"Shared libraries","path":"lib/","description":"Cross-cutting concerns used by API routes and (indirectly) middleware.","modules":[{"id":"lib-api","name":"api","path":"lib/api.ts","role":"apiHeaders, publicUnlessParameterized, parseRecommendParams (shared public + Pro)"},{"id":"lib-cors","name":"cors","path":"lib/cors.ts","role":"Browser CORS allowlist for helloai.com origins"},{"id":"lib-sanitize","name":"sanitize","path":"lib/sanitize.ts","role":"Task string sanitization for recommend queries"},{"id":"lib-request-logger","name":"request-logger","path":"lib/request-logger.ts","role":"Request log, AI UA detection, anomalous pattern detection"},{"id":"lib-pay","name":"pay/*","path":"lib/pay/","role":"Lightning earn/fund loop for Pro API","children":[{"name":"pro_service","path":"lib/pay/pro_service.ts","role":"serveProRecommend \u2014 invoice, settle, score, ledger, metrics"},{"name":"lightning","path":"lib/pay/lightning.ts","role":"Lightning backend (mock + real)"},{"name":"ledger","path":"lib/pay/ledger.ts","role":"Append-only earnings/sweeps; payment-hash dedupe"},{"name":"funding","path":"lib/pay/funding.ts","role":"Funding proposals and approval"},{"name":"metrics","path":"lib/pay/metrics.ts","role":"Pro request metrics \u2192 data/ledger/pro-requests.jsonl"},{"name":"hash","path":"lib/pay/hash.ts","role":"sha256 / HMAC helpers for preimage verification"},{"name":"config","path":"lib/pay/config.ts","role":"Pro price (sats) and pay config"},{"name":"types","path":"lib/pay/types.ts","role":"Pay domain types"}]}]},{"id":"data","name":"Data layer","path":"data/","description":"JSON is the source of truth. TypeScript modules provide typed access and shared scoring used by both UI and API.","files":[{"id":"models-json","name":"models.json","path":"data/models.json","role":"Frontier models: id, name, provider, elo, cost in/out, context_window, strengths, color"},{"id":"open-weight-json","name":"open_weight_models.json","path":"data/open_weight_models.json","role":"Open-weight picks: VRAM, quant, tokens/s, license; optional bench_source first-party"},{"id":"categories-json","name":"categories.json","path":"data/categories.json","role":"Use-case categories with leader + insight"},{"id":"articles-json","name":"articles.json","path":"data/articles.json","role":"Weekly articles sorted by date desc"},{"id":"site-json","name":"site.json","path":"data/site.json","role":"Site config + lastUpdated"},{"id":"local-leaderboard","name":"local_leaderboard.json","path":"data/local_leaderboard.json","role":"Local Elo snapshot support for leaderboard scripts"},{"id":"data-index","name":"index.ts","path":"data/index.ts","role":"getModels, getCategories, getArticles, getOpenWeightModels, getSiteConfig, formatDate"},{"id":"recommend","name":"recommend.ts","path":"data/recommend.ts","role":"scoreAndRank + SCORING_WEIGHTS \u2014 shared by homepage and /api/recommend (+ Pro)"},{"id":"leaderboard","name":"leaderboard.ts","path":"data/leaderboard.ts","role":"eloBarWidth for homepage leaderboard bars"},{"id":"types","name":"types.ts","path":"data/types.ts","role":"Model, Category, Article, OpenWeightModel, SiteConfig"},{"id":"api-types","name":"api-types.ts","path":"data/api-types.ts","role":"API response TypeScript shapes"},{"id":"pro-ledger","name":"ledger/pro-requests.jsonl","path":"data/ledger/pro-requests.jsonl","role":"Append-only Pro request metrics log"}],"scoring":{"withTask":{"task":0.4,"elo":0.35,"cost":0.15,"context":0.1},"withoutTask":{"task":0.0,"elo":0.55,"cost":0.25,"context":0.2},"hard_filters":["max_cost (input)","min_context","provider"],"notes":"Output price is surfaced but not used in filter/score"}},{"id":"ops","name":"Ops & automation","path":"scripts/ + Makefile + .claude/","description":"Weekly data refresh, article pipeline, deploy, and agent maintenance.","deploy":{"image":"do360now/helloai-web","pipeline":["verify-all-agents.sh","make weekly_update (optional in full deploy)","make bump_version (always separate before image build)","make build_helloai_app","make build_helloai_image","make push_helloai_image","make az_deploy"],"docker":{"file":"Dockerfile","stages":["deps","builder","runner"],"build_arg":"APP_VERSION \u2192 NEXT_PUBLIC_APP_VERSION","cmd":"node server.js","port":3000}},"scripts":[{"name":"update_leaderboard.py","role":"Deterministic Elo / leaderboard refresh"},{"name":"weekly_update.py","role":"Weekly deterministic data refresh orchestration"},{"name":"arena.py","role":"Chatbot Arena data helpers"},{"name":"add_article.py","role":"Insert finished article JSON into articles.json"},{"name":"validate_brief.py","role":"Validate article-idea-generator \u2192 article-writer brief schema"},{"name":"check_provider_catalog.py","role":"Guard: provider catalogs vs models.json"},{"name":"check_cluster_bench.py","role":"Guard: first-party GPU cluster benches vs open_weight_models.json"},{"name":"pro_demand_report.py","role":"Pro demand analytics from ledger metrics"},{"name":"deploy.py","role":"Deploy helper"}],"agents":[{"name":"leaderboard-updater","path":".claude/agents/leaderboard-updater.md","executor":"Grok (default); Claude fallback","role":"Model version/pricing/Elo drift; proposes JSON diffs"},{"name":"article-idea-generator","path":".claude/agents/article-idea-generator.md","executor":"Grok (default); Claude fallback","role":"Scouts topics; emits typed JSON briefs"},{"name":"article-writer","path":".claude/agents/article-writer.md","executor":"Opus","role":"Writes article prose from brief \u2192 content array"},{"name":"data-validator","path":".claude/agents/data-validator.md","executor":"Haiku","role":"Structural + semantic checks on data/*.json"},{"name":"api-smoke-tester","path":".claude/agents/api-smoke-tester.md","executor":"Haiku","role":"Post-deploy smoke of public API endpoints"},{"name":"seo-auditor","path":".claude/agents/seo-auditor.md","executor":"Sonnet","role":"Live page title/OG/canonical/structured data audit"}],"skills":[{"name":"weekly-update","paths":[".grok/skills/weekly-update/SKILL.md",".claude/skills/weekly-update/SKILL.md"]},{"name":"deploy","path":".claude/skills/deploy/SKILL.md"},{"name":"advisor-pattern","path":".claude/skills/advisor-pattern/SKILL.md"}],"state":[{"path":".claude/state/leaderboard-changes.jsonl","role":"Append-only audit of proposed leaderboard changes"},{"path":".claude/agent-memory/leaderboard-updater.md","role":"Cross-session memory: staleness streaks"},{"path":".claude/agent-memory/article-idea-generator.md","role":"Cross-session memory: brief queue"}]},{"id":"quality","name":"Quality & tests","path":"__tests__/","description":"Jest data integrity + route contract tests. TypeScript strict. ESLint.","commands":{"test":"npx jest / npm test","typecheck":"npx tsc --noEmit","lint":"npm run lint","build":"npm run build","verify_agents":"./verify-all-agents.sh"},"suites":["data.test.ts","recommend.test.ts","api-routes.test.ts","api-params.test.ts","openapi-consistency.test.ts","open-weight.test.ts","leaderboard.test.ts","pro-route.test.ts","pay/*","async-params.test.ts","format-date.test.ts"]}],"data_flows":[{"id":"homepage-rank","name":"Homepage interactive ranking","steps":["User sets task / max cost in ModelFilter","app/page.tsx calls scoreAndRank(models, categories, opts)","data/recommend.ts hard-filters then weighted-scores","ModelCard grid re-renders ranked list"]},{"id":"public-recommend","name":"Public /api/recommend","steps":["middleware rate-limits + logs","route parses params via parseRecommendParams (lib/api)","scoreAndRank (data/recommend)","JSON response with CORS + Cache-Control headers"]},{"id":"pro-recommend","name":"Pro /api/pro/recommend","steps":["Validate params (same parser as public \u2014 before payment)","If no X-Preimage \u2192 402 + Lightning invoice","Verify preimage \u2192 payment hash settled + amount","Dedupe payment hash in ledger","scoreAndRank (full set / Pro limit perk)","Append earning + metrics; return body + X-Receipt"]},{"id":"agent-discovery","name":"Agent self-discovery","steps":["Fetch /.well-known/ai-plugin.json","Read /api/openapi.json","Call /api/recommend or /api/pro/recommend autonomously"]},{"id":"weekly-pipeline","name":"Weekly update pipeline","steps":["check_provider_catalog.py + check_cluster_bench.py guards","leaderboard-updater (Grok) proposes model/Elo diffs","article-idea-generator (Grok) emits brief JSON","article-writer (Opus) returns content array","add_article.py inserts into articles.json","data-validator + jest + tsc; commit data/"]},{"id":"deploy-pipeline","name":"Deploy pipeline","steps":["verify-all-agents.sh","make bump_version (separate step)","build_helloai_app + build_helloai_image","push_helloai_image \u2192 Docker Hub","az_deploy \u2192 Azure App Service container tag + restart"]}],"directory_tree":{"app/":"Next.js App Router \u2014 pages, API routes, components, SEO","data/":"JSON source of truth + typed accessors + scoring","lib/":"CORS, API helpers, sanitize, request logger, Lightning pay","public/":"Static assets + .well-known/ai-plugin.json","scripts/":"Python automation (leaderboard, guards, articles)","__tests__/":"Jest integrity and contract tests",".claude/":"Agent specs, skills, hooks, agent-memory, state",".grok/":"Grok skills (weekly-update default path)","docs/":"Architecture, pay-loop, specs, superpowers plans","Dockerfile":"Multi-stage standalone image","Makefile":"Version, build, push, Azure deploy, open-weight stacks","middleware.ts":"API rate limit + recon detection","next.config.mjs":"standalone output, security headers, redirects"},"relationships":[{"from":"app/page.tsx","to":"data/recommend.ts","type":"imports","label":"scoreAndRank"},{"from":"app/api/recommend/route.ts","to":"data/recommend.ts","type":"imports","label":"scoreAndRank"},{"from":"app/api/pro/recommend/route.ts","to":"lib/pay/pro_service.ts","type":"imports","label":"serveProRecommend"},{"from":"lib/pay/pro_service.ts","to":"data/recommend.ts","type":"imports","label":"scoreAndRank"},{"from":"lib/pay/pro_service.ts","to":"lib/api.ts","type":"imports","label":"parseRecommendParams"},{"from":"app/api/*/route.ts","to":"lib/api.ts","type":"imports","label":"apiHeaders"},{"from":"middleware.ts","to":"lib/request-logger.ts","type":"imports","label":"log + anomaly"},{"from":"data/index.ts","to":"data/*.json","type":"imports","label":"static JSON"},{"from":"article-idea-generator","to":"article-writer","type":"handoff","label":"typed brief JSON"},{"from":"scripts/add_article.py","to":"data/articles.json","type":"writes","label":"insert article"},{"from":"Makefile","to":"Azure App Service","type":"deploys","label":"container tag"}]};</script>
+  <script>
+    /**
+     * Prefer fetch of sibling architecture.json (works over http(s)).
+     * Fall back to embedded snapshot so file:// open still works.
+     */
+    const EMBEDDED = null; // set at runtime if fetch fails — see load()
+
+    const LAYER_COLORS = {
+      edge: "#fbbf24",
+      presentation: "#00E5A0",
+      api: "#6366F1",
+      lib: "#F472B6",
+      data: "#34d399",
+      ops: "#a78bfa",
+      quality: "#94a3b8",
+    };
+
+    function esc(s) {
+      return String(s ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function renderMeta(data) {
+      const s = data.stack || {};
+      const items = [
+        ["Framework", s.framework],
+        ["UI", Array.isArray(s.ui) ? s.ui.join(" · ") : s.ui],
+        ["Data", s.data],
+        ["Runtime", s.runtime],
+        ["Hosting", s.hosting],
+        ["Image", s.registry ? `${s.registry} / standalone` : "standalone"],
+      ];
+      document.getElementById("meta-grid").innerHTML = items
+        .map(
+          ([k, v]) =>
+            `<div class="meta-card"><div class="k">${esc(k)}</div><div class="v">${esc(v || "—")}</div></div>`
+        )
+        .join("");
+      if (data.meta?.generated) {
+        document.getElementById("gen-date").textContent = data.meta.generated;
+      }
+      if (data.meta?.description) {
+        document.getElementById("project-desc").textContent = data.meta.description;
+      }
+    }
+
+    function nodeCards(nodes, pathKey = "path") {
+      if (!nodes?.length) return "";
+      return `<div class="grid-cards">${nodes
+        .map((n) => {
+          const title = n.name || n.id || "item";
+          const file = n[pathKey] || n.file || n.path || "";
+          const role = n.role || n.description || n.desc || "";
+          return `<article class="card" data-search="${esc(
+            `${title} ${file} ${role}`.toLowerCase()
+          )}">
+            <h4>${esc(title)}</h4>
+            ${file ? `<div class="file">${esc(file)}</div>` : ""}
+            ${role ? `<p>${esc(role)}</p>` : ""}
+          </article>`;
+        })
+        .join("")}</div>`;
+    }
+
+    function renderLayers(data) {
+      const stack = document.getElementById("layer-stack");
+      stack.innerHTML = (data.layers || [])
+        .map((layer, i) => {
+          const color = LAYER_COLORS[layer.id] || "var(--primary)";
+          const kids =
+            layer.components ||
+            layer.endpoints ||
+            layer.modules ||
+            layer.files ||
+            layer.agents ||
+            layer.suites ||
+            [];
+          const extra = [];
+
+          if (layer.ui_components) {
+            extra.push(
+              `<p style="margin:0.75rem 0 0.4rem;font-size:0.75rem;font-family:var(--mono);color:var(--muted)">UI COMPONENTS</p>` +
+                nodeCards(layer.ui_components)
+            );
+          }
+          if (layer.modules) {
+            const pay = layer.modules.find((m) => m.children);
+            let body = nodeCards(layer.modules);
+            if (pay?.children) {
+              body +=
+                `<p style="margin:0.75rem 0 0.4rem;font-size:0.75rem;font-family:var(--mono);color:var(--muted)">lib/pay/*</p>` +
+                nodeCards(pay.children);
+            }
+            extra.push(body);
+          } else if (layer.components) {
+            extra.push(nodeCards(layer.components));
+          } else if (layer.files) {
+            extra.push(nodeCards(layer.files));
+          } else if (layer.endpoints) {
+            extra.push(
+              `<p class="section-desc" style="margin:0 0 0.5rem">See the API table below for full endpoint detail.</p>` +
+                nodeCards(
+                  layer.endpoints.map((e) => ({
+                    name: e.path,
+                    path: e.file,
+                    role: e.description,
+                  }))
+                )
+            );
+          } else if (layer.agents) {
+            extra.push(nodeCards(layer.agents.map((a) => ({
+              name: a.name,
+              path: a.path,
+              role: `${a.executor || ""} — ${a.role || ""}`,
+            }))));
+          } else if (layer.scripts) {
+            extra.push(nodeCards(layer.scripts.map((s) => ({
+              name: s.name,
+              path: `scripts/${s.name}`,
+              role: s.role,
+            }))));
+          }
+
+          if (layer.deploy?.pipeline) {
+            extra.push(
+              `<p style="margin:0.75rem 0 0.4rem;font-size:0.75rem;font-family:var(--mono);color:var(--muted)">DEPLOY STEPS</p>
+               <div class="pipeline">${layer.deploy.pipeline
+                 .map(
+                   (s, idx, arr) =>
+                     `<span class="pipe-step">${esc(s)}</span>${
+                       idx < arr.length - 1 ? '<span class="pipe-arrow">→</span>' : ""
+                     }`
+                 )
+                 .join("")}</div>`
+            );
+          }
+
+          if (layer.commands) {
+            extra.push(
+              `<p style="margin:0.75rem 0 0.4rem;font-size:0.75rem;font-family:var(--mono);color:var(--muted)">COMMANDS</p>
+               <div class="grid-cards">${Object.entries(layer.commands)
+                 .map(
+                   ([k, v]) =>
+                     `<article class="card" data-search="${esc((k + " " + v).toLowerCase())}">
+                        <h4>${esc(k)}</h4>
+                        <div class="file">${esc(v)}</div>
+                      </article>`
+                 )
+                 .join("")}</div>`
+            );
+          }
+
+          const count =
+            (layer.components?.length || 0) +
+            (layer.endpoints?.length || 0) +
+            (layer.modules?.length || 0) +
+            (layer.files?.length || 0) +
+            (layer.agents?.length || 0) +
+            (layer.ui_components?.length || 0) ||
+            kids.length ||
+            "…";
+
+          return `<div class="layer ${i === 0 || i === 1 ? "open" : ""}" data-layer="${esc(layer.id)}">
+            <button type="button" class="layer-head" aria-expanded="${i === 0 || i === 1}">
+              <span class="layer-dot" style="background:${color}"></span>
+              <span class="layer-title">${esc(layer.name)}</span>
+              ${layer.path ? `<span class="layer-count">${esc(layer.path)}</span>` : ""}
+              <span class="layer-count">${count} items</span>
+              <span class="chev">›</span>
+            </button>
+            <div class="layer-body">
+              ${layer.description ? `<p class="section-desc">${esc(layer.description)}</p>` : ""}
+              ${extra.join("")}
+            </div>
+          </div>`;
+        })
+        .join("");
+
+      stack.querySelectorAll(".layer-head").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const layer = btn.closest(".layer");
+          const open = layer.classList.toggle("open");
+          btn.setAttribute("aria-expanded", open ? "true" : "false");
+        });
+      });
+    }
+
+    function renderApi(data) {
+      const apiLayer = (data.layers || []).find((l) => l.id === "api");
+      const eps = apiLayer?.endpoints || [];
+      document.getElementById("api-tbody").innerHTML = eps
+        .map((e) => {
+          const params = (e.params || []).map((p) => `<span class="tag">${esc(p)}</span>`).join("");
+          const headers = (e.headers || [])
+            .map((h) => `<span class="tag pro">${esc(h)}</span>`)
+            .join("");
+          return `<tr data-search="${esc(
+            `${e.method} ${e.path} ${e.description} ${(e.params || []).join(" ")}`.toLowerCase()
+          )}">
+            <td><span class="method">${esc(e.method)}</span></td>
+            <td><span class="ep">${esc(e.path)}</span></td>
+            <td>${params || headers ? params + headers : "—"}</td>
+            <td>${esc(e.description)}</td>
+          </tr>`;
+        })
+        .join("");
+    }
+
+    function renderWeights(data) {
+      const dataLayer = (data.layers || []).find((l) => l.id === "data");
+      const scoring = dataLayer?.scoring || data.scoring;
+      if (!scoring) {
+        document.getElementById("weights").innerHTML = "<p class='section-desc'>No scoring config.</p>";
+        return;
+      }
+
+      const panels = [
+        ["With task match", scoring.withTask],
+        ["Without task", scoring.withoutTask],
+      ];
+
+      document.getElementById("weights").innerHTML = panels
+        .map(([title, w]) => {
+          if (!w) return "";
+          const rows = Object.entries(w)
+            .map(([k, v]) => {
+              const pct = Math.round(Number(v) * 100);
+              return `<div class="bar-row">
+                <span class="label">${esc(k)}</span>
+                <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+                <span class="pct">${pct}%</span>
+              </div>`;
+            })
+            .join("");
+          return `<div class="weight-panel"><h3>${esc(title)}</h3>${rows}</div>`;
+        })
+        .join("");
+    }
+
+    function renderFlows(data) {
+      document.getElementById("flows-grid").innerHTML = (data.data_flows || [])
+        .map(
+          (f) => `<article class="flow" data-search="${esc(
+            (f.name + " " + (f.steps || []).join(" ")).toLowerCase()
+          )}">
+            <h3>${esc(f.name)}</h3>
+            <ol class="steps">${(f.steps || []).map((s) => `<li>${esc(s)}</li>`).join("")}</ol>
+          </article>`
+        )
+        .join("");
+    }
+
+    function renderAgents(data) {
+      const ops = (data.layers || []).find((l) => l.id === "ops");
+      const agents = ops?.agents || [];
+      document.getElementById("agents-grid").innerHTML = agents
+        .map(
+          (a) => `<article class="agent" data-search="${esc(
+            `${a.name} ${a.executor} ${a.role} ${a.path}`.toLowerCase()
+          )}">
+            <div class="name">${esc(a.name)}</div>
+            <div class="exec">${esc(a.executor || "")}</div>
+            <p>${esc(a.role || "")}</p>
+            ${a.path ? `<div class="file" style="margin-top:0.45rem;font-family:var(--mono);font-size:0.68rem;color:var(--secondary)">${esc(a.path)}</div>` : ""}
+          </article>`
+        )
+        .join("");
+    }
+
+    function renderDeploy(data) {
+      const ops = (data.layers || []).find((l) => l.id === "ops");
+      const steps = ops?.deploy?.pipeline || [];
+      document.getElementById("pipeline").innerHTML = steps
+        .map(
+          (s, i) =>
+            `<span class="pipe-step">${esc(s)}</span>${
+              i < steps.length - 1 ? '<span class="pipe-arrow">→</span>' : ""
+            }`
+        )
+        .join("");
+    }
+
+    function renderTree(data) {
+      const tree = data.directory_tree || {};
+      document.getElementById("tree-pre").innerHTML = Object.entries(tree)
+        .map(
+          ([dir, desc]) =>
+            `<span class="dir">${esc(dir.padEnd(18))}</span>  <span class="desc"># ${esc(desc)}</span>`
+        )
+        .join("\n");
+    }
+
+    function renderRels(data) {
+      document.getElementById("rel-list").innerHTML = (data.relationships || [])
+        .map(
+          (r) => `<div class="rel" data-search="${esc(
+            `${r.from} ${r.to} ${r.type} ${r.label}`.toLowerCase()
+          )}">
+            <span class="node">${esc(r.from)}</span>
+            <span class="arrow">→</span>
+            <span class="node">${esc(r.to)}</span>
+            <span class="type">${esc(r.type)}</span>
+            ${r.label ? `<span class="label">${esc(r.label)}</span>` : ""}
+          </div>`
+        )
+        .join("");
+    }
+
+    function setupSearch() {
+      const input = document.getElementById("search");
+      const hit = document.getElementById("hit-count");
+      input.addEventListener("input", () => {
+        const q = input.value.trim().toLowerCase();
+        const nodes = document.querySelectorAll("[data-search]");
+        let visible = 0;
+        nodes.forEach((el) => {
+          const match = !q || el.getAttribute("data-search").includes(q);
+          el.style.display = match ? "" : "none";
+          if (match) visible++;
+        });
+        // Expand layers that contain matches
+        if (q) {
+          document.querySelectorAll(".layer").forEach((layer) => {
+            const has = [...layer.querySelectorAll("[data-search]")].some(
+              (el) => el.style.display !== "none" && el.getAttribute("data-search").includes(q)
+            );
+            if (has) {
+              layer.classList.add("open");
+              layer.querySelector(".layer-head")?.setAttribute("aria-expanded", "true");
+            }
+          });
+        }
+        hit.textContent = q ? `${visible} match${visible === 1 ? "" : "es"}` : "";
+      });
+    }
+
+    function setupToc() {
+      const links = [...document.querySelectorAll("nav.toc a")];
+      const sections = links
+        .map((a) => document.querySelector(a.getAttribute("href")))
+        .filter(Boolean);
+      const obs = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e) => {
+            if (!e.isIntersecting) return;
+            links.forEach((l) => l.classList.toggle("active", l.getAttribute("href") === `#${e.target.id}`));
+          });
+        },
+        { rootMargin: "-20% 0px -70% 0px", threshold: 0 }
+      );
+      sections.forEach((s) => obs.observe(s));
+    }
+
+    function render(data) {
+      renderMeta(data);
+      renderLayers(data);
+      renderApi(data);
+      renderWeights(data);
+      renderFlows(data);
+      renderAgents(data);
+      renderDeploy(data);
+      renderTree(data);
+      renderRels(data);
+      setupSearch();
+      setupToc();
+    }
+
+    async function load() {
+      const status = document.getElementById("data-status");
+      try {
+        const res = await fetch("./architecture.json", { cache: "no-store" });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const data = await res.json();
+        render(data);
+        status.textContent = "Loaded from architecture.json";
+        status.className = "status-line ok";
+      } catch (err) {
+        // Offline / file:// fallback: re-fetch not available — show message
+        // and try to use window.__ARCHITECTURE__ if injected.
+        if (window.__ARCHITECTURE__) {
+          render(window.__ARCHITECTURE__);
+          status.textContent = "Loaded from embedded snapshot (fetch failed: " + err.message + ")";
+          status.className = "status-line ok";
+          return;
+        }
+        status.textContent =
+          "Could not load architecture.json (" +
+          err.message +
+          "). Serve docs/ over HTTP, e.g. npx serve docs — or open alongside a static server.";
+        status.className = "status-line err";
+      }
+    }
+
+    load();
+  </script>
+</body>
+</html>

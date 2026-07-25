@@ -3,6 +3,18 @@
 ## Overview
 Next.js 16 app router landing page serving https://helloai.com/
 
+## Interactive map
+- **[architecture.html](./architecture.html)** — single-page visual map (layers, API, scoring, flows, agents, deploy)
+- **[architecture.json](./architecture.json)** — machine-readable architecture graph (source of truth for the HTML)
+
+Open the HTML via a static server for live JSON reload, or as a file (embedded snapshot fallback):
+
+```bash
+npx serve docs   # then open /architecture.html
+# or
+xdg-open docs/architecture.html
+```
+
 ## Structure
 ```
 app/

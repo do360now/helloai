@@ -1,0 +1,515 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "meta": {
+    "project": "helloai",
+    "title": "Hello, AI — Architecture Map",
+    "live": "https://helloai.com",
+    "repo": "https://github.com/do360now/HelloAiV2",
+    "description": "Unbiased, curated directory comparing frontier AI models — with Elo rankings, category insights, weekly articles, and a public agent-queryable API.",
+    "generated": "2026-07-22",
+    "version_source": "Makefile VERSION"
+  },
+  "stack": {
+    "framework": "Next.js 16.2.3 (App Router)",
+    "language": "TypeScript (strict)",
+    "ui": ["React 19", "Tailwind CSS v4 (CSS-first)"],
+    "fonts": "Geist Sans + Geist Mono via next/font/google",
+    "data": "Static JSON files in /data/ loaded at build/import time",
+    "runtime": "Node.js 20 (Docker Alpine)",
+    "output": "standalone (next.config.mjs → Docker)",
+    "hosting": "Azure App Service (container: do360now/helloai-web)",
+    "registry": "Docker Hub"
+  },
+  "design_system": {
+    "background": "#080A12",
+    "primary": "#00E5A0",
+    "secondary": "#6366F1",
+    "tertiary": "#F472B6",
+    "notes": "Glass utility (backdrop blur) in app/globals.css; each model has a brand color in models.json"
+  },
+  "layers": [
+    {
+      "id": "edge",
+      "name": "Edge / Middleware",
+      "path": "middleware.ts",
+      "description": "Applies only to /api/* — rate limiting, AI user-agent detection, anomalous access logging.",
+      "components": [
+        {
+          "id": "middleware",
+          "name": "middleware",
+          "path": "middleware.ts",
+          "role": "Rate limit 100 req/min/IP; X-RateLimit-* headers; AI UA + anomaly alerts via lib/request-logger"
+        },
+        {
+          "id": "security-headers",
+          "name": "Security headers",
+          "path": "next.config.mjs",
+          "role": "HSTS, CSP, X-Frame-Options DENY, nosniff, Referrer-Policy, Permissions-Policy; HTTP→HTTPS redirect"
+        }
+      ]
+    },
+    {
+      "id": "presentation",
+      "name": "Presentation (App Router)",
+      "path": "app/",
+      "description": "Pages, layouts, SEO surfaces, and reusable UI components.",
+      "components": [
+        {
+          "id": "layout",
+          "name": "Root layout",
+          "path": "app/layout.tsx",
+          "role": "Global metadata, fonts, SEO defaults"
+        },
+        {
+          "id": "home",
+          "name": "Homepage",
+          "path": "app/page.tsx",
+          "role": "Client component: interactive model filter using scoreAndRank; sections for models, open-weight, categories, articles"
+        },
+        {
+          "id": "articles-index",
+          "name": "Articles index",
+          "path": "app/articles/page.tsx",
+          "role": "Lists articles from data/articles.json"
+        },
+        {
+          "id": "article-slug",
+          "name": "Article page",
+          "path": "app/articles/[slug]/page.tsx",
+          "role": "Individual article (async params — Next.js 16); JSON-LD"
+        },
+        {
+          "id": "og-home",
+          "name": "OG image (home)",
+          "path": "app/opengraph-image.tsx",
+          "role": "Dynamic 1200×630 OG image, edge runtime"
+        },
+        {
+          "id": "og-article",
+          "name": "OG image (article)",
+          "path": "app/articles/[slug]/opengraph-image.tsx",
+          "role": "Per-article dynamic OG image"
+        },
+        {
+          "id": "sitemap",
+          "name": "Sitemap",
+          "path": "app/sitemap.ts",
+          "role": "Auto-generated /sitemap.xml"
+        },
+        {
+          "id": "robots",
+          "name": "Robots",
+          "path": "app/robots.ts",
+          "role": "Auto-generated /robots.txt"
+        },
+        {
+          "id": "globals",
+          "name": "Global styles",
+          "path": "app/globals.css",
+          "role": "Tailwind v4 + glass utility + design tokens"
+        }
+      ],
+      "ui_components": [
+        { "name": "Nav", "path": "app/components/Nav.tsx" },
+        { "name": "Hero", "path": "app/components/Hero.tsx" },
+        { "name": "ModelCard", "path": "app/components/ModelCard.tsx" },
+        { "name": "ModelFilter", "path": "app/components/ModelFilter.tsx" },
+        { "name": "OpenWeightCard", "path": "app/components/OpenWeightCard.tsx" },
+        { "name": "ArticleCard", "path": "app/components/ArticleCard.tsx" },
+        { "name": "CategoryIcon", "path": "app/components/CategoryIcon.tsx" },
+        { "name": "SectionHeader", "path": "app/components/SectionHeader.tsx" },
+        { "name": "ParticleCanvas", "path": "app/components/ParticleCanvas.tsx" }
+      ]
+    },
+    {
+      "id": "api",
+      "name": "Public API",
+      "path": "app/api/",
+      "description": "Public JSON endpoints. No auth on free tier. Browser CORS restricted to helloai.com origins. Rate limit via middleware.",
+      "base": "https://helloai.com",
+      "endpoints": [
+        {
+          "method": "GET",
+          "path": "/api/status",
+          "file": "app/api/status/route.ts",
+          "params": [],
+          "description": "Health, version, data freshness, endpoint manifest"
+        },
+        {
+          "method": "GET",
+          "path": "/api/models",
+          "file": "app/api/models/route.ts",
+          "params": ["provider?"],
+          "description": "All frontier models with full data"
+        },
+        {
+          "method": "GET",
+          "path": "/api/recommend",
+          "file": "app/api/recommend/route.ts",
+          "params": ["task?", "max_cost?", "min_context?", "provider?", "limit?"],
+          "description": "Ranked recommendations via shared scoreAndRank"
+        },
+        {
+          "method": "GET",
+          "path": "/api/openapi.json",
+          "file": "app/api/openapi.json/route.ts",
+          "params": [],
+          "description": "Full OpenAPI 3.0 spec"
+        },
+        {
+          "method": "GET",
+          "path": "/api/pro/recommend",
+          "file": "app/api/pro/recommend/route.ts",
+          "params": ["task?", "max_cost?", "min_context?", "provider?", "limit?"],
+          "headers": ["X-Preimage", "X-Agent-Id"],
+          "description": "Lightning-paid Pro recommend — full result set, payment receipt header"
+        },
+        {
+          "method": "GET",
+          "path": "/.well-known/ai-plugin.json",
+          "file": "public/.well-known/ai-plugin.json",
+          "params": [],
+          "description": "Agent discovery manifest (static)"
+        }
+      ]
+    },
+    {
+      "id": "lib",
+      "name": "Shared libraries",
+      "path": "lib/",
+      "description": "Cross-cutting concerns used by API routes and (indirectly) middleware.",
+      "modules": [
+        {
+          "id": "lib-api",
+          "name": "api",
+          "path": "lib/api.ts",
+          "role": "apiHeaders, publicUnlessParameterized, parseRecommendParams (shared public + Pro)"
+        },
+        {
+          "id": "lib-cors",
+          "name": "cors",
+          "path": "lib/cors.ts",
+          "role": "Browser CORS allowlist for helloai.com origins"
+        },
+        {
+          "id": "lib-sanitize",
+          "name": "sanitize",
+          "path": "lib/sanitize.ts",
+          "role": "Task string sanitization for recommend queries"
+        },
+        {
+          "id": "lib-request-logger",
+          "name": "request-logger",
+          "path": "lib/request-logger.ts",
+          "role": "Request log, AI UA detection, anomalous pattern detection"
+        },
+        {
+          "id": "lib-pay",
+          "name": "pay/*",
+          "path": "lib/pay/",
+          "role": "Lightning earn/fund loop for Pro API",
+          "children": [
+            { "name": "pro_service", "path": "lib/pay/pro_service.ts", "role": "serveProRecommend — invoice, settle, score, ledger, metrics" },
+            { "name": "lightning", "path": "lib/pay/lightning.ts", "role": "Lightning backend (mock + real)" },
+            { "name": "ledger", "path": "lib/pay/ledger.ts", "role": "Append-only earnings/sweeps; payment-hash dedupe" },
+            { "name": "funding", "path": "lib/pay/funding.ts", "role": "Funding proposals and approval" },
+            { "name": "metrics", "path": "lib/pay/metrics.ts", "role": "Pro request metrics → data/ledger/pro-requests.jsonl" },
+            { "name": "hash", "path": "lib/pay/hash.ts", "role": "sha256 / HMAC helpers for preimage verification" },
+            { "name": "config", "path": "lib/pay/config.ts", "role": "Pro price (sats) and pay config" },
+            { "name": "types", "path": "lib/pay/types.ts", "role": "Pay domain types" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "data",
+      "name": "Data layer",
+      "path": "data/",
+      "description": "JSON is the source of truth. TypeScript modules provide typed access and shared scoring used by both UI and API.",
+      "files": [
+        {
+          "id": "models-json",
+          "name": "models.json",
+          "path": "data/models.json",
+          "role": "Frontier models: id, name, provider, elo, cost in/out, context_window, strengths, color"
+        },
+        {
+          "id": "open-weight-json",
+          "name": "open_weight_models.json",
+          "path": "data/open_weight_models.json",
+          "role": "Open-weight picks: VRAM, quant, tokens/s, license; optional bench_source first-party"
+        },
+        {
+          "id": "categories-json",
+          "name": "categories.json",
+          "path": "data/categories.json",
+          "role": "Use-case categories with leader + insight"
+        },
+        {
+          "id": "articles-json",
+          "name": "articles.json",
+          "path": "data/articles.json",
+          "role": "Weekly articles sorted by date desc"
+        },
+        {
+          "id": "site-json",
+          "name": "site.json",
+          "path": "data/site.json",
+          "role": "Site config + lastUpdated"
+        },
+        {
+          "id": "local-leaderboard",
+          "name": "local_leaderboard.json",
+          "path": "data/local_leaderboard.json",
+          "role": "Local Elo snapshot support for leaderboard scripts"
+        },
+        {
+          "id": "data-index",
+          "name": "index.ts",
+          "path": "data/index.ts",
+          "role": "getModels, getCategories, getArticles, getOpenWeightModels, getSiteConfig, formatDate"
+        },
+        {
+          "id": "recommend",
+          "name": "recommend.ts",
+          "path": "data/recommend.ts",
+          "role": "scoreAndRank + SCORING_WEIGHTS — shared by homepage and /api/recommend (+ Pro)"
+        },
+        {
+          "id": "leaderboard",
+          "name": "leaderboard.ts",
+          "path": "data/leaderboard.ts",
+          "role": "eloBarWidth for homepage leaderboard bars"
+        },
+        {
+          "id": "types",
+          "name": "types.ts",
+          "path": "data/types.ts",
+          "role": "Model, Category, Article, OpenWeightModel, SiteConfig"
+        },
+        {
+          "id": "api-types",
+          "name": "api-types.ts",
+          "path": "data/api-types.ts",
+          "role": "API response TypeScript shapes"
+        },
+        {
+          "id": "pro-ledger",
+          "name": "ledger/pro-requests.jsonl",
+          "path": "data/ledger/pro-requests.jsonl",
+          "role": "Append-only Pro request metrics log"
+        }
+      ],
+      "scoring": {
+        "withTask": { "task": 0.4, "elo": 0.35, "cost": 0.15, "context": 0.1 },
+        "withoutTask": { "task": 0.0, "elo": 0.55, "cost": 0.25, "context": 0.2 },
+        "hard_filters": ["max_cost (input)", "min_context", "provider"],
+        "notes": "Output price is surfaced but not used in filter/score"
+      }
+    },
+    {
+      "id": "ops",
+      "name": "Ops & automation",
+      "path": "scripts/ + Makefile + .claude/",
+      "description": "Weekly data refresh, article pipeline, deploy, and agent maintenance.",
+      "deploy": {
+        "image": "do360now/helloai-web",
+        "pipeline": [
+          "verify-all-agents.sh",
+          "make weekly_update (optional in full deploy)",
+          "make bump_version (always separate before image build)",
+          "make build_helloai_app",
+          "make build_helloai_image",
+          "make push_helloai_image",
+          "make az_deploy"
+        ],
+        "docker": {
+          "file": "Dockerfile",
+          "stages": ["deps", "builder", "runner"],
+          "build_arg": "APP_VERSION → NEXT_PUBLIC_APP_VERSION",
+          "cmd": "node server.js",
+          "port": 3000
+        }
+      },
+      "scripts": [
+        { "name": "update_leaderboard.py", "role": "Deterministic Elo / leaderboard refresh" },
+        { "name": "weekly_update.py", "role": "Weekly deterministic data refresh orchestration" },
+        { "name": "arena.py", "role": "Chatbot Arena data helpers" },
+        { "name": "add_article.py", "role": "Insert finished article JSON into articles.json" },
+        { "name": "validate_brief.py", "role": "Validate article-idea-generator → article-writer brief schema" },
+        { "name": "check_provider_catalog.py", "role": "Guard: provider catalogs vs models.json" },
+        { "name": "check_cluster_bench.py", "role": "Guard: first-party GPU cluster benches vs open_weight_models.json" },
+        { "name": "pro_demand_report.py", "role": "Pro demand analytics from ledger metrics" },
+        { "name": "deploy.py", "role": "Deploy helper" }
+      ],
+      "agents": [
+        {
+          "name": "leaderboard-updater",
+          "path": ".claude/agents/leaderboard-updater.md",
+          "executor": "Grok (default); Claude fallback",
+          "role": "Model version/pricing/Elo drift; proposes JSON diffs"
+        },
+        {
+          "name": "article-idea-generator",
+          "path": ".claude/agents/article-idea-generator.md",
+          "executor": "Grok (default); Claude fallback",
+          "role": "Scouts topics; emits typed JSON briefs"
+        },
+        {
+          "name": "article-writer",
+          "path": ".claude/agents/article-writer.md",
+          "executor": "Opus",
+          "role": "Writes article prose from brief → content array"
+        },
+        {
+          "name": "data-validator",
+          "path": ".claude/agents/data-validator.md",
+          "executor": "Haiku",
+          "role": "Structural + semantic checks on data/*.json"
+        },
+        {
+          "name": "api-smoke-tester",
+          "path": ".claude/agents/api-smoke-tester.md",
+          "executor": "Haiku",
+          "role": "Post-deploy smoke of public API endpoints"
+        },
+        {
+          "name": "seo-auditor",
+          "path": ".claude/agents/seo-auditor.md",
+          "executor": "Sonnet",
+          "role": "Live page title/OG/canonical/structured data audit"
+        }
+      ],
+      "skills": [
+        { "name": "weekly-update", "paths": [".grok/skills/weekly-update/SKILL.md", ".claude/skills/weekly-update/SKILL.md"] },
+        { "name": "deploy", "path": ".claude/skills/deploy/SKILL.md" },
+        { "name": "advisor-pattern", "path": ".claude/skills/advisor-pattern/SKILL.md" }
+      ],
+      "state": [
+        { "path": ".claude/state/leaderboard-changes.jsonl", "role": "Append-only audit of proposed leaderboard changes" },
+        { "path": ".claude/agent-memory/leaderboard-updater.md", "role": "Cross-session memory: staleness streaks" },
+        { "path": ".claude/agent-memory/article-idea-generator.md", "role": "Cross-session memory: brief queue" }
+      ]
+    },
+    {
+      "id": "quality",
+      "name": "Quality & tests",
+      "path": "__tests__/",
+      "description": "Jest data integrity + route contract tests. TypeScript strict. ESLint.",
+      "commands": {
+        "test": "npx jest / npm test",
+        "typecheck": "npx tsc --noEmit",
+        "lint": "npm run lint",
+        "build": "npm run build",
+        "verify_agents": "./verify-all-agents.sh"
+      },
+      "suites": [
+        "data.test.ts",
+        "recommend.test.ts",
+        "api-routes.test.ts",
+        "api-params.test.ts",
+        "openapi-consistency.test.ts",
+        "open-weight.test.ts",
+        "leaderboard.test.ts",
+        "pro-route.test.ts",
+        "pay/*",
+        "async-params.test.ts",
+        "format-date.test.ts"
+      ]
+    }
+  ],
+  "data_flows": [
+    {
+      "id": "homepage-rank",
+      "name": "Homepage interactive ranking",
+      "steps": [
+        "User sets task / max cost in ModelFilter",
+        "app/page.tsx calls scoreAndRank(models, categories, opts)",
+        "data/recommend.ts hard-filters then weighted-scores",
+        "ModelCard grid re-renders ranked list"
+      ]
+    },
+    {
+      "id": "public-recommend",
+      "name": "Public /api/recommend",
+      "steps": [
+        "middleware rate-limits + logs",
+        "route parses params via parseRecommendParams (lib/api)",
+        "scoreAndRank (data/recommend)",
+        "JSON response with CORS + Cache-Control headers"
+      ]
+    },
+    {
+      "id": "pro-recommend",
+      "name": "Pro /api/pro/recommend",
+      "steps": [
+        "Validate params (same parser as public — before payment)",
+        "If no X-Preimage → 402 + Lightning invoice",
+        "Verify preimage → payment hash settled + amount",
+        "Dedupe payment hash in ledger",
+        "scoreAndRank (full set / Pro limit perk)",
+        "Append earning + metrics; return body + X-Receipt"
+      ]
+    },
+    {
+      "id": "agent-discovery",
+      "name": "Agent self-discovery",
+      "steps": [
+        "Fetch /.well-known/ai-plugin.json",
+        "Read /api/openapi.json",
+        "Call /api/recommend or /api/pro/recommend autonomously"
+      ]
+    },
+    {
+      "id": "weekly-pipeline",
+      "name": "Weekly update pipeline",
+      "steps": [
+        "check_provider_catalog.py + check_cluster_bench.py guards",
+        "leaderboard-updater (Grok) proposes model/Elo diffs",
+        "article-idea-generator (Grok) emits brief JSON",
+        "article-writer (Opus) returns content array",
+        "add_article.py inserts into articles.json",
+        "data-validator + jest + tsc; commit data/"
+      ]
+    },
+    {
+      "id": "deploy-pipeline",
+      "name": "Deploy pipeline",
+      "steps": [
+        "verify-all-agents.sh",
+        "make bump_version (separate step)",
+        "build_helloai_app + build_helloai_image",
+        "push_helloai_image → Docker Hub",
+        "az_deploy → Azure App Service container tag + restart"
+      ]
+    }
+  ],
+  "directory_tree": {
+    "app/": "Next.js App Router — pages, API routes, components, SEO",
+    "data/": "JSON source of truth + typed accessors + scoring",
+    "lib/": "CORS, API helpers, sanitize, request logger, Lightning pay",
+    "public/": "Static assets + .well-known/ai-plugin.json",
+    "scripts/": "Python automation (leaderboard, guards, articles)",
+    "__tests__/": "Jest integrity and contract tests",
+    ".claude/": "Agent specs, skills, hooks, agent-memory, state",
+    ".grok/": "Grok skills (weekly-update default path)",
+    "docs/": "Architecture, pay-loop, specs, superpowers plans",
+    "Dockerfile": "Multi-stage standalone image",
+    "Makefile": "Version, build, push, Azure deploy, open-weight stacks",
+    "middleware.ts": "API rate limit + recon detection",
+    "next.config.mjs": "standalone output, security headers, redirects"
+  },
+  "relationships": [
+    { "from": "app/page.tsx", "to": "data/recommend.ts", "type": "imports", "label": "scoreAndRank" },
+    { "from": "app/api/recommend/route.ts", "to": "data/recommend.ts", "type": "imports", "label": "scoreAndRank" },
+    { "from": "app/api/pro/recommend/route.ts", "to": "lib/pay/pro_service.ts", "type": "imports", "label": "serveProRecommend" },
+    { "from": "lib/pay/pro_service.ts", "to": "data/recommend.ts", "type": "imports", "label": "scoreAndRank" },
+    { "from": "lib/pay/pro_service.ts", "to": "lib/api.ts", "type": "imports", "label": "parseRecommendParams" },
+    { "from": "app/api/*/route.ts", "to": "lib/api.ts", "type": "imports", "label": "apiHeaders" },
+    { "from": "middleware.ts", "to": "lib/request-logger.ts", "type": "imports", "label": "log + anomaly" },
+    { "from": "data/index.ts", "to": "data/*.json", "type": "imports", "label": "static JSON" },
+    { "from": "article-idea-generator", "to": "article-writer", "type": "handoff", "label": "typed brief JSON" },
+    { "from": "scripts/add_article.py", "to": "data/articles.json", "type": "writes", "label": "insert article" },
+    { "from": "Makefile", "to": "Azure App Service", "type": "deploys", "label": "container tag" }
+  ]
+}
