@@ -91,23 +91,18 @@ _NAME_MAP: dict[str, list[str]] = {
         "gemini-3-pro",
         "gemini-3-flash",
     ],
-    "grok": [
-        "grok-4.5",
-        "grok-4.3",
-        "grok-4.20",
-        "grok-4.1-thinking",
-        "grok-4.1",
-        "grok-4.20-beta1",
-    ],
     "muse": [
         "muse-spark-1.2",
         "muse-spark-1.1",
         "muse-spark",
     ],
-    "kimi": [
-        "kimi-k3",
-        "kimi-k3-max",
-        "kimi-k3-thinking",
+    "qwen": [
+        "qwen3.8-max",
+        "qwen3.8-max-preview",
+    ],
+    "deepseek": [
+        "deepseek-v4-pro",
+        "deepseek-v4-pro-high-preview",
     ],
 }
 
@@ -123,8 +118,8 @@ _OPEN_WEIGHT_NAME_MAP: dict[str, list[str]] = {
         "mistral-small-2506",
         "mistral-small-3.2-24b-instruct-2506",
     ],
-    "qwen8b": [
-        "qwen3-8b",
+    "gptoss20b": [
+        "gpt-oss-20b",
     ],
     "qwen14b": [
         "qwen3-14b",

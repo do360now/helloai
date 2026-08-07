@@ -101,6 +101,33 @@
     }
   },
   {
+    "id": "gptoss20b",
+    "name": "gpt-oss-20b",
+    "provider": "OpenAI",
+    "url": "https://huggingface.co/openai/gpt-oss-20b",
+    "tag": "OpenAI Local",
+    "desc": "OpenAI's Apache 2.0 MoE (~21B total / ~3.6B active). Native MXFP4 fits ~16 GB; we measured 53.73 tok/s on the budget two-GPU cluster — the fastest open-weight card we track. Arena ~1317 Elo.",
+    "color": "#10A37F",
+    "elo": 1317,
+    "context_window": 131072,
+    "strengths": [
+      "Honest Daily Use",
+      "Coding & Engineering"
+    ],
+    "params_b": 21,
+    "vram_gb": 16,
+    "quantization": [
+      "MXFP4"
+    ],
+    "tokens_per_sec": 53.73,
+    "reference_hardware": "GTX 1070 8GB + RTX 5060 8GB (llama.cpp RPC split, 1GbE)",
+    "license": "Apache 2.0",
+    "bench_source": {
+      "type": "first-party",
+      "date": "2026-07-15"
+    }
+  },
+  {
     "id": "qwen14b",
     "name": "Qwen3 14B",
     "provider": "Qwen Team",
@@ -124,32 +151,6 @@
     "bench_source": {
       "type": "first-party",
       "date": "2026-07-06"
-    }
-  },
-  {
-    "id": "qwen8b",
-    "name": "Qwen3 8B",
-    "provider": "Qwen Team",
-    "url": "https://huggingface.co/Qwen/Qwen3-8B",
-    "tag": "Starter Pick",
-    "desc": "The lowest-friction way into real local AI: fits any 6 GB+ GPU at Q4_K_M and measured 43.5 tok/s on our budget two-GPU cluster. Hybrid thinking modes, Apache 2.0.",
-    "color": "#A78BFA",
-    "elo": 1275,
-    "context_window": 128000,
-    "strengths": [
-      "Honest Daily Use"
-    ],
-    "params_b": 8,
-    "vram_gb": 5,
-    "quantization": [
-      "Q4_K_M"
-    ],
-    "tokens_per_sec": 43.5,
-    "reference_hardware": "GTX 1070 8GB + RTX 5060 8GB (llama.cpp RPC split, 1GbE)",
-    "license": "Apache 2.0",
-    "bench_source": {
-      "type": "first-party",
-      "date": "2026-07-05"
     }
   }
 ]

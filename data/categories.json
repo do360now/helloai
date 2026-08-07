@@ -2,28 +2,28 @@
   {
     "name": "Overall Preference",
     "leader": "Claude Fable 5",
-    "insight": "Highest Elo in the tracked set at 1507 on LMArena text overall. Mythos-class capability with conservative safety fallbacks to Opus 4.8 on flagged queries.",
+    "insight": "Highest Elo in the tracked set at 1507 on LMArena text overall. Mythos-class capability with conservative safety fallbacks to Opus on flagged queries.",
     "icon": "trophy",
     "color": "#FBBF24"
   },
   {
     "name": "Coding & Engineering",
     "leader": "Claude Fable 5",
-    "insight": "95.0% on SWE-bench Verified and 80% on SWE-bench Pro — well ahead of Opus 4.8. Best pick for long-horizon agentic coding when the 2× price premium is justified.",
+    "insight": "95.0% on SWE-bench Verified and 80% on SWE-bench Pro — still the long-horizon agentic coding pick when the 2× price premium over Opus 5 is justified.",
     "icon": "code",
     "color": "#00E5A0"
   },
   {
     "name": "Hard Reasoning & Science",
     "leader": "Gemini 3.1 Pro",
-    "insight": "Leads on PhD-level benchmarks like GPQA and ARC-AGI subsets. Claude and Grok are strong contenders.",
+    "insight": "Leads on PhD-level benchmarks like GPQA and ARC-AGI subsets. Claude and Qwen3.8-Max are strong contenders.",
     "icon": "science",
     "color": "#6366F1"
   },
   {
     "name": "Honest Daily Use",
-    "leader": "Grok 4.5",
-    "insight": "xAI's default chat model — direct answers without corporate polish, now with coding-grade speed at 80 TPS and 4.2× token efficiency on engineering tasks.",
+    "leader": "DeepSeek V4 Pro",
+    "insight": "Cheapest frontier API we track at $0.435/$0.87 with 1M context — the default when token volume dominates and Mythos-class quality is not required.",
     "icon": "chat",
     "color": "#F472B6"
   }

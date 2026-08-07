@@ -33,6 +33,22 @@
     ]
   },
   {
+    "id": "qwen",
+    "name": "Qwen3.8-Max",
+    "provider": "Alibaba",
+    "url": "https://www.qwencloud.com/models/qwen3.8-max",
+    "tag": "2.4T Max",
+    "desc": "Alibaba's 2.4T MoE flagship (95B active): long-horizon coding and professional work at $2/$6 with 1M context. Arena ~1497 Elo — re-admits Alibaba after the July Muse swap.",
+    "color": "#5B4AE8",
+    "elo": 1497,
+    "cost_per_million_tokens": 2,
+    "cost_per_million_tokens_output": 6,
+    "context_window": 1000000,
+    "strengths": [
+      "Coding & Engineering"
+    ]
+  },
+  {
     "id": "claude",
     "name": "Claude Opus 5",
     "provider": "Anthropic",
@@ -66,36 +82,20 @@
     ]
   },
   {
-    "id": "kimi",
-    "name": "Kimi K3",
-    "provider": "Moonshot AI",
-    "url": "https://www.kimi.com/",
-    "tag": "3T-Class MoE",
-    "desc": "Moonshot's 2.8T MoE flagship (16 of 896 experts active): natively multimodal, 1M context, long-horizon coding and knowledge work. API at $3/$15 with $0.30 cache-hit input; LMArena text overall ~1486 Elo.",
-    "color": "#0EA5E9",
-    "elo": 1485,
-    "cost_per_million_tokens": 3,
-    "cost_per_million_tokens_output": 15,
+    "id": "deepseek",
+    "name": "DeepSeek V4 Pro",
+    "provider": "DeepSeek",
+    "url": "https://api-docs.deepseek.com/quick_start/pricing/",
+    "tag": "Price Leader",
+    "desc": "DeepSeek's 1.6T MoE flagship (49B active): MIT-licensed API at $0.435/$0.87 with 1M context — an order of magnitude under Western mid-tier rates. Arena deepseek-v4-pro ~1457 Elo.",
+    "color": "#4D6BFE",
+    "elo": 1457,
+    "cost_per_million_tokens": 0.435,
+    "cost_per_million_tokens_output": 0.87,
     "context_window": 1000000,
     "strengths": [
+      "Honest Daily Use",
       "Coding & Engineering"
-    ]
-  },
-  {
-    "id": "grok",
-    "name": "Grok 4.5",
-    "provider": "xAI",
-    "url": "https://grok.x.ai",
-    "tag": "Engineering Speed",
-    "desc": "xAI's recommended chat and code model: 83.3% on Terminal-Bench 2.1, 4.2× fewer output tokens than Opus 4.8 on SWE Bench Pro, served at 80 TPS. $2/$6 with 500K context.",
-    "color": "#EF4444",
-    "elo": 1468,
-    "cost_per_million_tokens": 2,
-    "cost_per_million_tokens_output": 6,
-    "context_window": 500000,
-    "strengths": [
-      "Coding & Engineering",
-      "Honest Daily Use"
     ]
   }
 ]

@@ -25,19 +25,6 @@
       "catalog_name_patterns": ["Gemini ([0-9.]+) Pro"]
     },
     {
-      "model_id": "grok",
-      "provider": "xAI",
-      "catalog_url": "https://docs.x.ai/docs/models",
-      "news_url": "https://x.ai/news",
-      "tracked_name_pattern": "Grok ([0-9.]+)",
-      "catalog_name_patterns": ["Grok ([0-9.]+)"],
-      "recommendation_patterns": [
-        "use Grok ([0-9.]+)",
-        "Chat:.*Grok ([0-9.]+)",
-        "Introducing Grok ([0-9.]+)"
-      ]
-    },
-    {
       "model_id": "muse",
       "provider": "Meta",
       "catalog_url": "https://ai.meta.com/blog/",
@@ -46,12 +33,20 @@
       "catalog_name_patterns": ["Muse Spark ([0-9.]+)", "muse-spark-([0-9.]+)"]
     },
     {
-      "model_id": "kimi",
-      "provider": "Moonshot AI",
-      "catalog_url": "https://platform.kimi.ai/docs/pricing/chat-k3",
-      "news_url": "https://www.kimi.com/blog/kimi-k3",
-      "tracked_name_pattern": "Kimi K([0-9]+)",
-      "catalog_name_patterns": ["Kimi K([0-9]+)", "kimi-k([0-9]+)"]
+      "model_id": "qwen",
+      "provider": "Alibaba",
+      "catalog_url": "https://www.qwencloud.com/models/qwen3.8-max",
+      "news_url": "https://qwen.ai/blog?id=qwen3.8",
+      "tracked_name_pattern": "Qwen([0-9.]+)-Max",
+      "catalog_name_patterns": ["Qwen([0-9.]+)-Max", "qwen([0-9.]+)-max"]
+    },
+    {
+      "model_id": "deepseek",
+      "provider": "DeepSeek",
+      "catalog_url": "https://api-docs.deepseek.com/quick_start/pricing/",
+      "news_url": "https://api-docs.deepseek.com/news/news260424",
+      "tracked_name_pattern": "DeepSeek V([0-9.]+) Pro",
+      "catalog_name_patterns": ["DeepSeek-V([0-9.]+)-Pro", "deepseek-v([0-9.]+)-pro", "DeepSeek V([0-9.]+) Pro"]
     }
   ]
 }

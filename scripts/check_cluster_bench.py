@@ -39,10 +39,10 @@ _TG_TOLERANCE = 0.5  # tok/s slack so JSON rounding (44.7 vs 44.70) is not drift
 # Same exact-match philosophy as arena.py's _OPEN_WEIGHT_NAME_MAP:
 # unmapped rows are surfaced as candidates, never fuzzy-matched.
 _BENCH_NAME_MAP: dict[str, str] = {
-    "Qwen3-8B": "qwen8b",
     "Qwen3-14B": "qwen14b",
     "Mistral Small 3.2 24B": "mistral",
     "Qwen3-30B-A3B (MoE)": "qwen30ba3b",
+    "gpt-oss-20b (MoE)": "gptoss20b",
 }
 
 

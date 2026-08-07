@@ -8,6 +8,7 @@ Meta shipped Muse Spark 1.2 + Muse Code (Aug 5–6) at unchanged $1.25/$4.25; Ar
 
 ## Article WRITTEN this cycle (2026-08-07)
 - **muse-spark-1-2-muse-code-agentic-upgrade** — "Muse Spark 1.2 Ships With Muse Code" (Discovery). Same-provider bump; Muse Code pairing; helloai tracks 1.2 at 1498 Elo.
+- **qwen-deepseek-gptoss-rebalance-frontier-set** — "Qwen3.8-Max and DeepSeek Join; Grok and Kimi Exit" (Discovery). Human-approved admits: Qwen3.8-Max + DeepSeek V4 Pro frontier; gpt-oss-20b open-weight; drops Grok/Kimi/qwen8b.
 
 ## Article WRITTEN this cycle (2026-07-25)
 - **claude-opus-5-outscores-fable-5-at-half-price** — Opus 5 launch vs Fable 5.

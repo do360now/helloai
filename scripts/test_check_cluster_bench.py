@@ -35,11 +35,11 @@ Prose here must not be parsed as rows.
 
 MODELS = [
     {
-        "id": "qwen8b",
-        "tokens_per_sec": 43.5,
-        "vram_gb": 5,
-        "quantization": ["Q4_K_M"],
-        "bench_source": {"type": "first-party", "date": "2026-07-05"},
+        "id": "gptoss20b",
+        "tokens_per_sec": 53.73,
+        "vram_gb": 16,
+        "quantization": ["MXFP4"],
+        "bench_source": {"type": "first-party", "date": "2026-07-15"},
     },
     {
         "id": "qwen30ba3b",
@@ -71,14 +71,14 @@ def test_clean_data_yields_no_drift_and_flags_candidates() -> None:
     findings, candidates = compare(parse_bench_table(FIXTURE), MODELS)
     assert findings == []
     assert len(candidates) == 1
-    assert "gpt-oss-20b" in candidates[0]
+    assert "Qwen3-8B" in candidates[0]
 
 
 def test_tokens_per_sec_drift_detected() -> None:
-    stale = [dict(MODELS[0], tokens_per_sec=39.0)] + MODELS[1:]
+    stale = [dict(MODELS[0], tokens_per_sec=50.0)] + MODELS[1:]
     findings, _ = compare(parse_bench_table(FIXTURE), stale)
     assert len(findings) == 1
-    assert findings[0].model_id == "qwen8b"
+    assert findings[0].model_id == "gptoss20b"
     assert findings[0].field == "tokens_per_sec"
 
 
@@ -89,7 +89,7 @@ def test_quant_drift_detected() -> None:
 
 
 def test_tolerance_absorbs_rounding() -> None:
-    rounded = [dict(MODELS[0], tokens_per_sec=43.2)] + MODELS[1:]  # |43.2-43.5| < 0.5
+    rounded = [dict(MODELS[0], tokens_per_sec=53.5)] + MODELS[1:]  # |53.5-53.73| < 0.5
     findings, _ = compare(parse_bench_table(FIXTURE), rounded)
     assert findings == []
 
