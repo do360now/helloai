@@ -18,18 +18,35 @@
   },
   {
     "id": "muse",
-    "name": "Muse Spark 1.1",
+    "name": "Muse Spark 1.2",
     "provider": "Meta",
     "url": "https://www.meta.ai/",
     "tag": "Budget Agentic",
-    "desc": "Meta's first paid frontier API: native multi-agent orchestration, MCP and computer use, 1M self-managed context. #2 in helloai's tracked set at 1495 Elo — cheapest agentic option we track at $1.25/$4.25.",
+    "desc": "Meta's Muse Spark 1.2 — agentic coding upgrade co-trained with Muse Code. #2 in helloai's tracked set at 1498 Elo — cheapest agentic option we track at $1.25/$4.25 with 1M context.",
     "color": "#0668E1",
-    "elo": 1495,
+    "elo": 1498,
     "cost_per_million_tokens": 1.25,
     "cost_per_million_tokens_output": 4.25,
     "context_window": 1000000,
     "strengths": [
       "Coding & Engineering"
+    ]
+  },
+  {
+    "id": "claude",
+    "name": "Claude Opus 5",
+    "provider": "Anthropic",
+    "url": "https://claude.ai",
+    "tag": "Coding King",
+    "desc": "Anthropic's July 2026 successor to Opus 4.8: 96% on SWE-bench Verified, doubles Frontier-Bench performance, and scores 3x the next-best model on ARC-AGI-3 — at the same $5/$25 price.",
+    "color": "#D97706",
+    "elo": 1493,
+    "cost_per_million_tokens": 5,
+    "cost_per_million_tokens_output": 25,
+    "context_window": 1000000,
+    "strengths": [
+      "Coding & Engineering",
+      "Overall Preference"
     ]
   },
   {
@@ -40,7 +57,7 @@
     "tag": "Multimodal Leader",
     "desc": "Dominates reasoning and multimodal tasks. Scored 77% on ARC-AGI-2 — double its predecessor — and leads on graduate-level science benchmarks.",
     "color": "#4285F4",
-    "elo": 1486,
+    "elo": 1487,
     "cost_per_million_tokens": 2,
     "cost_per_million_tokens_output": 12,
     "context_window": 1000000,
@@ -56,29 +73,12 @@
     "tag": "3T-Class MoE",
     "desc": "Moonshot's 2.8T MoE flagship (16 of 896 experts active): natively multimodal, 1M context, long-horizon coding and knowledge work. API at $3/$15 with $0.30 cache-hit input; LMArena text overall ~1486 Elo.",
     "color": "#0EA5E9",
-    "elo": 1486,
+    "elo": 1485,
     "cost_per_million_tokens": 3,
     "cost_per_million_tokens_output": 15,
     "context_window": 1000000,
     "strengths": [
       "Coding & Engineering"
-    ]
-  },
-  {
-    "id": "claude",
-    "name": "Claude Opus 5",
-    "provider": "Anthropic",
-    "url": "https://claude.ai",
-    "tag": "Coding King",
-    "desc": "Anthropic's July 2026 successor to Opus 4.8: 96% on SWE-bench Verified, doubles Frontier-Bench performance, and scores 3x the next-best model on ARC-AGI-3 — at the same $5/$25 price.",
-    "color": "#D97706",
-    "elo": 1484,
-    "cost_per_million_tokens": 5,
-    "cost_per_million_tokens_output": 25,
-    "context_window": 1000000,
-    "strengths": [
-      "Coding & Engineering",
-      "Overall Preference"
     ]
   },
   {

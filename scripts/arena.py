@@ -73,6 +73,8 @@ _NAME_MAP: dict[str, list[str]] = {
         "claude-fable-5",
     ],
     "claude": [
+        "claude-opus-5-high",
+        "claude-opus-5-max",
         "claude-opus-5-thinking",
         "claude-opus-5",
         "claude-opus-4-8-thinking",
@@ -98,6 +100,7 @@ _NAME_MAP: dict[str, list[str]] = {
         "grok-4.20-beta1",
     ],
     "muse": [
+        "muse-spark-1.2",
         "muse-spark-1.1",
         "muse-spark",
     ],

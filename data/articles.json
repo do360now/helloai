@@ -1,5 +1,20 @@
 [
   {
+    "slug": "muse-spark-1-2-muse-code-agentic-upgrade",
+    "title": "Muse Spark 1.2 Ships With Muse Code",
+    "excerpt": "Meta ships Muse Spark 1.2 with Muse Code at the same $1.25/$4.25 rates. helloai bumps 1.1 to 1.2 at 1498 Elo — still the cheapest agentic pick.",
+    "date": "2026-08-07",
+    "category": "Discovery",
+    "readTime": "2 min",
+    "content": [
+      "Meta just upgraded its cheapest frontier API without raising the price. Muse Spark 1.2 landed on the Meta Model API and OpenRouter around August 5–6 at the same $1.25 per million input tokens and $4.25 per million output tokens that made 1.1 the budget agentic pick — still with a full 1M-token context window. On Arena's text overall board dated August 6, muse-spark-1.2 (xHigh) sits at 1498 Elo, second only to Claude Fable 5 at 1507 in helloai's tracked set.",
+      "The model did not arrive alone. Meta AI chief Alexandr Wang said Spark 1.2 was developed and trained alongside Muse Code, Meta's first coding-agent product, now in preview with pay-as-you-go pricing described as similar to the Spark API. That pairing matters more than a version digit: Meta is selling a harness and a model as one stack, the same play Anthropic and OpenAI have been running with Claude Code/Cowork and Codex-style surfaces. For teams already on the Meta Model API, the path is a same-id upgrade, not a vendor switch.",
+      "helloai applies the same rule it uses for every same-provider bump: replace 1.1 with 1.2 under the existing muse id. Pricing and context do not change; the card copy and arena aliases do. Muse remains the cheapest agentic option we track, undercutting Opus 5 ($5/$25), Kimi K3 ($3/$15), and Grok 4.5 ($2/$6) on both sides of the meter for teams that want multi-agent orchestration without Mythos-class bills.",
+      "Trade-offs stay real. Arena votes for 1.2 are still early compared with Fable and the long-lived Claude Opus lines, and Meta's contributor tier — roughly $0.10/$0.20 when you opt in to training use of prompts and completions — is a different product from the standard no-train production rate. Standard tier is the default for anyone treating this as a production dependency. Coding-agent previews also move faster than public Elo; treat Muse Code claims as vendor-directed until your own harness evals land.",
+      "The wider board did not freeze while Meta shipped. Qwen3.8-Max is pressing the $2/$6 tier with high preliminary arena scores, and Gemini 3.5 Pro is still missing from Google's pricing page. For /api/recommend today, Meta's slot is 1.2: same budget, slightly higher human preference, and a coding-agent surface that did not exist when 1.1 replaced Qwen in July. The next decision is whether that stack holds once Alibaba's Max-class model and Google's delayed Pro both finish their launches."
+    ]
+  },
+  {
     "slug": "claude-opus-5-outscores-fable-5-at-half-price",
     "title": "Claude Opus 5 Just Beat Anthropic's Own Flagship",
     "excerpt": "Anthropic's $5/$25 Opus 5 beats its own $10/$50 Fable 5 on Frontier-Bench and ARC-AGI-3, raising an uncomfortable question about who really leads the Claude lineup.",
@@ -132,21 +147,6 @@
       "Whether this eats frontier-lab profits depends on the workload. Anthropic's revenue surge rides on Claude Code users who need peak performance on hard tasks — the band where Fable 5 at $10/$50 still commands a premium. OpenAI's enterprise contracts bundle compliance and procurement relationships a curl install cannot replace. Those margins are not disappearing. What is eroding is the middle: teams running Opus or GPT-5.5 on routine codegen because it was the only agent-grade option. Ollama Pro at $20 per month, with cloud models metered on GPU time rather than per-token API rates, plus Hermes's local-first pattern with cloud fallback only on failure, is direct arbitrage. Keep the hardest 10% on closed APIs; the other 90% never hits their rate cards.",
       "The structural threat is routing, not raw quality. The same CLI can target `gemma4:31b` locally, `glm-5.2:cloud` remotely, or — via fallback — Claude Sonnet on OpenRouter. Inference marketplaces host the same MIT weights. The lab's moat shrinks from owning the model to owning the safest model on the hardest tasks plus the enterprise wrapper. That is a narrower, higher-stakes business.",
       "helloai will keep tracking closed frontier flagships because procurement, policy, and peak capability still flow through Anthropic, OpenAI, Google, and xAI. But this stack signals where token economics are heading: open weights plus unified runtimes commoditize the agent layer closed labs spent two years monetizing. Frontier labs will not go broke on developers who never needed Fable-tier intelligence. They will feel it in the customers who stop upgrading — not because open models won outright, but because good enough finally runs without them."
-    ]
-  },
-  {
-    "slug": "arc-agi-3-frontier-models-under-1-percent",
-    "title": "Frontier Models Score Under 1% on ARC-AGI-3",
-    "excerpt": "ARC-AGI-3 launched March 25 with humans at 100% and frontier AI at 0.51%. GPT-5.5 and Opus 4.7 barely move the needle — exposing a gap arena Elo cannot see.",
-    "date": "2026-07-04",
-    "category": "Analysis",
-    "readTime": "2 min",
-    "content": [
-      "On March 25, ARC Prize Foundation shipped ARC-AGI-3 — the first interactive reasoning benchmark where agents explore novel game environments with no instructions, infer the rules, and carry what they learn across levels. The launch headline was blunt: humans score 100%, frontier AI scores 0.51%. That is not a rounding error. It measures whether models can adapt in real time to an environment nobody described in training data — a skill none of helloai's tracked frontier entries have demonstrated.",
-      "The gap holds when you zoom in on models helloai actually tracks. ARC Prize's May analysis of 160 replays put GPT-5.5 at 0.43% and Claude Opus 4.7 at 0.18% on the semi-private dataset — both under one percent on 135 hand-crafted environments where controlled human testing confirmed every level is solvable. Over one million games have been played since launch. Arena Elo tells a different story: helloai's six-model set spans just 33 points from Fable 5 at 1508 to Qwen3.7-Max at 1475. ARC-AGI-3 suggests those ranks measure a narrower skill than interactive adaptation.",
-      "The replays explain the flat scores. ARC Prize identified three failure modes: models perceive local effects but fail to build global world models; they map unfamiliar mechanics to known games like Tetris or Sokoban and waste actions on wrong affordances; and they sometimes clear an early level by coincidence, then carry a wrong theory forward. Opus compresses into confident-but-wrong theories; GPT-5.5 generates wider hypotheses but struggles to commit. Both land under one percent.",
-      "For developers using helloai's /api/recommend endpoint, the implication is task-shape dependent. ARC-AGI-3 is not a critique of coding on SWE-bench or reasoning on ARC-AGI-2's static puzzles — those scores remain valid for those workloads. Interactive adaptation — exploring a new UI, inferring undocumented tool behavior, recovering when environments change mid-run — is a different axis. None of the tracked frontier models have demonstrated it at human efficiency on ARC-AGI-3's action-scoring framework.",
-      "ARC Prize 2026 is live with over two million dollars in prizes for open-source ARC-AGI-3 solutions. helloai will keep tracking arena rank, pricing, and category fit for workloads builders ship today. But the Elo convergence that felt definitive in May looks thinner when models leading coding and reasoning leaderboards cannot crack one percent on environments any human can learn in a single sitting. The next capability worth watching is not another SWE-bench point — it is whether any frontier model can close the exploration gap without instructions."
     ]
   }
 ]

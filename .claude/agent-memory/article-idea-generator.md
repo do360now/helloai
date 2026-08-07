@@ -1,48 +1,46 @@
 # Article Idea Generator — Cross-Session Memory
 
 ## Last Run
-- Date: 2026-07-22 (Grok weekly update)
+- Date: 2026-08-07 (Grok weekly update)
 
 ## News landscape this week
-Google GA'd Gemini 3.6 Flash + 3.5 Flash-Lite (July 21) while 3.5 Pro remains partner-only — the central story. Arena Elo refresh reordered helloai's set: Muse Spark 1.1 to #2 (1495), Claude Opus 4.8 and Grok 4.5 down. Kimi K3 still API-only (weights ~July 27); consumer Kimi subscriptions paused amid demand. No Claude Opus 5; no Gemini 3.5 Pro GA.
+Meta shipped Muse Spark 1.2 + Muse Code (Aug 5–6) at unchanged $1.25/$4.25; Arena muse-spark-1.2 (xHigh) 1498 Elo. Alibaba GA'd Qwen3.8-Max (~Aug 3) at $2/$6 with ~1497 preliminary arena. Kimi K3 open weights shipped Jul 27 (2.8T — not single-GPU). Claude Opus 5 arena effort variants live (high 1493). Gemini 3.5 Pro still absent from official pricing. DeepSeek V4-Flash price-performance story secondary.
+
+## Article WRITTEN this cycle (2026-08-07)
+- **muse-spark-1-2-muse-code-agentic-upgrade** — "Muse Spark 1.2 Ships With Muse Code" (Discovery). Same-provider bump; Muse Code pairing; helloai tracks 1.2 at 1498 Elo.
+
+## Article WRITTEN this cycle (2026-07-25)
+- **claude-opus-5-outscores-fable-5-at-half-price** — Opus 5 launch vs Fable 5.
 
 ## Article WRITTEN this cycle (2026-07-22)
-- **gemini-3-6-flash-ships-3-5-pro-still-waiting** — "Gemini 3.6 Flash Ships — 3.5 Pro Still Waiting" (Analysis). Flash GA + Pro delay; why helloai keeps 3.1 Pro; arena 1485 near frontier without admission.
+- **gemini-3-6-flash-ships-3-5-pro-still-waiting** — Flash GA + Pro delay.
 
-## Article WRITTEN this cycle (2026-07-17)
-- **kimi-k3-replaces-gpt-in-helloai-set** — Discovery. Moonshot admit; GPT-5.6 Sol dropped.
-- **chatgpt-work-vs-claude-cowork-agentic-seat-war** — Analysis. Product-surface war.
-
-## Article WRITTEN this cycle (2026-07-09)
-- **grok-4-5-ships-as-xai-default**, **gpt-5-6-sol-general-availability**, **muse-spark-1-1-replaces-qwen-in-helloai-set**
-
-## Brief Queue (reconciled 2026-07-22)
+## Brief Queue (reconciled 2026-08-07)
 
 **REMAINING / CARRY-FORWARD:**
-1. **gemini-3-5-pro-2m-context-deep-think** — WRITE WHEN GA CONFIRMED (still partner-only July 22).
-2. **muse-spark-climbs-to-number-two** — optional Analysis if Muse holds 1495+ after more votes.
-3. **kimi-k3-open-weights-local** — WRITE after July 27 weight release if single-GPU story exists.
-4. **best-model-for-reasoning-right-now** — HOLD until Gemini 3.5 Pro GA.
-5. **best-model-for-daily-use-right-now** — Honest Daily Use guide (Grok 4.5 still category leader; Elo 1468).
-6. **fable-5-usage-credits-economics** — if credit drama continues.
+1. **qwen3-8-max-frontier-price-pressure** — Analysis on Alibaba re-admit under six-model cap (rank-2 brief this week).
+2. **kimi-k3-open-weights-not-local** — Analysis: weights shipped but fails OW single-GPU hard req (rank-3).
+3. **gemini-3-5-pro-2m-context-deep-think** — WRITE WHEN GA CONFIRMED (still not on pricing page Aug 7).
+4. **claude-opus-5-coding-crown-arena** — optional post-launch Arena coding vs preference split (near-duplicate risk with Jul 25 launch piece).
+5. **best-model-for-daily-use-right-now** — Honest Daily Use guide (Grok 4.5 still category leader).
+6. **best-model-for-reasoning-right-now** — HOLD until Gemini 3.5 Pro GA.
 
 ## Angles Already Covered (avoid repeating within 30 days)
+- Muse Spark 1.2 / Muse Code agentic upgrade (2026-08-07)
+- Claude Opus 5 launch vs Fable 5 (2026-07-25)
 - Gemini 3.6 Flash ships / 3.5 Pro still waiting (2026-07-22)
 - Kimi K3 replaces GPT-5.6 Sol / Moonshot admit (2026-07-17)
 - ChatGPT Work vs Claude Cowork agentic seat war (2026-07-17)
 - Muse Spark 1.1 replaces Qwen in tracked set (2026-07-09)
-- Grok 4.5 default chat model / catalog guard (2026-07-09)
+- Grok 4.5 default chat model (2026-07-09)
 - GPT-5.6 Sol general availability (2026-07-09)
 - Prompt caching + batch API cost stacking (2026-07-04)
-- ARC-AGI-3 interactive benchmark gap (2026-07-04)
-- Government-gated frontier releases (2026-07-01)
-- Best model for coding guide (2026-06-22)
 
 ## Recurring Gaps to Watch
 - Gemini 3.5 Pro GA → immediate Discovery + same-provider gemini replace
-- Kimi open weights (~July 27) → open-weight admit path separate from frontier API
-- "Model for X" guides: reasoning on hold; daily use still open
+- Human decision on qwen3.8-max / DeepSeek V4 under six-model cap
+- Qwen3.8-Max open weights (promised after Aug 3) → OW path if single-GPU viable
 
-## Notes (2026-07-22)
-- Rank-1 brief written: Gemini Flash/Pro delay (timeliness × product relevance for recommend routing).
-- Dropped oldest article under max_articles=10: grok-4-3-now-on-amazon-bedrock.
+## Notes (2026-08-07)
+- Rank-1 brief written: Muse Spark 1.2 (timeliness × tracked-model version bump × Muse Code product surface).
+- Dropped under max_articles=10: arc-agi-3-frontier-models-under-1-percent (2026-07-04).
