@@ -109,6 +109,7 @@ _NAME_MAP: dict[str, list[str]] = {
 # Open-weight models use a separate map — frontier and open-weight IDs are disjoint.
 _OPEN_WEIGHT_NAME_MAP: dict[str, list[str]] = {
     "gemma": [
+        "gemma-4-31b",
         "gemma-4-31b-it",
     ],
     "qwen32b": [

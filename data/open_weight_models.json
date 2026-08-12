@@ -5,7 +5,7 @@
     "provider": "Google DeepMind",
     "url": "https://huggingface.co/google/gemma-4-31b-it",
     "tag": "Efficiency Champion",
-    "desc": "Google's Gemma 4 31B ranks #3 among all open-weight models on LMArena with an Elo of 1452 — beating models 20x its size. Fits a single RTX 4090 at Q4_K_M and ships Apache 2.0.",
+    "desc": "Google's Gemma 4 31B ranks #3 among all open-weight models on LMArena with an Elo of 1451 — beating models 20x its size. Fits a single RTX 4090 at Q4_K_M and ships Apache 2.0.",
     "color": "#4285F4",
     "elo": 1451,
     "context_window": 128000,
@@ -30,7 +30,7 @@
     "tag": "Single-GPU Pick",
     "desc": "The strongest model that comfortably fits a single 24 GB GPU. Adds vision and tool-use over 3.1, tightly instruction-tuned, and Apache 2.0 with no usage restrictions — a dependable all-rounder for local daily use.",
     "color": "#F97316",
-    "elo": 1358,
+    "elo": 1357,
     "context_window": 128000,
     "strengths": [
       "Honest Daily Use"
@@ -106,9 +106,9 @@
     "provider": "OpenAI",
     "url": "https://huggingface.co/openai/gpt-oss-20b",
     "tag": "OpenAI Local",
-    "desc": "OpenAI's Apache 2.0 MoE (~21B total / ~3.6B active). Native MXFP4 fits ~16 GB; we measured 53.73 tok/s on the budget two-GPU cluster — the fastest open-weight card we track. Arena ~1317 Elo.",
+    "desc": "OpenAI's Apache 2.0 MoE (~21B total / ~3.6B active). Native MXFP4 fits ~16 GB; we measured 53.73 tok/s on the budget two-GPU cluster — the fastest open-weight card we track. Arena ~1318 Elo.",
     "color": "#10A37F",
-    "elo": 1317,
+    "elo": 1318,
     "context_window": 131072,
     "strengths": [
       "Honest Daily Use",
