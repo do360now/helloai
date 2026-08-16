@@ -1,5 +1,20 @@
 [
   {
+    "slug": "deepseek-v4-pro-price-hike-still-cheapest",
+    "title": "DeepSeek Doubled Its Rate Card and Still Leads Daily Use",
+    "excerpt": "DeepSeek V4 Pro's hike is live today: $0.66/$1.98 off-peak, up from $0.435/$0.87. It remains helloai's cheapest tracked frontier API.",
+    "date": "2026-08-16",
+    "category": "Analysis",
+    "readTime": "2 min",
+    "content": [
+      "DeepSeek's price-leader era just got more expensive. Official API docs put new DeepSeek V4 Pro rates live at 16:00 UTC on August 16, 2026: cache-miss input moves from $0.435 to $0.66 off-peak and $1.32 at peak, and output jumps from $0.87 to $1.98 off-peak and $3.96 at peak. Cache-hit input goes from $0.003625 to $0.022 off-peak and $0.044 at peak. The model id is unchanged — DeepSeek-V4-Pro-0813 — and arena still lists deepseek-v4-pro at 1458 Elo. The invoice is what changed.",
+      "Peak hours are 01:00–04:00 and 06:00–10:00 UTC, seven hours billed at twice the off-peak rate. helloai lists the off-peak $0.66/$1.98 figure the same way it lists Gemini 3.1 Pro's standard $2/$12. That is still the cheapest tracked frontier API. Muse Spark 1.2 remains $1.25/$4.25, Qwen3.8-Max $2/$6, Gemini 3.1 Pro $2/$12, Claude Opus 5 $5/$25, and Claude Fable 5 $10/$50. Off-peak DeepSeek is about half of Muse on input and output. Peak DeepSeek ($1.32/$3.96) almost meets Muse on input and still undercuts it on output.",
+      "The August 7 rebalance sold DeepSeek as an order-of-magnitude undercut of Western mid-tier rates. That sentence is now false. Versus Muse it is a 2x story, not a 10x story. Teams that built agent loops around $0.003625 cache hits will feel the 6x to 12x cache-hit hike more than the headline input bump. Peak windows also sit on a slice of US evening and Asian morning, when a lot of interactive coding agents run. The MIT license and 1M context did not change; the set-it-and-forget-the-bill pitch did.",
+      "helloai is not dropping DeepSeek. Honest Daily Use still belongs to the cheapest tracked API with a 1M window, and no other row undercuts $0.66/$1.98. Grok 4.6 is still $2/$6 with a 500K window and a preliminary 1464 Elo — too fresh for the two-week bar, and it does not win on price. Gemini 3.7 Flash shipped August 13 at an introductory $0.75/$3.75, but Flash does not replace 3.1 Pro on hard reasoning, and 3.5 Pro is still missing from Google's pricing page.",
+      "The next weekly pass will be about whether anyone else moves. If Muse or Qwen hold their rates, DeepSeek keeps the daily-use slot even after a painful hike. If they cut, or if Grok's arena sample matures above the floor with a unique agent story, the August 7 price-shock admit becomes a one-month footnote. Until then, /api/recommend still routes high-volume, non-Mythos work to DeepSeek — just not at the invoice you budgeted on August 15."
+    ]
+  },
+  {
     "slug": "grok-4-6-ships-after-helloai-drop",
     "title": "Grok 4.6 Ships the Week After helloai Dropped It",
     "excerpt": "xAI ships Grok 4.6 today at the same $2/$6 as 4.5, five days after helloai dropped Grok. Arena votes are still too thin to reopen the slot.",
@@ -132,21 +147,6 @@
       "The economics shift matters for helloai's tracked set. Grok 4.3 was the cheapest frontier option at $1.25/$2.50 with 1M context — the cost floor that made it the Honest Daily Use leader. Grok 4.5 trades that for higher nominal rates and half the context window. Effective cost may still beat headline comparisons when output tokens dominate, because 4.5 burns far fewer tokens per resolved task. Teams routing on nominal leaderboard rates alone will mis-rank Grok against Gemini 3.1 Pro and Qwen3.7-Max until they profile output volume.",
       "Availability is broad but not universal. Grok 4.5 is live in Grok Build, Cursor on all plans, and the xAI API console as of launch day. EU API access is delayed to mid-July per xAI's release notes. Grok 4.3 remains on the pricing table for workloads that need 1M context at the lower rate card. helloai tracks one xAI entry per admission rules — 4.5 wins because the provider docs steer new chat and code traffic there, not because 4.3 vanished.",
       "The miss exposed a process gap, not a data gap. Memory listed rejected candidates like Grok 4.4; official catalogs moved faster. helloai now runs scripts/check_provider_catalog.py at the start of every weekly update — fetching each provider's catalog and news URLs and comparing parsed versions against models.json before judgment-heavy web search. The structural fix is boring and reliable: if docs.x.ai recommends Grok 4.5 and models.json still says 4.3, the pipeline stops until someone patches it."
-    ]
-  },
-  {
-    "slug": "gpt-5-6-sol-general-availability",
-    "title": "GPT-5.6 Sol Reaches General Availability",
-    "excerpt": "OpenAI ends the partner-only preview on July 9. GPT-5.6 Sol replaces GPT-5.5 in helloai's tracked set at the same $5/$30 rate — the upgrade path teams waited on since June 26.",
-    "date": "2026-07-09",
-    "category": "Discovery",
-    "readTime": "2 min",
-    "content": [
-      "On July 9, OpenAI ends the partner-only preview that held GPT-5.6 Sol behind government gates since June 26. Sol, Terra, and Luna roll out globally — the upgrade path helloai deferred when it wrote on July 1 that GPT-5.5 would remain the tracked OpenAI entry until general API availability. That condition is met. GPT-5.6 Sol replaces GPT-5.5 in models.json at the same $5/$30 per-million-token rate, with curated Elo held at 1484 until LMArena sources refresh.",
-      "The capability jump is real but narrow. OpenAI's June 26 preview puts Sol at 88.8 percent on Terminal-Bench 2.1 — up from GPT-5.5's 82.7 percent on Terminal-Bench 2.0. Sol Ultra mode, which coordinates subagents, reaches 91.9 percent. Terra lands at 84.3 percent at half the price; Luna at 82.5 percent at $1/$6. Sol matches Mythos 5 on Terminal-Bench while using roughly a third of the output tokens, per OpenAI's claims. For agentic pipelines already on OpenAI contracts, Sol is a same-price upgrade, not a procurement event.",
-      "The release arc matters as much as the benchmarks. CNBC reported July 8 that OpenAI would publicly release the GPT-5.6 series on Thursday, ending the government-requested limits from June 26. OpenAI CEO Sam Altman posted \"Happy building\" on X. The timing follows Anthropic's July 1 global redeploy of Claude Fable 5 after export controls lifted — two labs, two release patterns, both converging on broader access within two weeks. OpenAI also shipped GPT-Live voice models on July 9, a separate product line from the Sol/Terra/Luna text stack.",
-      "For helloai's tracked set, the competitive picture shifts modestly. Claude Fable 5 still leads at 1508 Elo. Opus 4.8 holds 1503. Gemini 3.1 Pro, Grok 4.3, and Qwen3.7-Max fill out the six-model set. GPT-5.6 Sol does not change the nineteen-point Elo spread — arena data remains frozen on a May 2025 nakasyou snapshot — but it does change which OpenAI model /api/recommend returns for provider-filtered queries. Teams that standardized on GPT-5.5 for Terminal-Bench-shaped workloads should retest on Sol before assuming rank parity.",
-      "The government-gated release pattern helloai flagged in early July may be shortening, not entrenching. OpenAI called the partner-only preview a short-term step; thirteen days later, general access is open. Whether that cadence becomes the default for every frontier launch is still unresolved — the June 2 executive order's evaluation framework has no public calendar. But for this week, the practical answer is simple: GPT-5.6 Sol is the OpenAI flagship helloai tracks, and the gate is down."
     ]
   }
 ]
