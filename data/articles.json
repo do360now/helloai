@@ -1,5 +1,20 @@
 [
   {
+    "slug": "qwen3-8-max-cools-below-gemini",
+    "title": "Qwen3.8-Max Cools Below Gemini as Arena Votes Arrive",
+    "excerpt": "Qwen3.8-Max's launch-week arena lead is gone. Two weeks of votes drop it to 1481 Elo, five points under Gemini 3.1 Pro. The $2/$6 card did not change.",
+    "date": "2026-08-22",
+    "category": "Analysis",
+    "readTime": "2 min",
+    "content": [
+      "Qwen3.8-Max is no longer the fourth-ranked model helloai tracks. The arena.ai text-overall snapshot dated August 21, 2026 lists qwen3.8-max at 1481 Elo plus or minus 7 on 9,955 votes. Gemini 3.1 Pro Preview sits at 1486 plus or minus 3 on 99,182 votes. Two weeks ago Qwen was 1491 with 6,908 votes, and the launch-week listing was near 1497. The rate card did not move. QwenCloud still prices the 2.4-trillion-parameter MoE at $2 per million input tokens and $6 per million output, with a 1M context window. The ranking did.",
+      "That is what a thin sample does when it fills in. A plus-or-minus-7 interval on ten thousand votes is still wider than Gemini's plus-or-minus-3 on a hundred thousand, so calling this a settled loss would over-read the board. It is a directional cooling, not a collapse. helloai's August 7 rebalance admitted Qwen3.8-Max because the early arena score sat near 1497, second only to Claude Fable 5 and Muse Spark 1.2 in the tracked set. The same-provider rule that dropped Kimi K3 for Alibaba assumed that launch Elo would hold. It held for a week. It did not hold for two.",
+      "The rest of the tracked table barely moved. Claude Fable 5 is 1508, Muse Spark 1.2 is 1498, Claude Opus 5 is 1493, and DeepSeek V4 Pro is still 1458 at $0.66/$1.98 off-peak. Official catalogs for Anthropic, Meta, Google, Alibaba, and DeepSeek show no newer flagship than the rows we already track. Gemini 3.5 Pro is still missing from Google's pricing page. The /api/recommend coding path still surfaces Qwen as the $2/$6 1M option; the Overall Preference order now puts Gemini above it.",
+      "The board outside the six-model cap is noisier than the cap itself. Z.ai's GLM-5.3-max, live on the API at the same $1.40/$4.40 as 5.2, already sits at 1487 Elo with 3,751 votes — above Qwen, below Opus 5. Grok 4.6 is still flagged Preliminary at 1461 on 3,473 votes, ten days after launch, with a 500K window that does not beat DeepSeek on price. Neither is auto-admitted this week. Qwen3.8-27B finally has an arena slug at 1440, the signal the open-weight shelf was waiting on, but helloai already carries three Qwen local cards and has no first-party 4090 throughput for the 27B.",
+      "The honest read is that Alibaba's Max-class API is a mid-tier frontier row that looks less like a 1497 rocket and more like a 1481 peer of Gemini 3.1 Pro at half the output price. Teams that picked Qwen on August 7 for the Elo, not the invoice, should re-run their own harness rather than the launch table. The next weekly pass is whether GLM-5.3's sample matures at 1487, and whether Grok 4.6's Preliminary flag drops after August 26. Until one of those forces a human replace, the six-model set stays Anthropic, Meta, Google, Alibaba, and DeepSeek — just not in the order the August 7 article sold."
+    ]
+  },
+  {
     "slug": "deepseek-v4-pro-price-hike-still-cheapest",
     "title": "DeepSeek Doubled Its Rate Card and Still Leads Daily Use",
     "excerpt": "DeepSeek V4 Pro's hike is live today: $0.66/$1.98 off-peak, up from $0.435/$0.87. It remains helloai's cheapest tracked frontier API.",
@@ -132,21 +147,6 @@
       "The business shift behind the model matters for readers who built on Llama. Muse Spark is closed and metered; Meta's free-weights era is not extended to this line. Zuckerberg's launch-day post framed Spark as strong agentic performance at a very low price — competitive with Grok 4.5 and well below Opus and GPT-5.6 Sol on output tokens. US developers get $20 in free API credits; EU and global API access timelines are not fully documented at launch. Consumer access is free via meta.ai Thinking mode.",
       "For helloai's /api/recommend routing, the competitive stack reorders slightly. Muse Spark 1.1 slots fifth by Elo at 1487, above GPT-5.6 Sol at 1484 and below Grok 4.5 at 1490. It becomes the cheapest tracked frontier API on input and the strongest Meta representation helloai has ever carried — previously rejected in May when no public API existed. Teams that routed coding tasks to Qwen3.7-Max for cost should retest Muse Spark on their agent harnesses; benchmark claims are vendor-reported and eval-hygiene questions surfaced on launch day.",
       "helloai's admission rules require a public API, proven provider, 200K+ context, and arena signal within 25 points of the set floor. Muse Spark passes on family Elo; 1.1-specific votes are hours old, so curated 1487 stands until the weekly Elo scraper matches arena aliases. The May 31 rejection of muse-spark is superseded. Meta joins Anthropic, Google, xAI, and OpenAI in the tracked frontier set — six labs, six models, one budget-agentic slot, now painted Meta blue."
-    ]
-  },
-  {
-    "slug": "grok-4-5-ships-as-xai-default",
-    "title": "Grok 4.5 Ships as xAI's Default Chat Model",
-    "excerpt": "xAI launched Grok 4.5 on July 8 — 83.3% on Terminal-Bench 2.1, 4.2× token efficiency, and $2/$6 pricing. helloai's tracked Grok entry moves from 4.3 to 4.5.",
-    "date": "2026-07-09",
-    "category": "Discovery",
-    "readTime": "2 min",
-    "content": [
-      "On July 8, xAI shipped Grok 4.5 — and helloai's weekly drift check missed it. The updater was watching memory for a Grok 4.4 release that never came, while xAI's docs and news page already listed 4.5 as the recommended chat and code model. Grok 4.5 replaces Grok 4.3 in models.json today: $2/$6 per million tokens, 500K context, and xAI's explicit guidance to use it for everything except dedicated voice, image, and video APIs.",
-      "The capability story is engineering speed, not arena rank. xAI claims 83.3% on Terminal-Bench 2.1, 64.7% on SWE Bench Pro, and 29.0% resolution on SWE Marathon — competitive with GPT-5.6 Sol and Claude Opus 4.8 on agentic coding slices. The sharper claim is token efficiency: Grok 4.5 averages 15,954 output tokens per SWE Bench Pro task versus 67,020 for Opus 4.8 (max), a 4.2× gap that compounds in production agent loops. xAI serves the model at 80 tokens per second, positioning it as a fast-model-speed flagship rather than a budget tier.",
-      "The economics shift matters for helloai's tracked set. Grok 4.3 was the cheapest frontier option at $1.25/$2.50 with 1M context — the cost floor that made it the Honest Daily Use leader. Grok 4.5 trades that for higher nominal rates and half the context window. Effective cost may still beat headline comparisons when output tokens dominate, because 4.5 burns far fewer tokens per resolved task. Teams routing on nominal leaderboard rates alone will mis-rank Grok against Gemini 3.1 Pro and Qwen3.7-Max until they profile output volume.",
-      "Availability is broad but not universal. Grok 4.5 is live in Grok Build, Cursor on all plans, and the xAI API console as of launch day. EU API access is delayed to mid-July per xAI's release notes. Grok 4.3 remains on the pricing table for workloads that need 1M context at the lower rate card. helloai tracks one xAI entry per admission rules — 4.5 wins because the provider docs steer new chat and code traffic there, not because 4.3 vanished.",
-      "The miss exposed a process gap, not a data gap. Memory listed rejected candidates like Grok 4.4; official catalogs moved faster. helloai now runs scripts/check_provider_catalog.py at the start of every weekly update — fetching each provider's catalog and news URLs and comparing parsed versions against models.json before judgment-heavy web search. The structural fix is boring and reliable: if docs.x.ai recommends Grok 4.5 and models.json still says 4.3, the pipeline stops until someone patches it."
     ]
   }
 ]

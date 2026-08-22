@@ -1,6 +1,54 @@
 # leaderboard-updater agent memory
 
-## Last run: 2026-08-16 weekly (Grok) — DeepSeek price hike
+## Last run: 2026-08-22 weekly (Grok) — Qwen3.8-Max arena cool
+
+### Applied
+- **Arena Elo refresh** from arena.ai Aug 21 (nakasyou still 457d stale; CSV fallback 354d stale):
+  - fable 1507→1508, muse 1499→1498, claude 1494→1493, **qwen 1491→1481**
+  - gemini 1486 and deepseek 1458 unchanged
+  - OW unchanged (qwen14b still unmatched on live arena)
+- **Desc Elo mentions** updated for fable, muse, qwen; Overall Preference insight 1507→1508
+- Tracked sort order now: Fable 1508, Muse 1498, Opus 5 1493, **Gemini 1486, Qwen 1481**, DeepSeek 1458
+- Catalog/cluster guards exit 0. Cluster leaderboard table date still **2026-07-17**. Newest named-model check: Qwen3.8-27B skipped 2026-08-20 (Q4 ~15.3 GiB vs 16GB pool). Newest raw-bench row still Ministral-3-14B (2026-08-10).
+
+### Verified model states
+**Frontier (Elo desc):**
+- **fable**: Claude Fable 5 — $10/$50, 1M, 1508
+- **muse**: Muse Spark 1.2 — $1.25/$4.25, 1M, 1498
+- **claude**: Claude Opus 5 — $5/$25, 1M, 1493
+- **gemini**: Gemini 3.1 Pro — $2/$12, 1M, 1486
+- **qwen**: Qwen3.8-Max — $2/$6, 1M, **1481** (cooled; votes 9955)
+- **deepseek**: DeepSeek V4 Pro — $0.66/$1.98 off-peak ($1.32/$3.96 peak), 1M, 1458. Weekend all-off-peak starts 00:00 Beijing Aug 23 (no card-number change).
+
+**Open-weight:** gemma 1451, mistral 1357, qwen32b 1347, qwen30ba3b 1327, gptoss20b 1318, qwen14b 1300 (still unmatched on live arena)
+
+### Catalog / cluster
+- Catalog guard exit 0 (no version-ahead). Official pages confirm Fable $10/$50, Opus 5 $5/$25, Gemini 3.1 Pro $2/$12 ≤200k, Muse 1.2 $1.25/$4.25, Qwen3.8-Max $2/$6, DeepSeek V4 Pro $0.66/$1.98 off-peak.
+- Cluster bench: no drift vs open_weight_models.json. Latest leaderboard table date **2026-07-17**. Same untracked bench candidates as Aug 16; Qwen3.8-27B named-model skip 2026-08-20 (doesn't fit 16GB pool; would fit 24GB 4090).
+
+### Rejected this run
+- **grok-4.6**: official $2/$6, 500K. Arena grok-4.6-high **1461 Preliminary / 3473 votes** (was 1464/3396 Aug 16). Day 10 of 14. Fails 2-week Elo hard req. Elo dropped 3 pts.
+- **gemini-3.5-pro**: still absent from official pricing page
+- **gemini-3.7-flash**: gemini-3.7-flash-high **1490 Preliminary / 5718 votes**. Same-provider Flash; replacing 3.1 Pro would lose Hard Reasoning niche.
+- **gpt-5.6-sol**: 1482, dropped Jul 17, no new unique positioning
+- **deepseek-v4-pro-high-20260813**: 1459±10 / 3621 votes. Official GA still DeepSeek-V4-Pro-0813 matching deepseek-v4-pro 1458.
+- **Qwen3.8-2.4T-A95B**: custom license + not single-GPU
+- **Hy3**: Apache 2.0 295B-A21B, arena 1457, official 8-GPU serve — fails single-GPU
+- Cluster OW leftovers (Qwen3-8B, 2507 unconfirmed, Llama-3.1-8B, Gemma-3-4B, Gemma-4-E4B/12B, Phi-4-mini): no new evidence
+
+### Needs human review / pending
+- **glm-5.3-max** (upgraded from glm-5.2-max): API $1.40/$4.40, 1M ctx, Aug 14/18 GA. Arena glm-5.3-max **1487±10 / 3751 votes**. Passes hard + new-provider soft. 8 days old — 2-week bar not yet met. Set at 6 — do not auto-replace.
+- **Qwen3.8-27B**: HF live Apache 2.0, 27B dense VLM, Q4 weights ~15.3 GiB. Arena **qwen3.8-27b 1440±10 / 3205 votes**. Same-provider replace of qwen32b (1347). **Do not auto-replace:** already 3 Qwen OW cards; no first-party 4090 tok/s; cluster skipped it for the 16GB pool.
+- **muse-glimmer**: Apache 2.0 30B, official 17GB Q4 for 24GB, arena **1426±10 / 3718 votes** (unchanged). New OW provider. Set at 6 — human call to drop qwen14b.
+- Re-check Grok 4.6 after 2 weeks (~Aug 26) **or** if Preliminary flag drops and Elo holds above the tracked floor
+- Wire arena.ai into Elo scraper (nakasyou still dead; 457d)
+
+### Notes
+- DeepSeek weekend all-off-peak starts Aug 23 00:00 Beijing; card still uses off-peak $0.66/$1.98 (majority hours, now including Sat/Sun).
+- Claude Sonnet 5 $2/$10 intro price is now permanent (Sept 1 $3/$15 hike cancelled). We do not track Sonnet.
+- Qwen3.8-Max cooling is the first material arena move since the Aug 7 admit. Recommend table still routes $2/$6 1M coding to Qwen; Overall Preference order now Gemini over Qwen.
+
+## Previous run: 2026-08-16 weekly (Grok) — DeepSeek price hike
 
 ### Applied
 - **deepseek pricing**: $0.435/$0.87 → **$0.66/$1.98** (off-peak card). Official peak/off-peak table live at 16:00 UTC Aug 16. Peak is $1.32/$3.96 (01:00–04:00 and 06:00–10:00 UTC). Cache-hit input $0.022/$0.044.

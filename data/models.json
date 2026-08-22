@@ -5,9 +5,9 @@
     "provider": "Anthropic",
     "url": "https://claude.ai",
     "tag": "Mythos Class",
-    "desc": "First Mythos-class model cleared for general use. Leads LMArena text overall at 1507 Elo with 95% on SWE-bench Verified and top GDPval-AA knowledge-work scores — gains widen on long-horizon agentic runs.",
+    "desc": "First Mythos-class model cleared for general use. Leads LMArena text overall at 1508 Elo with 95% on SWE-bench Verified and top GDPval-AA knowledge-work scores — gains widen on long-horizon agentic runs.",
     "color": "#9333EA",
-    "elo": 1507,
+    "elo": 1508,
     "cost_per_million_tokens": 10,
     "cost_per_million_tokens_output": 50,
     "context_window": 1000000,
@@ -22,9 +22,9 @@
     "provider": "Meta",
     "url": "https://www.meta.ai/",
     "tag": "Budget Agentic",
-    "desc": "Meta's Muse Spark 1.2 — agentic coding upgrade co-trained with Muse Code. #2 in helloai's tracked set at 1499 Elo — cheapest agentic option we track at $1.25/$4.25 with 1M context.",
+    "desc": "Meta's Muse Spark 1.2 — agentic coding upgrade co-trained with Muse Code. #2 in helloai's tracked set at 1498 Elo — cheapest agentic option we track at $1.25/$4.25 with 1M context.",
     "color": "#0668E1",
-    "elo": 1499,
+    "elo": 1498,
     "cost_per_million_tokens": 1.25,
     "cost_per_million_tokens_output": 4.25,
     "context_window": 1000000,
@@ -40,29 +40,13 @@
     "tag": "Coding King",
     "desc": "Anthropic's July 2026 successor to Opus 4.8: 96% on SWE-bench Verified, doubles Frontier-Bench performance, and scores 3x the next-best model on ARC-AGI-3 — at the same $5/$25 price.",
     "color": "#D97706",
-    "elo": 1494,
+    "elo": 1493,
     "cost_per_million_tokens": 5,
     "cost_per_million_tokens_output": 25,
     "context_window": 1000000,
     "strengths": [
       "Coding & Engineering",
       "Overall Preference"
-    ]
-  },
-  {
-    "id": "qwen",
-    "name": "Qwen3.8-Max",
-    "provider": "Alibaba",
-    "url": "https://www.qwencloud.com/models/qwen3.8-max",
-    "tag": "2.4T Max",
-    "desc": "Alibaba's 2.4T MoE flagship (95B active): long-horizon coding and professional work at $2/$6 with 1M context. Arena ~1491 Elo — re-admits Alibaba after the July Muse swap.",
-    "color": "#5B4AE8",
-    "elo": 1491,
-    "cost_per_million_tokens": 2,
-    "cost_per_million_tokens_output": 6,
-    "context_window": 1000000,
-    "strengths": [
-      "Coding & Engineering"
     ]
   },
   {
@@ -79,6 +63,22 @@
     "context_window": 1000000,
     "strengths": [
       "Hard Reasoning & Science"
+    ]
+  },
+  {
+    "id": "qwen",
+    "name": "Qwen3.8-Max",
+    "provider": "Alibaba",
+    "url": "https://www.qwencloud.com/models/qwen3.8-max",
+    "tag": "2.4T Max",
+    "desc": "Alibaba's 2.4T MoE flagship (95B active): long-horizon coding and professional work at $2/$6 with 1M context. Arena ~1481 Elo — launch sample cooled below Gemini 3.1 Pro.",
+    "color": "#5B4AE8",
+    "elo": 1481,
+    "cost_per_million_tokens": 2,
+    "cost_per_million_tokens_output": 6,
+    "context_window": 1000000,
+    "strengths": [
+      "Coding & Engineering"
     ]
   },
   {
