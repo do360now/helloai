@@ -1,5 +1,20 @@
 [
   {
+    "slug": "grok-bot-cloud-teammate-local-cli",
+    "title": "Grok Bot Is a Cloud Teammate. The Local CLI Runs the Site",
+    "excerpt": "Grok Bot, launched August 11, is a cloud teammate with its own VM. The local grok CLI is what can actually operate a production checkout like helloai.",
+    "date": "2026-08-26",
+    "category": "Analysis",
+    "readTime": "2 min",
+    "content": [
+      "xAI is selling two desktop agents this month, and they are not the same product. Grok Bot, launched as an early beta on August 11, 2026, is a macOS, Windows, and iOS app whose Bots share a persistent cloud computer with a browser, filesystem, and terminal. Grok Build is the local grok command: Grok Build 1.0 left beta on August 7, the changelog is at 1.0.5 as of August 15, and the marketing page now says it is powered by Grok 4.6. Calling both Grok Bot is how you confuse a rented VM with the checkout you actually ship from.",
+      "Grok Bot's pitch is always-on teammates. Official docs say jobs keep running when you close the laptop, Bots can use apps with no API, and they can watch a workflow once and save it as a routine. Several Bots share one user-scoped cloud computer at /workspace — a convenience and a security boundary. Access is SuperGrok Plus and Heavy, or Cursor Pro+, Ultra, and Teams, signed in with a Cursor account. There is no Linux desktop app. Local-computer execution is a separate setting that defaults to ask-every-time; the computer itself is still in the cloud. That is closer to Claude Cowork than to a repo-native CLI.",
+      "A site like helloai.com is a git checkout: data files, tests, a commit, and deploy keys that should not sit on a shared Bot VM. Grok Build is built for that shape. Install is one curl on macOS, Linux, and Windows. It has plan mode, subagents, worktrees, AGENTS.md, skills, hooks, MCP, git, and headless grok -p for scripts. The Apache 2.0 tree is xai-org/grok-build. Claude Code and Codex CLI already occupy this niche. Grok Build is xAI's entry, not a new category.",
+      "The trade-offs are not subtle. Cloud Bots work at 3 a.m. and can click a CRM with no MCP server. They require cloud data storage, refuse Cursor's Legacy Privacy Mode, and share logins across every Bot on the account. Local CLIs stop when the session stops unless you wrap them in CI, and they will git push if you let them. Neither is local inference: both call Grok 4.6 in xAI's cloud. The locality is the harness. The weights still leave the building.",
+      "This week Grok 4.6 hits two weeks on the public API at $2/$6 with a 500K window. Code Arena WebDev lists grok-4.6-high at 1629, a hair above Claude Fable 5 at 1626; text overall is still Preliminary at 1461. Grok Bot is two weeks old. The useful question for a site like this is no longer whether xAI has a frontier model. It is whether you want the teammate on a computer you rent, or the agent in the directory you already deploy from."
+    ]
+  },
+  {
     "slug": "qwen3-8-max-cools-below-gemini",
     "title": "Qwen3.8-Max Cools Below Gemini as Arena Votes Arrive",
     "excerpt": "Qwen3.8-Max's launch-week arena lead is gone. Two weeks of votes drop it to 1481 Elo, five points under Gemini 3.1 Pro. The $2/$6 card did not change.",
@@ -132,21 +147,6 @@
       "Under the hood, helloai still tracks the models that power those surfaces. Claude Fable 5 leads text overall at 1508 Elo, Claude Opus 4.8 sits at 1503, and GPT-5.6 Sol is at 1484 with $5/$30 per million tokens. Those gaps matter for agentic coding and long-horizon runs. They matter less once a team standardizes on a single work surface that holds their files, context, and scheduled jobs. Product lock-in is becoming the durable moat as the model layer keeps leapfrogging week to week.",
       "The trade-off is real. Cowork's remote sessions and Max-first mobile beta favor teams already deep in Anthropic's stack; ChatGPT Work's Codex-plus-browser pitch favors teams that want one super-app for artifacts. Neither product makes models interchangeable for free — routing a hard reasoning job to Gemini 3.1 Pro or a cheap agentic loop to Muse Spark 1.1 still means leaving the seat. Teams that treat this as pure productivity will love the leverage. Teams that treat the seat as architecture should keep data portable and a second surface live for anything mission-critical.",
       "The next model release will still move the Elo board. The more consequential question for the rest of 2026 is which work surface accumulates the habits, connectors, and unfinished multi-hour jobs that are expensive to migrate. Model scores remain the right way to pick a brain. The seat is how that brain stays in the room."
-    ]
-  },
-  {
-    "slug": "muse-spark-1-1-replaces-qwen-in-helloai-set",
-    "title": "Muse Spark 1.1 Replaces Qwen3.7-Max in helloai's Frontier Set",
-    "excerpt": "Meta ships Muse Spark 1.1 with a public API at $1.25/$4.25. helloai drops Qwen3.7-Max and adds Meta as its budget agentic pick at 1487 Elo.",
-    "date": "2026-07-09",
-    "category": "Discovery",
-    "readTime": "2 min",
-    "content": [
-      "On July 9, Meta Superintelligence Labs shipped Muse Spark 1.1 and opened the Meta Model API in public preview — the first time developers can buy Meta inference directly. helloai replaces Qwen3.7-Max with Muse Spark 1.1 in its six-model frontier set: $1.25/$4.25 per million input/output tokens, 1M context, and LMArena text overall at 1487 Elo (preliminary, 13,591 votes). The admission drops Alibaba's API flagship to make room for Meta under helloai's six-model cap; Qwen3 32B remains in the open-weight section as a separate track.",
-      "The positioning overlap is why the swap makes sense. Qwen3.7-Max entered helloai in June as the budget agentic option — 80.4% on SWE-bench Verified, $2.50/$7.50, 1475 Elo. Muse Spark 1.1 targets the same procurement story at lower headline rates and higher arena rank: Meta claims MCP Atlas 88.1, JobBench 54.7 against Opus 4.8's 48.4, and native multi-agent orchestration with MCP servers and computer use. Coding benchmarks are mixed — SWE-Bench Pro 61.5 trails Opus 4.8's 69.2 — but agentic tool chains are where Meta invested.",
-      "The business shift behind the model matters for readers who built on Llama. Muse Spark is closed and metered; Meta's free-weights era is not extended to this line. Zuckerberg's launch-day post framed Spark as strong agentic performance at a very low price — competitive with Grok 4.5 and well below Opus and GPT-5.6 Sol on output tokens. US developers get $20 in free API credits; EU and global API access timelines are not fully documented at launch. Consumer access is free via meta.ai Thinking mode.",
-      "For helloai's /api/recommend routing, the competitive stack reorders slightly. Muse Spark 1.1 slots fifth by Elo at 1487, above GPT-5.6 Sol at 1484 and below Grok 4.5 at 1490. It becomes the cheapest tracked frontier API on input and the strongest Meta representation helloai has ever carried — previously rejected in May when no public API existed. Teams that routed coding tasks to Qwen3.7-Max for cost should retest Muse Spark on their agent harnesses; benchmark claims are vendor-reported and eval-hygiene questions surfaced on launch day.",
-      "helloai's admission rules require a public API, proven provider, 200K+ context, and arena signal within 25 points of the set floor. Muse Spark passes on family Elo; 1.1-specific votes are hours old, so curated 1487 stands until the weekly Elo scraper matches arena aliases. The May 31 rejection of muse-spark is superseded. Meta joins Anthropic, Google, xAI, and OpenAI in the tracked frontier set — six labs, six models, one budget-agentic slot, now painted Meta blue."
     ]
   }
 ]

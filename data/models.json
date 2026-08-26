@@ -22,14 +22,15 @@
     "provider": "Meta",
     "url": "https://www.meta.ai/",
     "tag": "Budget Agentic",
-    "desc": "Meta's Muse Spark 1.2 — agentic coding upgrade co-trained with Muse Code. #2 in helloai's tracked set at 1498 Elo — cheapest agentic option we track at $1.25/$4.25 with 1M context.",
+    "desc": "Meta's Muse Spark 1.2 — agentic coding upgrade co-trained with Muse Code. #2 in helloai's tracked set at 1498 Elo — cheapest tracked API at $1.25/$4.25 with 1M context.",
     "color": "#0668E1",
     "elo": 1498,
     "cost_per_million_tokens": 1.25,
     "cost_per_million_tokens_output": 4.25,
     "context_window": 1000000,
     "strengths": [
-      "Coding & Engineering"
+      "Coding & Engineering",
+      "Honest Daily Use"
     ]
   },
   {
@@ -82,19 +83,18 @@
     ]
   },
   {
-    "id": "deepseek",
-    "name": "DeepSeek V4 Pro",
-    "provider": "DeepSeek",
-    "url": "https://api-docs.deepseek.com/quick_start/pricing/",
-    "tag": "Price Leader",
-    "desc": "DeepSeek's 1.6T MoE flagship (49B active): MIT-licensed API at $0.66/$1.98 off-peak ($1.32/$3.96 peak) with 1M context — still the cheapest tracked frontier API. Arena deepseek-v4-pro ~1458 Elo.",
-    "color": "#4D6BFE",
-    "elo": 1458,
-    "cost_per_million_tokens": 0.66,
-    "cost_per_million_tokens_output": 1.98,
-    "context_window": 1000000,
+    "id": "grok",
+    "name": "Grok 4.6",
+    "provider": "xAI",
+    "url": "https://grok.com",
+    "tag": "Agentic Code",
+    "desc": "xAI's current flagship for chat and code at $2/$6 with 500K context. Arena grok-4.6-high ~1461 Elo overall; Code Arena WebDev 1629 sits above Claude Fable 5.",
+    "color": "#EF4444",
+    "elo": 1461,
+    "cost_per_million_tokens": 2,
+    "cost_per_million_tokens_output": 6,
+    "context_window": 500000,
     "strengths": [
-      "Honest Daily Use",
       "Coding & Engineering"
     ]
   }
