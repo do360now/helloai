@@ -1,5 +1,20 @@
 [
   {
+    "slug": "openai-gpt-5-6-sol-price-cut-terminal-bench-lead",
+    "title": "OpenAI Cuts Sol's Price 20% While It Leads Terminal-Bench",
+    "excerpt": "OpenAI slashed GPT-5.6 Sol's price 20% the same week it topped Terminal-Bench 2.1 against Opus 5 — an invoice argument for a model helloai's Elo-gated table still leaves off the board.",
+    "date": "2026-08-30",
+    "category": "Analysis",
+    "readTime": "2 min",
+    "content": [
+      "OpenAI cut GPT-5.6 Sol's price 20% on August 21, 2026 — input from $5 to $4 per million tokens, output from $30 to $20 — and flagged the new rate as promotional through at least November 21. It is the third cut in the GPT-5.6 line in under a month. Terra dropped 20% on July 30. Luna dropped 80% the same day and now lists at $0.20/$1.20. The frontier tier is now being priced like the mid tier was six months ago.",
+      "The timing is what makes this interesting rather than routine. Sol posts 89.5% on Terminal-Bench 2.1, edging Claude Opus 5's 89.1% on the same benchmark. So OpenAI's most expensive current model just got cheaper in the same window it took the lead on an agentic coding benchmark against the model helloai currently ranks as the strongest coder. On raw price-per-capability, that is a real argument, and it is the first one OpenAI has had in a while.",
+      "It is not, however, an admission argument. helloai's tracked six is gated on Elo — LMArena head-to-head preference — and nothing else. Sol left the table on July 17 when Kimi K3 replaced it, and Sol was the lowest-Elo entry at the time at 1484. Terminal-Bench measures something narrow and useful: can the model drive a terminal to completion. Elo measures something broad and noisy: do humans prefer the output across everything they happen to ask. A win in the first does not move the second, and the tracked set only reads the second.",
+      "There is a wrinkle worth sitting with. The current tracked floor is Grok 4.6 at 1461 — below the 1484 Sol carried when it was dropped. Read one way, that is an inconsistency: the bar moved down after Sol left, and Sol would clear today's floor. Read another way, the July decision was made against July's field, admission is not retroactive, and re-litigating past cuts every time the floor drifts turns a ranked table into a queue of appeals. Neither reading is obviously wrong, which is usually a sign the rule is doing more work than the number behind it.",
+      "What the price cut actually changes is the invoice, and that is not nothing — at $4/$20 with a Terminal-Bench lead, Sol is a defensible pick for agentic coding workloads regardless of where it sits on any directory's table. The open question is whether an Elo-gated set should have a price input at all. If cost-per-capability never touches admission, the tracked six will keep describing which model people prefer while saying nothing about which model a team should actually buy. If it does touch admission, the criterion stops being one number and starts being a judgment call. OpenAI has spent a month making that question harder to avoid."
+    ]
+  },
+  {
     "slug": "grok-bot-cloud-teammate-local-cli",
     "title": "Grok Bot Is a Cloud Teammate. The Local CLI Runs the Site",
     "excerpt": "Grok Bot, launched August 11, is a cloud teammate with its own VM. The local grok CLI is what can actually operate a production checkout like helloai.",
@@ -132,21 +147,6 @@
       "Economics sit between Muse Spark 1.1 and the Western flagships. Muse still undercuts everyone at $1.25/$4.25. Kimi K3's $3/$15 list rate is cheaper on input than Opus 4.8 and GPT-5.6 Sol, and cache-hit traffic at $0.30 per million tokens is the real lever for agent loops that resend long prefixes. Output remains expensive relative to Grok 4.5's $6, so teams that burn reasoning tokens should profile before treating K3 as a default cost win. Flat pricing across the full 1M window — no long-context surcharge tier — is a quieter advantage for document and repo-scale jobs.",
       "Dropping GPT-5.6 Sol is the hard part of the decision. Sol still leads many agentic coding slices, including Terminal-Bench 2.1 numbers OpenAI published at launch, and OpenAI remains the default enterprise contract for a large share of teams. helloai is not saying Sol is weak; it is saying the curated comparison set only holds six rows, and Moonshot's first clear frontier API entry is more informative this week than keeping a second Western coding flagship that already has Fable, Opus, and Grok covering adjacent ground. Teams standardized on OpenAI should keep Sol in production routing regardless of the helloai table.",
       "For /api/recommend, the stack is now Anthropic (Fable 5 and Opus 4.8), Google, xAI, Meta, and Moonshot. Muse Spark keeps the budget-agentic floor; Kimi K3 fills the mid-price multimodal long-context slot that neither Muse nor Grok fully owns. The next checkpoint is July 27 weight release and whether arena votes hold once the preliminary K3 sample matures. Until then, helloai tracks the public API Moonshot is selling today — and leaves OpenAI off the six-model board for the first time since the directory launched."
-    ]
-  },
-  {
-    "slug": "chatgpt-work-vs-claude-cowork-agentic-seat-war",
-    "title": "ChatGPT Work vs Claude Cowork: The Agentic Seat War",
-    "excerpt": "OpenAI and Anthropic are no longer fighting only on LMArena — ChatGPT Work and Claude Cowork compete for the surface where finished work ships.",
-    "date": "2026-07-17",
-    "category": "Analysis",
-    "readTime": "2 min",
-    "content": [
-      "The July 2026 fight between OpenAI and Anthropic is no longer about which model tops LMArena. It is about who owns the surface where finished work ships. On July 7, Anthropic took Claude Cowork to the web at claude.ai and to iOS and Android, with remote sessions that keep running when every device is offline. Two days later, OpenAI answered with ChatGPT Work — ChatGPT, Codex, and browser automation collapsed into one agent surface powered by the GPT-5.6 family.",
-      "The data Anthropic published with the Cowork expansion should end the \"coding agents only\" framing. From 1.2 million anonymized sessions across more than 600,000 organizations in a late-May sample, business process work took 33.4% of usage, content creation 16.4%, and software development only 8.7%. Over 90% of Cowork sessions are non-coding knowledge work: reports, onboarding checklists, decks, and spreadsheet reconciliation. OpenAI's ChatGPT Work aims at the same prize — finished documents, presentations, and web apps — and is rolling out first to Pro, Enterprise, and Edu users before Plus and Business.",
-      "Under the hood, helloai still tracks the models that power those surfaces. Claude Fable 5 leads text overall at 1508 Elo, Claude Opus 4.8 sits at 1503, and GPT-5.6 Sol is at 1484 with $5/$30 per million tokens. Those gaps matter for agentic coding and long-horizon runs. They matter less once a team standardizes on a single work surface that holds their files, context, and scheduled jobs. Product lock-in is becoming the durable moat as the model layer keeps leapfrogging week to week.",
-      "The trade-off is real. Cowork's remote sessions and Max-first mobile beta favor teams already deep in Anthropic's stack; ChatGPT Work's Codex-plus-browser pitch favors teams that want one super-app for artifacts. Neither product makes models interchangeable for free — routing a hard reasoning job to Gemini 3.1 Pro or a cheap agentic loop to Muse Spark 1.1 still means leaving the seat. Teams that treat this as pure productivity will love the leverage. Teams that treat the seat as architecture should keep data portable and a second surface live for anything mission-critical.",
-      "The next model release will still move the Elo board. The more consequential question for the rest of 2026 is which work surface accumulates the habits, connectors, and unfinished multi-hour jobs that are expensive to migrate. Model scores remain the right way to pick a brain. The seat is how that brain stays in the room."
     ]
   }
 ]

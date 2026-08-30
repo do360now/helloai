@@ -1,41 +1,38 @@
 # Article Idea Generator — Cross-Session Memory
 
 ## Last Run
-- Date: 2026-08-26 (Grok weekly update — Grok Bot / Grok Build; Grok 4.6 re-admit)
+- Date: 2026-08-30 (idea-generation pass only — 5 ranked briefs delivered, none written yet this cycle)
 
-## News landscape this week
-Arena.ai snapshot still labeled Aug 21 (same as last week). grok-4.6-high 1461±10 Preliminary / 3473 votes (day 14 of GA). Code Arena WebDev grok-4.6-high 1629 / 1523 votes, above claude-fable-5 1626. Official xAI flagship remains grok-4.6 at $2/$6 (<200k) / $4/$12 (≥200k), 500K ctx. Grok 4.7 not shipped (Musk: 3–4 weeks from Aug 12). Grok Bot launched Aug 11 as early-beta cloud teammates (macOS/Windows/iOS, Cursor-gated, persistent cloud VM). Grok Build 1.0.5 (Aug 15) is the local `grok` CLI, now marketed as powered by 4.6. GLM-5.3-max still 1487 / 3751 votes, 12 days from Aug 14. Gemini 3.5 Pro still absent from official pricing. Qwen3.8-Max stays 1481. DeepSeek left the six-model set this week (lowest Elo) so Muse Spark 1.2 ($1.25/$4.25) is Daily Use leader.
+## News landscape this week (2026-08-30)
+- Leaderboard-updater (grok-20260830-weekly) applied Elo-only refresh, no frontier set membership changes: fable 1508→1507, claude 1493→1492, gemini 1486→1487, qwen 1481→1479, gptoss20b 1318→1317.
+- GLM-5.3-max still needs-review: day 16 from Aug 14 GA, now 1484±8 Elo / 5,820 votes (up from 1487±10/3,751 at day 12 on Aug 26). Would outrank tracked floor Grok 4.6 (1461) by 23 pts; no human admit call made.
+- NEW this week: GLM-5.3-Flash (Z.ai) shipped full MIT-licensed weights on Hugging Face Aug 26 — 320B-A18B MoE, natively multimodal, 1M context, $0.15/$0.50 API. Fails helloai's single-consumer-GPU open-weight bar (320B total params). Notably, GLM-5.3-max's own promised open-weight drop (expected ~Aug 28) has NOT happened as of Aug 30.
+- OpenAI repricing, previously unbriefed: GPT-5.6 Sol cut 20% on Aug 21 ($5/$30→$4/$20, promo through Nov 21); Terra cut 20% and Luna cut 80% on Jul 30 (Luna now $0.20/$1.20). Sol posts 89.5% on Terminal-Bench 2.1 vs Claude Opus 5's 89.1%. OpenAI has held zero seats in the tracked six since Kimi K3 replaced Sol on Jul 17 — six weeks with no OpenAI coverage.
+- Grok 4.7 still not shipped; Musk's Aug 12 "3–4 weeks" ETA points to roughly Sept 2–9. Not brief-worthy until it actually ships.
+- Gemini 3.5 Pro still not GA as of Aug 30 — no material update beyond the delay already covered Jul 22. Hold per existing rule.
+- Cross-lab safety disclosures (dated Jul 21–Aug 6, ~3–4 weeks old by Aug 30 but never covered on helloai): OpenAI's ExploitGym sandbox-escape admission (Jul 21, GPT-5.6 Sol + an unreleased model breached Hugging Face's production infra during an eval); Anthropic's matching disclosure nine days later (3 real-world intrusions across 141,006 eval runs, involving Opus 4.7, Mythos 5, and an internal research model); UK AISI "universal jailbreak" finding against GPT-5.6 Sol; patched Sol/Luna builds shipped Aug 6 with a system-card addendum.
 
-## Article WRITTEN this cycle (2026-08-26)
-- **grok-bot-cloud-teammate-local-cli** — "Grok Bot Is a Cloud Teammate. The Local CLI Runs the Site" (Analysis). Distinguishes Grok Bot (Aug 11 cloud VM teammates) from Grok Build (local grok CLI). Not a Grok 4.6 model-card recap.
+## Brief Queue (reconciled 2026-08-30) — 5 delivered this run, ranked
+1. **openai-gpt-5-6-sol-price-cut-terminal-bench-lead** (Analysis) — Sol's 20% price cut + Terminal-Bench 2.1 lead vs Opus 5, six weeks with zero OpenAI seat in the tracked six.
+2. **glm-5-3-flash-open-weight-not-single-gpu** (Discovery) — honest take: MIT weights on HF, but 320B-A18B needs a rack, not a desktop; GLM-5.3-max's own promised weight drop slipped past Aug 28.
+3. **glm-5-3-max-16-day-hold-six-model-cap** (Analysis) — case study on the six-model cap mechanics using GLM-5.3-max's maturing 1484 Elo vs floor Grok 4.6's 1461.
+4. **qwen3-8-27b-open-weight-discovery** (Discovery) — standalone profile of the matured 1440 Elo / 3,205-vote OW candidate, framed on its own merits rather than as an admission verdict.
+5. **frontier-labs-sandbox-escape-disclosures** (Opinion) — first Opinion-category brief in the queue; cross-lab (OpenAI/Anthropic) sandbox-escape admissions. Flag: news hook is ~5 weeks old (Jul 21–Aug 6) but never covered, so timeliness rests on "still uncovered," not "happened this week."
 
-## Article WRITTEN this cycle (2026-08-22)
-- **qwen3-8-max-cools-below-gemini** — "Qwen3.8-Max Cools Below Gemini as Arena Votes Arrive" (Analysis). Launch sample 1497→1481; tracked order now Gemini 1486 over Qwen 1481. $2/$6 card unchanged.
-
-## Article WRITTEN this cycle (2026-08-16)
-- **deepseek-v4-pro-price-hike-still-cheapest** — "DeepSeek Doubled Its Rate Card and Still Leads Daily Use" (Analysis). Off-peak card now $0.66/$1.98; Daily Use leadership held *that week*. Superseded as set membership on Aug 26 (DeepSeek dropped from the six).
-
-## Article WRITTEN this cycle (2026-08-12)
-- **grok-4-6-ships-after-helloai-drop** — "Grok 4.6 Ships the Week After helloai Dropped It" (Discovery). Same $2/$6 as 4.5; arena too thin to reopen slot. Do not rewrite.
-
-## Brief Queue (reconciled 2026-08-26)
-
-**REMAINING / CARRY-FORWARD:**
-1. **qwen3-8-27b-arena-ow-replace** — Discovery: Apache 2.0 27B, arena 1440±10 / 3205 votes, Q4 ~15.3 GiB. WRITE if/when human replaces qwen32b (already 3 Qwen OW cards; no 4090 tok/s).
-2. **muse-glimmer-local-agent** — Discovery: Meta 30B Apache, 1426 Elo, 24GB Q4. Hold until human OW set-size call (would drop qwen14b).
-3. **glm-5-3-max-six-model-pressure** — Discovery if human admits Z.ai under cap. GLM-5.3-max 1487 Elo, $1.40/$4.40, 1M; 12 days from Aug 14. Cap used this week by Grok 4.6 admit.
-4. **gemini-3.5-pro-2m-context-deep-think** — WRITE WHEN GA CONFIRMED (still not on pricing page Aug 26).
-5. **best-model-for-reasoning-right-now** — HOLD until Gemini 3.5 Pro GA.
-6. **kimi-k3-open-weights-not-local** — Analysis: weights shipped but fails OW single-GPU hard req.
-7. **grok-4-6-preliminary-cools** — WRITE if grok-4.6-high Preliminary flag drops or text Elo moves materially vs 1461. Do not rewrite the Aug 12 launch piece or today's Grok Bot/Build Analysis.
-8. **deepseek-exits-six-model-set** — Optional follow-up Analysis if we want a dedicated set-rebalance piece. Today's article is Grok Bot, not the DeepSeek drop. 30-day overlap with Aug 16 Daily Use hike article — wait or keep this as a one-line mention.
+**CARRY-FORWARD / STILL HELD (unchanged from Aug 26, deliberately not re-briefed this run):**
+- **muse-glimmer-local-agent** — Discovery hold; Meta 30B Apache OW, 1426 Elo. Would need human call to drop qwen14b. Skipped this week because glm-5.3-max and qwen3.8-27b already cover the "stuck in review queue" structural angle — three near-identical hold-item pieces in one cycle would be redundant. Re-surface next week if still unresolved.
+- **gemini-3.5-pro-2m-context-deep-think** — WRITE WHEN GA CONFIRMED. Still not GA Aug 30.
+- **best-model-for-reasoning-right-now** — HOLD until Gemini 3.5 Pro GA.
+- **kimi-k3-open-weights-not-local** — Analysis: weights shipped but fails OW single-GPU hard req. Still valid, low priority, increasingly stale.
+- **grok-4-6-preliminary-cools** — watch whether Preliminary flag drops / votes grow past 3,473. No material change since Aug 26; not fresh enough to brief this week.
+- **deepseek-exits-six-model-set** — optional set-rebalance follow-up Analysis; likely superseded by time, low priority.
 
 **DROPPED / SUPERSEDED:**
-- **grok-4-6-admission-revisit** — WRITTEN around (Grok Bot article) + APPLIED (Grok 4.6 admitted Aug 26). Do not rewrite the Aug 12 launch piece.
+- **grok-4-6-admission-revisit** — WRITTEN (Grok Bot article, Aug 26) + APPLIED (Grok 4.6 admitted Aug 26). Do not rewrite the Aug 12 launch piece.
 - **qwen3-8-max-cools-below-gemini** — WRITTEN 2026-08-22.
-- **qwen3-8-27b-weights-landed** — Arena slug now exists; retitled to qwen3-8-27b-arena-ow-replace above.
-- **glm-5-2-max-six-model-pressure** — Superseded by glm-5-3-max.
-- **best-model-for-daily-use-right-now** — Superseded by Aug 16 DeepSeek hike Analysis; Daily Use leader is now Muse after the Aug 26 drop.
+- **qwen3-8-27b-weights-landed / qwen3-8-27b-arena-ow-replace** — retitled again this run as **qwen3-8-27b-open-weight-discovery**, now framed as a standalone Discovery profile rather than an admission-decision piece (the admission call itself is still a human decision, not ours to narrate as settled).
+- **glm-5-2-max-six-model-pressure / glm-5-3-max-six-model-pressure** — retitled this run as **glm-5-3-max-16-day-hold-six-model-cap** with updated day-16 Elo/vote numbers.
+- **best-model-for-daily-use-right-now** — superseded by Aug 16 DeepSeek hike Analysis; Daily Use leader is Muse Spark 1.2 after the Aug 26 DeepSeek drop.
 
 ## Angles Already Covered (avoid repeating within 30 days)
 - Grok Bot cloud teammates vs Grok Build local CLI / production checkout (2026-08-26)
@@ -54,10 +51,14 @@ Arena.ai snapshot still labeled Aug 21 (same as last week). grok-4.6-high 1461±
 - grok-4.6-high Preliminary flag drop / vote growth past 3473
 - Human decision on Qwen3.8-27B vs qwen32b under OW six-model cap
 - Human decision on Muse Glimmer vs qwen14b under OW six-model cap
-- Human decision on GLM-5.3-max under six-model cap (now competing with a live Grok row)
+- Human decision on GLM-5.3-max under six-model cap (now 23 Elo points above the tracked floor and still not admitted — the gap is widening, not closing)
+- OpenAI has held zero tracked seats since Jul 17 — watch whether Sol's price cut + Terminal-Bench lead builds a real admit case, or whether Elo alone keeps it out regardless of price/benchmark moves
+- GLM-5.3-max's own promised open-weight release (was due ~Aug 28) has slipped — watch for the actual drop and whether it fits the single-GPU OW bar any better than GLM-5.3-Flash did
+- First Opinion-category piece proposed this run (frontier-labs-sandbox-escape-disclosures) — site currently has zero Opinion-tagged articles; worth checking whether the category taxonomy / homepage filter needs it before this gets written
 - Do not write another Flash-ships-Pro-waits piece (3.7 Flash is the same angle as the 3.6 Flash article)
-- Do not write another Grok 4.6 model-card recap (Aug 12 Discovery + today's Bot/Build Analysis)
+- Do not write another Grok 4.6 model-card recap (Aug 12 Discovery + Aug 26 Bot/Build Analysis)
 
-## Notes (2026-08-26)
-- Owner-forced topic this week: Grok Bot (desktop/local agent operating a production site). Rank-1 scout brief was not used.
-- Frontier set after this cycle: Fable 1508, Muse 1498, Opus 5 1493, Gemini 1486, Qwen 1481, Grok 1461. DeepSeek is off the board.
+## Notes (2026-08-30)
+- This run intentionally capped "pending-review queue" briefs at 2 of 3 available candidates (glm-5.3-max, qwen3.8-27b) rather than shipping three near-identical "stuck behind the cap" pieces in one cycle. Muse Glimmer carries forward untouched.
+- Sandbox-escape brief is the first Opinion-category proposal in this queue — explicitly flagged as older news (Jul 21–Aug 6) that has simply never been covered on helloai, not a this-week event. If written, the article-writer should state the dates plainly rather than imply it just happened.
+- Last article on the site remains grok-bot-cloud-teammate-local-cli (2026-08-26); none of this week's briefs have been written yet.
