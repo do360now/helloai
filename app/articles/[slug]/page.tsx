@@ -72,7 +72,7 @@ export default async function ArticlePage({
             author: {
               '@type': 'Person',
               name: 'Clement Machado',
-              url: 'https://x.com/MachadoClement',
+              url: 'https://x.com/helloaix',
             },
             publisher: {
               '@type': 'Organization',

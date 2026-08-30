@@ -117,6 +117,24 @@ Any AI agent can self-discover the API via `/.well-known/ai-plugin.json`, read t
 ### Scoring logic (data/recommend.ts)
 Shared between `/api/recommend` and the interactive homepage filter. Hard filters (cost, context, provider) exclude models first. Remaining models get weighted scores: task match (40%), Elo (35%), cost efficiency (15%), context size (10%). With no task, weights shift to Elo (55%), cost (25%), context (20%).
 
+### Benchmark sources — what is and isn't ingested
+
+**Elo is the only quantitative ranking signal.** It comes from LMArena only, via `scripts/arena.py`:
+- Primary: nakasyou `lmarena-history` JSON snapshots
+- Fallback: `fboulnois/llm-leaderboard-csv` GitHub releases
+- Curated Elos in `models.json` stay authoritative over both
+
+`models.json` has **no benchmark fields** — the schema is the 12 keys listed above. (`open_weight_models.json` separately carries `bench_source` for first-party throughput numbers; unrelated to any external leaderboard.)
+
+**ARC Prize (`https://arcprize.org/leaderboard`) is NOT ingested anywhere.** ARC-AGI appears in exactly three places, all hand-written editorial prose that no script verifies or refreshes:
+- `data/models.json` — Gemini `desc` ("77% on ARC-AGI-2")
+- `data/models.json` — Opus 5 `desc` ("3x the next-best model on ARC-AGI-3")
+- `data/categories.json` — "Hard Reasoning & Science" `insight` (namechecks GPQA + ARC-AGI subsets)
+
+Plus `.claude/agents/article-idea-generator.md` lists ARC-AGI as a benchmark keyword to watch when scouting article topics — a search hint, not an ingestion path.
+
+**Open question (raised 2026-07-25, not yet decided):** should ARC-AGI become a tracked signal? Considerations captured so far — ARC-AGI is a narrow abstract-reasoning benchmark, so folding it into `elo` would muddy a number that currently means one specific thing (LMArena head-to-head preference). Sketched alternative: a separate `arc_agi_score` field surfaced on the "Hard Reasoning & Science" category, optionally weighted only when `task=reasoning`. Also unresolved: those `desc` percentages currently drift silently — there is no equivalent of `check_cluster_bench.py` guarding them.
+
 ## Data Update Workflow
 
 For the full weekly update, use the `/weekly-update` skill.

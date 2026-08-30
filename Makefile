@@ -1,4 +1,4 @@
-VERSION=2.14.49
+VERSION=2.14.56
 
 # ─── Rootless Docker ─────────────────────────────────────
 # Point at the rootless per-user socket. ?= preserves any DOCKER_HOST
@@ -277,7 +277,7 @@ test_azure_auth:
 test_azure_access:
 	@echo "Testing access to Azure resources..."
 	@az group show --name $(AZURE_RG) --output table || (echo "❌ Cannot access resource group $(AZURE_RG)"; exit 1)
-	@az webapp show --name $(AZURE_APP) --resource-group $(AZURE_RG) --output table || (echo "❌ Cannot access webapp $(AZURE_APP)"; exit 1)
+	@az webapp show --name $(AZURE_APP) --resource-group $(AZURE_RG) --query "{name:name,state:state,location:location}" --output table || (echo "❌ Cannot access webapp $(AZURE_APP)"; exit 1)
 	@echo "✅ Azure resources accessible"
 
 test_deploy: test_azure_auth test_azure_access

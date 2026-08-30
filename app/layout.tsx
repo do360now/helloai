@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     'AI comparison', 'AI leaderboard', 'Claude', 'Gemini', 'GPT',
     'Grok', 'AI chatbot', 'best AI model', 'LLM comparison',
   ],
-  authors: [{ name: 'Clement Machado', url: 'https://x.com/MachadoClement' }],
+  authors: [{ name: 'Clement Machado', url: 'https://x.com/helloaix' }],
   creator: 'Clement Machado',
   alternates: {
     canonical: 'https://helloai.com',
@@ -43,7 +43,7 @@ export const metadata: Metadata = {
     title: 'Hello, AI — Your Unbiased Guide to the World\'s Smartest AIs',
     description:
       'Compare Claude, Gemini, GPT, and Grok with honest weekly leaderboards, cost data, and task-specific recommendations. No hype, just real benchmarks.',
-    creator: '@MachadoClement',
+    creator: '@helloaix',
   },
   robots: {
     index: true,
@@ -79,7 +79,7 @@ export default function RootLayout({
               author: {
                 '@type': 'Person',
                 name: 'Clement Machado',
-                url: 'https://x.com/MachadoClement',
+                url: 'https://x.com/helloaix',
               },
             }),
           }}

@@ -191,6 +191,16 @@ make deploy
 
 > **Note:** `make weekly_update` runs only the deterministic Python Elo scraper (`scripts/weekly_update.py`). It does **not** run leaderboard drift analysis or article generation — use `/weekly-update` for the full cycle.
 
+## Benchmark sources
+
+Elo is the **only** quantitative ranking signal on the site, and it comes from LMArena only (via `scripts/arena.py` — nakasyou `lmarena-history` JSON, falling back to `fboulnois/llm-leaderboard-csv` releases; curated Elos in `models.json` override both). The `/api/recommend` scoring weights use nothing else: task match 40%, Elo 35%, cost 15%, context 10%.
+
+`models.json` carries no benchmark fields. `open_weight_models.json` separately carries `bench_source` for first-party throughput measured on the local GPU cluster — unrelated to any external leaderboard.
+
+**ARC Prize (arcprize.org/leaderboard) is not ingested.** ARC-AGI appears only as hand-written prose in two model `desc` fields (Gemini, Opus 5) and one `categories.json` insight, plus as a search keyword in the `article-idea-generator` agent spec. No script verifies or refreshes those numbers, so they can drift silently.
+
+Whether to track ARC-AGI as a real signal is an open question (raised 2026-07-25). Leading idea: a separate `arc_agi_score` field surfaced on "Hard Reasoning & Science" and weighted only for `task=reasoning`, rather than blending it into `elo` — Elo currently means one specific thing (LMArena head-to-head preference) and mixing a narrow abstract-reasoning benchmark into it would muddy that.
+
 ## Data update workflow (manual one-offs)
 
 1. Edit `/data/*.json`
@@ -228,4 +238,4 @@ All agents use a **generator-verifier pattern**: the executor does the work, the
 
 ---
 
-Curated by [Clement Machado](https://clementmachado.com) · [@MachadoClement](https://x.com/MachadoClement) · No ads, no affiliate links
+Curated by [Clement Machado](https://clementmachado.com) · [@helloaix](https://x.com/helloaix) · No ads, no affiliate links

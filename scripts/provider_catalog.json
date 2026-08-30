@@ -41,12 +41,16 @@
       "catalog_name_patterns": ["Qwen([0-9.]+)-Max", "qwen([0-9.]+)-max"]
     },
     {
-      "model_id": "deepseek",
-      "provider": "DeepSeek",
-      "catalog_url": "https://api-docs.deepseek.com/quick_start/pricing/",
-      "news_url": "https://api-docs.deepseek.com/news/news260424",
-      "tracked_name_pattern": "DeepSeek V([0-9.]+) Pro",
-      "catalog_name_patterns": ["DeepSeek-V([0-9.]+)-Pro", "deepseek-v([0-9.]+)-pro", "DeepSeek V([0-9.]+) Pro"]
+      "model_id": "grok",
+      "provider": "xAI",
+      "catalog_url": "https://docs.x.ai/developers/models",
+      "news_url": "https://x.ai/news/grok-4-6",
+      "tracked_name_pattern": "Grok ([0-9.]+)",
+      "catalog_name_patterns": ["Grok ([0-9.]+)"],
+      "recommendation_patterns": [
+        "use Grok ([0-9.]+)",
+        "For everything else, including code, use Grok ([0-9.]+)"
+      ]
     }
   ]
 }

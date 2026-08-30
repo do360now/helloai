@@ -100,9 +100,10 @@ _NAME_MAP: dict[str, list[str]] = {
         "qwen3.8-max",
         "qwen3.8-max-preview",
     ],
-    "deepseek": [
-        "deepseek-v4-pro",
-        "deepseek-v4-pro-high-preview",
+    "grok": [
+        "grok-4.6-high",
+        "grok-4.6",
+        "grok-4.5",
     ],
 }
 
