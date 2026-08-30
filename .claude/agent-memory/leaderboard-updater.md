@@ -1,5 +1,15 @@
 # leaderboard-updater agent memory
 
+## Human decision: 2026-08-30 — Qwen3.8-27B admitted, glm-5.3-max & muse-glimmer held
+
+Following the 2026-08-30 Grok weekly run (Elo-only drift, no set changes; 3 candidates flagged needs-review), the owner reviewed all three pending candidates directly:
+
+- **glm-5.3-max** (frontier, 1484±8/5820 votes, would drop Grok 4.6): **HELD** — dropping Grok 4 days after admitting it is editorial whiplash. Revisit if Grok's Elo gap widens further or GLM's votes keep climbing.
+- **muse-glimmer** (open-weight, 1426±10/3718 votes, new provider, would drop qwen14b): **HELD** — qwen14b's smallest-footprint/"Two-GPU Pick" niche is a real positioning gap muse-glimmer doesn't fill. Revisit with more votes or a clearer case to drop qwen14b.
+- **Qwen3.8-27B** (open-weight, same-provider replace of qwen32b): **ADMITTED**. New id `qwen27b`. +93 Elo (1440 vs 1347) at 15.3 GiB Q4 vs qwen32b's 20 GB — a real efficiency gain even without a first-party cluster bench yet (community-reported 65 tok/s on RTX 4090, no `bench_source` field since it's not our own measurement). `open_weight_models.json` re-sorted (1440 slots in right after gemma). `arena.py._OPEN_WEIGHT_NAME_MAP` swapped `qwen32b: [qwen3-32b]` → `qwen27b: [qwen3.8-27b]`. Open-weight Qwen count drops from 3 cards to 2.
+- Audit log: 4 new records appended under `run_id: human-20260830-review` in `leaderboard-changes.jsonl`.
+- **Watch next cycle**: cluster bench for qwen27b (no first-party number yet — first-party measurement should supersede the vendor/community 65 tok/s figure once available).
+
 ## Last run: 2026-08-26 weekly (Grok) — Grok 4.6 re-admit, drop DeepSeek
 
 ### Applied

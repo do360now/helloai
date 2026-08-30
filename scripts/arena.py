@@ -112,8 +112,8 @@ _OPEN_WEIGHT_NAME_MAP: dict[str, list[str]] = {
         "gemma-4-31b",
         "gemma-4-31b-it",
     ],
-    "qwen32b": [
-        "qwen3-32b",
+    "qwen27b": [
+        "qwen3.8-27b",
     ],
     "mistral": [
         "mistral-small-2506",
