@@ -30,8 +30,8 @@ function ModelsSection() {
     <section id="models" className="models-section">
       <SectionHeader
         label="Featured Models"
-        title="Pick your companion"
-        subtitle="One-click access to today's frontier leaders. Ranked by capability, updated weekly."
+        title="This week&apos;s frontier"
+        subtitle="Six APIs, ranked by capability. Filter by task or price. Updated weekly."
       />
       <ModelFilter
         categories={categories}
