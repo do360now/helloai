@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import type { Model } from '@/data/types';
+import { formatUsdPerMillion, formatContextWindow } from '@/data';
 
 function hexToRgb(hex: string): string {
   const r = parseInt(hex.slice(1, 3), 16);
@@ -59,6 +60,12 @@ export default function ModelCard({
       <div className="model-provider">{model.provider}</div>
       <h3 className="model-name">{model.name}</h3>
       <p className="model-desc">{model.desc}</p>
+
+      <div className="model-specs">
+        <span className="model-spec">{formatUsdPerMillion(model.cost_per_million_tokens)} in</span>
+        <span className="model-spec">{formatUsdPerMillion(model.cost_per_million_tokens_output)} out</span>
+        <span className="model-spec">{formatContextWindow(model.context_window)}</span>
+      </div>
 
       <div className="model-footer">
         <span className="model-elo">~{model.elo} Elo</span>

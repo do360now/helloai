@@ -482,6 +482,26 @@ body {
   transition: color 0.3s;
 }
 
+.model-specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 20px;
+}
+
+.model-spec {
+  font-size: 11px;
+  font-family: 'JetBrains Mono', var(--font-geist-mono), monospace;
+  font-weight: 600;
+  color: rgba(255,255,255,0.5);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 6px;
+  padding: 3px 8px;
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
 /* ─── OPEN WEIGHT SECTION ───────────────────────────────── */
 .ow-section {
   padding: 100px 24px;
