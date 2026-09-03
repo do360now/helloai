@@ -3,9 +3,8 @@
 import { useState, useEffect, useMemo } from 'react';
 import { Nav, Hero, ModelCard, CategoryIcon, SectionHeader, ArticleCard, OpenWeightCard } from './components';
 import ModelFilter from './components/ModelFilter';
-import { getSiteConfig, getModels, getCategories, getArticles, getOpenWeightModels, formatDate } from '@/data';
+import { getSiteConfig, getModels, getCategories, getArticles, getOpenWeightModels, formatDate, formatUsdPerMillion, formatContextWindow } from '@/data';
 import { scoreAndRank } from '@/data/recommend';
-import { eloBarWidth } from '@/data/leaderboard';
 
 const config = getSiteConfig();
 const models = getModels();
@@ -61,50 +60,43 @@ function ModelsSection() {
 }
 
 function LeaderboardSection() {
-  const maxElo = Math.max(...models.map((x) => x.elo));
-  const minElo = Math.min(...models.map((x) => x.elo));
-
   return (
     <section id="leaderboard" className="leaderboard-section">
       <div className="leaderboard-inner">
         <SectionHeader
           label="Leaderboard"
-          title="Who's actually winning"
-          subtitle="Elo ratings from Chatbot Arena blind votes. These shift weekly — here's the current snapshot."
+          title="This week's ranking"
+          subtitle="LMArena text-overall Elo with list price and context. Updated weekly."
         />
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-          {models.map((m, i) => {
-            const barWidth = eloBarWidth(m.elo, minElo, maxElo);
-            return (
-              <div
-                key={m.id}
-                className="leaderboard-row"
-                style={{ animationDelay: `${i * 0.08}s` }}
-              >
-                <span className={`leaderboard-rank ${i === 0 ? 'leaderboard-rank-1' : 'leaderboard-rank-other'}`}>
-                  {i + 1}
-                </span>
-                <div className="leaderboard-info">
-                  <div className="leaderboard-info-row">
-                    <div>
-                      <span className="leaderboard-model-name">{m.name}</span>
-                      <span className="leaderboard-provider">{m.provider}</span>
-                    </div>
-                    <span className="leaderboard-elo" style={{ color: m.color }}>{m.elo}</span>
+        <div className="leaderboard-list">
+          {models.map((m, i) => (
+            <a
+              key={m.id}
+              href={m.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="leaderboard-row"
+              style={{ animationDelay: `${i * 0.08}s` }}
+            >
+              <span className={`leaderboard-rank ${i === 0 ? 'leaderboard-rank-1' : 'leaderboard-rank-other'}`}>
+                {i + 1}
+              </span>
+              <div className="leaderboard-info">
+                <div className="leaderboard-info-row">
+                  <div>
+                    <span className="leaderboard-model-name">{m.name}</span>
+                    <span className="leaderboard-provider">{m.provider}</span>
                   </div>
-                  <div className="elo-bar-bg">
-                    <div
-                      className="elo-bar-fill"
-                      style={{
-                        width: `${barWidth}%`,
-                        background: `linear-gradient(90deg, ${m.color}90, ${m.color}40)`,
-                      }}
-                    />
-                  </div>
+                  <span className="leaderboard-elo" style={{ color: m.color }}>{m.elo}</span>
+                </div>
+                <div className="leaderboard-metrics">
+                  <span>{formatUsdPerMillion(m.cost_per_million_tokens)} in</span>
+                  <span>{formatUsdPerMillion(m.cost_per_million_tokens_output)} out</span>
+                  <span>{formatContextWindow(m.context_window)}</span>
                 </div>
               </div>
-            );
-          })}
+            </a>
+          ))}
         </div>
       </div>
     </section>
