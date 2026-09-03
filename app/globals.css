@@ -565,6 +565,22 @@ body {
 
 .leaderboard-inner { max-width: 800px; margin: 0 auto; }
 
+.leaderboard-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.leaderboard-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  font-family: 'JetBrains Mono', var(--font-geist-mono), monospace;
+  font-size: 12px;
+  color: rgba(255,255,255,0.45);
+  letter-spacing: 0.02em;
+}
+
 .leaderboard-row {
   display: flex;
   align-items: center;
@@ -574,6 +590,15 @@ body {
   background: rgba(255,255,255,0.02);
   border: 1px solid rgba(255,255,255,0.05);
   animation: fadeUp 0.5s both;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s, background 0.2s, transform 0.2s;
+}
+
+.leaderboard-row:hover {
+  border-color: rgba(0,229,160,0.25);
+  background: rgba(255,255,255,0.04);
+  transform: translateY(-1px);
 }
 
 .leaderboard-rank {
@@ -615,19 +640,6 @@ body {
   font-family: 'JetBrains Mono', var(--font-geist-mono), monospace;
   font-size: 14px;
   font-weight: 700;
-}
-
-.elo-bar-bg {
-  height: 4px;
-  border-radius: 2px;
-  background: rgba(255,255,255,0.05);
-  overflow: hidden;
-}
-
-.elo-bar-fill {
-  height: 100%;
-  border-radius: 2px;
-  transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* ─── INSIGHTS / CATEGORIES ─────────────────────────────── */
