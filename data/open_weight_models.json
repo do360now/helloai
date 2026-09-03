@@ -30,7 +30,7 @@
     "tag": "Coding Champion",
     "desc": "Alibaba's Qwen3.8 generation dense flagship, replacing the Qwen3 32B card at a smaller footprint: 27B parameters, 262K native context, and hybrid tool-use. Fits a single RTX 4090 at Q4 (~15.3 GiB weights); community-reported 65 tok/s decode. Apache 2.0.",
     "color": "#5B4AE8",
-    "elo": 1440,
+    "elo": 1436,
     "context_window": 262144,
     "strengths": [
       "Coding & Engineering",
@@ -106,7 +106,7 @@
     "provider": "OpenAI",
     "url": "https://huggingface.co/openai/gpt-oss-20b",
     "tag": "OpenAI Local",
-    "desc": "OpenAI's Apache 2.0 MoE (~21B total / ~3.6B active). Native MXFP4 fits ~16 GB; we measured 53.73 tok/s on the budget two-GPU cluster — the fastest open-weight card we track. Arena ~1318 Elo.",
+    "desc": "OpenAI's Apache 2.0 MoE (~21B total / ~3.6B active). Native MXFP4 fits ~16 GB; we measured 53.73 tok/s on the budget two-GPU cluster — the fastest open-weight card we track. Arena ~1317 Elo.",
     "color": "#10A37F",
     "elo": 1317,
     "context_window": 131072,

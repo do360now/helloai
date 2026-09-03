@@ -70,6 +70,8 @@ _TIMEOUT = 20
 # LMArena adds new model versions.
 _NAME_MAP: dict[str, list[str]] = {
     "fable": [
+        "claude-fable-5.1-max",
+        "claude-fable-5.1",
         "claude-fable-5",
     ],
     "claude": [
@@ -92,7 +94,10 @@ _NAME_MAP: dict[str, list[str]] = {
         "gemini-3-flash",
     ],
     "muse": [
+        "muse-spark-1.3",
+        "muse-spark-1.3 (xHigh)",
         "muse-spark-1.2",
+        "muse-spark-1.2 (xHigh)",
         "muse-spark-1.1",
         "muse-spark",
     ],

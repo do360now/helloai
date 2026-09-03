@@ -1,15 +1,15 @@
 [
   {
     "name": "Overall Preference",
-    "leader": "Claude Fable 5",
-    "insight": "Highest Elo in the tracked set at 1508 on LMArena text overall. Mythos-class capability with conservative safety fallbacks to Opus on flagged queries.",
+    "leader": "Claude Fable 5.1",
+    "insight": "Highest Elo in the tracked set at 1504 on LMArena text overall. Mythos-class capability with cheaper cache reads than Fable 5 and more precise cyber/biology safeguards.",
     "icon": "trophy",
     "color": "#FBBF24"
   },
   {
     "name": "Coding & Engineering",
-    "leader": "Claude Fable 5",
-    "insight": "95.0% on SWE-bench Verified and 80% on SWE-bench Pro — still the long-horizon agentic coding pick when the 2× price premium over Opus 5 is justified.",
+    "leader": "Claude Fable 5.1",
+    "insight": "Leads Code Arena WebDev at 1765 — well above Qwen3.8-Max and Grok 4.6. Same $10/$50 list as Fable 5, with cache reads cut to $0.25.",
     "icon": "code",
     "color": "#00E5A0"
   },
@@ -22,7 +22,7 @@
   },
   {
     "name": "Honest Daily Use",
-    "leader": "Muse Spark 1.2",
+    "leader": "Muse Spark 1.3",
     "insight": "Cheapest frontier API we track at $1.25/$4.25 with 1M context — the default when token volume dominates and Mythos-class quality is not required.",
     "icon": "chat",
     "color": "#F472B6"

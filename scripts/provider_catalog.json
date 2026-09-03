@@ -4,9 +4,9 @@
       "model_id": "fable",
       "provider": "Anthropic",
       "catalog_url": "https://platform.claude.com/docs/en/about-claude/pricing",
-      "news_url": "https://www.anthropic.com/news",
-      "tracked_name_pattern": "Claude Fable ([0-9]+)",
-      "catalog_name_patterns": ["Claude Fable ([0-9]+)"]
+      "news_url": "https://www.anthropic.com/claude-fable-and-mythos-5-1",
+      "tracked_name_pattern": "Claude Fable ([0-9.]+)",
+      "catalog_name_patterns": ["Claude Fable ([0-9.]+)"]
     },
     {
       "model_id": "claude",
@@ -27,8 +27,8 @@
     {
       "model_id": "muse",
       "provider": "Meta",
-      "catalog_url": "https://ai.meta.com/blog/",
-      "news_url": "https://ai.meta.com/blog/",
+      "catalog_url": "https://developer.meta.com/ai/models/muse-spark/",
+      "news_url": "https://research.meta.ai/blog/introducing-muse-spark-1-3",
       "tracked_name_pattern": "Muse Spark ([0-9.]+)",
       "catalog_name_patterns": ["Muse Spark ([0-9.]+)", "muse-spark-([0-9.]+)"]
     },
