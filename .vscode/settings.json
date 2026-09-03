@@ -1,0 +1,7 @@
+{
+    "python.terminal.activateEnvironment": false,
+    "python-envs.terminal.autoActivationType": "off",
+    "python-envs.workspaceSearchPaths": [
+        "*/.venv"
+    ]
+}

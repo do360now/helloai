@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AH-64 Apache - Three.js</title>
+    <style>
+        body { margin: 0; overflow: hidden; background: #1a1a2e; }
+        #info {
+            position: absolute; top: 10px; left: 10px; color: white;
+            font-family: monospace; pointer-events: none; z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div id="info">AH-64 Apache | Scroll to Zoom | Drag to Rotate</div>
+
+    <!-- Import Map for clean module loading without bundler -->
+    <script type="importmap">
+    {
+        "imports": {
+            "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+            "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+        }
+    }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'three';
+        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+        // Uncomment below when you have a real .glb file:
+        // import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+
+        // --- SCENE SETUP ---
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x87CEEB);
+        scene.fog = new THREE.Fog(0x87CEEB, 20, 100);
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+        camera.position.set(8, 5, 10);
+
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.shadowMap.enabled = true;
+        document.body.appendChild(renderer.domElement);
+
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.target.set(0, 1, 0);
+
+        // --- LIGHTING ---
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+        scene.add(ambientLight);
+
+        const dirLight = new THREE.DirectionalLight(0xffffff, 1.5);
+        dirLight.position.set(10, 20, 10);
+        dirLight.castShadow = true;
+        dirLight.shadow.mapSize.set(2048, 2048);
+        scene.add(dirLight);
+
+        // --- GROUND ---
+        const groundGeo = new THREE.PlaneGeometry(200, 200);
+        const groundMat = new THREE.MeshStandardMaterial({ color: 0x3b5e2b, roughness: 0.9 });
+        const ground = new THREE.Mesh(groundGeo, groundMat);
+        ground.rotation.x = -Math.PI / 2;
+        ground.receiveShadow = true;
+        scene.add(ground);
+
+        // =============================================
+        // PROCEDURAL AH-64 APACHE (Code-Built Model)
+        // Replace this section with GLTFLoader for realism
+        // =============================================
+        function createProceduralApache() {
+            const apache = new THREE.Group();
+            const oliveDrab = new THREE.MeshStandardMaterial({ color: 0x4B5320, roughness: 0.7 });
+            const darkMetal = new THREE.MeshStandardMaterial({ color: 0x222222, roughness: 0.4 });
+            const glass = new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.1, metalness: 0.8 });
+
+            // Fuselage
+            const bodyGeo = new THREE.BoxGeometry(1.2, 1.4, 4.5);
+            const body = new THREE.Mesh(bodyGeo, oliveDrab);
+            body.position.y = 1.5;
+            body.castShadow = true;
+            apache.add(body);
+
+            // Cockpit (Tandem seating - stepped)
+            const cockpitGeo = new THREE.BoxGeometry(1.0, 0.8, 2.0);
+            const cockpit = new THREE.Mesh(cockpitGeo, glass);
+            cockpit.position.set(0, 1.8, -1.8);
+            cockpit.rotation.x = 0.3;
+            apache.add(cockpit);
+
+            // Tail Boom
+            const tailGeo = new THREE.BoxGeometry(0.5, 0.5, 4.0);
+            const tail = new THREE.Mesh(tailGeo, oliveDrab);
+            tail.position.set(0, 1.6, 3.5);
+            tail.rotation.x = 0.15;
+            tail.castShadow = true;
+            apache.add(tail);
+
+            // Vertical Stabilizer
+            const vStabGeo = new THREE.BoxGeometry(0.1, 1.5, 1.0);
+            const vStab = new THREE.Mesh(vStabGeo, oliveDrab);
+            vStab.position.set(0, 2.5, 5.2);
+            apache.add(vStab);
+
+            // Main Rotor Mast
+            const mastGeo = new THREE.CylinderGeometry(0.15, 0.15, 0.8);
+            const mast = new THREE.Mesh(mastGeo, darkMetal);
+            mast.position.set(0, 2.6, 0);
+            apache.add(mast);
+
+            // Main Rotor Blades (4-blade system)
+            const rotorGroup = new THREE.Group();
+            rotorGroup.position.set(0, 3.0, 0);
+            const bladeGeo = new THREE.BoxGeometry(7.5, 0.05, 0.35);
+            for (let i = 0; i < 4; i++) {
+                const blade = new THREE.Mesh(bladeGeo, darkMetal);
+                blade.rotation.y = (Math.PI / 2) * i;
+                blade.castShadow = true;
+                rotorGroup.add(blade);
+            }
+            apache.add(rotorGroup);
+            apache.userData.rotor = rotorGroup; // Store ref for animation
+
+            // Tail Rotor
+            const tailRotorGroup = new THREE.Group();
+            tailRotorGroup.position.set(0.3, 2.8, 5.2);
+            const tBladeGeo = new THREE.BoxGeometry(1.8, 0.05, 0.15);
+            for (let i = 0; i < 4; i++) {
+                const tb = new THREE.Mesh(tBladeGeo, darkMetal);
+                tb.rotation.z = (Math.PI / 2) * i;
+                tailRotorGroup.add(tb);
+            }
+            apache.add(tailRotorGroup);
+            apache.userData.tailRotor = tailRotorGroup;
+
+            // Stub Wings + Weapon Pylons
+            const wingGeo = new THREE.BoxGeometry(3.5, 0.15, 0.8);
+            const wings = new THREE.Mesh(wingGeo, oliveDrab);
+            wings.position.set(0, 1.2, 0.3);
+            wings.castShadow = true;
+            apache.add(wings);
+
+            // Rocket Pods (Hydra 70)
+            const podGeo = new THREE.CylinderGeometry(0.2, 0.2, 1.2, 8);
+            const podL = new THREE.Mesh(podGeo, darkMetal);
+            podL.rotation.x = Math.PI / 2;
+            podL.position.set(-1.5, 1.0, 0.3);
+            apache.add(podL);
+            const podR = podL.clone();
+            podR.position.set(1.5, 1.0, 0.3);
+            apache.add(podR);
+
+            // Chain Gun (M230)
+            const gunGeo = new THREE.CylinderGeometry(0.05, 0.05, 1.0);
+            const gun = new THREE.Mesh(gunGeo, darkMetal);
+            gun.rotation.x = Math.PI / 2;
+            gun.position.set(0, 0.9, -2.2);
+            apache.add(gun);
+
+            // Landing Gear (Tailwheel type)
+            const gearMat = new THREE.MeshStandardMaterial({ color: 0x333333 });
+            const mainGearGeo = new THREE.CylinderGeometry(0.05, 0.05, 1.0);
+            const lgL = new THREE.Mesh(mainGearGeo, gearMat);
+            lgL.position.set(-0.8, 0.7, 0.5);
+            lgL.rotation.z = 0.3;
+            apache.add(lgL);
+            const lgR = lgL.clone();
+            lgR.position.set(0.8, 0.7, 0.5);
+            lgR.rotation.z = -0.3;
+            apache.add(lgR);
+
+            // Wheels
+            const wheelGeo = new THREE.TorusGeometry(0.15, 0.06, 8, 16);
+            const wL = new THREE.Mesh(wheelGeo, darkMetal);
+            wL.position.set(-1.0, 0.2, 0.5);
+            wL.rotation.y = Math.PI / 2;
+            apache.add(wL);
+            const wR = wL.clone();
+            wR.position.set(1.0, 0.2, 0.5);
+            apache.add(wR);
+            const tailWheel = new THREE.Mesh(new THREE.TorusGeometry(0.1, 0.04, 8, 16), darkMetal);
+            tailWheel.position.set(0, 0.2, 4.5);
+            tailWheel.rotation.y = Math.PI / 2;
+            apache.add(tailWheel);
+
+            return apache;
+        }
+
+        const apache = createProceduralApache();
+        scene.add(apache);
+
+        // =============================================
+        // GLTF LOADER TEMPLATE (Uncomment to use real model)
+        // =============================================
+        /*
+        const loader = new GLTFLoader();
+        loader.load('path/to/ah64-apache.glb', (gltf) => {
+            const model = gltf.scene;
+            model.scale.set(1, 1, 1);
+            model.traverse((child) => {
+                if (child.isMesh) {
+                    child.castShadow = true;
+                    child.receiveShadow = true;
+                }
+            });
+            scene.remove(apache); // Remove procedural fallback
+            scene.add(model);
+        }, undefined, (error) => console.error(error));
+        */
+
+        // --- ANIMATION LOOP ---
+        const clock = new THREE.Clock();
+
+        function animate() {
+            requestAnimationFrame(animate);
+            const delta = clock.getDelta();
+
+            // Spin rotors
+            if (apache.userData.rotor) {
+                apache.userData.rotor.rotation.y += 15 * delta;
+            }
+            if (apache.userData.tailRotor) {
+                apache.userData.tailRotor.rotation.x += 20 * delta;
+            }
+
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // --- RESIZE HANDLER ---
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+</html>

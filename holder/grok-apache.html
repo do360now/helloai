@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AH-64E Apache — Three.js</title>
+  <style>
+    :root {
+      --bg: #080a12;
+      --mint: #00e5a0;
+      --ink: #d7e0ea;
+      --dim: #8b97a8;
+    }
+    html, body { margin: 0; height: 100%; overflow: hidden; background: var(--bg); }
+    canvas { display: block; }
+    #hud {
+      position: absolute; inset: 0; pointer-events: none;
+      font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+      color: var(--ink); z-index: 2;
+    }
+    #title {
+      position: absolute; top: 18px; left: 20px;
+      text-transform: uppercase; letter-spacing: 0.18em;
+    }
+    #title h1 {
+      margin: 0; font-size: 14px; font-weight: 600; color: var(--mint);
+    }
+    #title p { margin: 6px 0 0; font-size: 11px; color: var(--dim); letter-spacing: 0.08em; }
+    #help {
+      position: absolute; left: 20px; bottom: 18px; font-size: 11px;
+      color: var(--dim); line-height: 1.7; letter-spacing: 0.04em;
+    }
+    #help b { color: var(--ink); font-weight: 600; }
+    #badge {
+      position: absolute; top: 18px; right: 20px; text-align: right;
+      font-size: 11px; color: var(--dim); letter-spacing: 0.12em;
+    }
+  </style>
+</head>
+<body>
+  <div id="hud">
+    <div id="title">
+      <h1>AH-64E Apache Guardian</h1>
+      <p>Procedural Three.js · 1 unit = 1 meter</p>
+    </div>
+    <div id="badge">HELLFIRE · HYDRA 70 · M230</div>
+    <div id="help">
+      <b>Drag</b> orbit · <b>Scroll</b> zoom · <b>1</b> olive · <b>2</b> desert<br />
+      <b>Space</b> rotors · <b>H</b> hover · <b>L</b> Longbow · <b>F</b> fly-around
+    </div>
+  </div>
+
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+
+  <script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+    import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+
+    // ---------------------------------------------------------------------------
+    // Scene
+    // ---------------------------------------------------------------------------
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x6f8494);
+    scene.fog = new THREE.Fog(0x8a9aaa, 40, 160);
+
+    const camera = new THREE.PerspectiveCamera(42, innerWidth / innerHeight, 0.1, 400);
+    camera.position.set(11.2, 5.2, 9.6);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+    renderer.setSize(innerWidth, innerHeight);
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.08;
+    renderer.shadowMap.enabled = true;
+    renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+    document.body.appendChild(renderer.domElement);
+
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.06;
+    controls.target.set(0, 2.1, -0.6);
+    controls.maxPolarAngle = Math.PI * 0.49;
+    controls.minDistance = 4;
+    controls.maxDistance = 48;
+
+    const hemi = new THREE.HemisphereLight(0xc5d4e2, 0x6b5a3c, 0.72);
+    scene.add(hemi);
+
+    const sun = new THREE.DirectionalLight(0xfff1d6, 2.15);
+    sun.position.set(18, 28, 10);
+    sun.castShadow = true;
+    sun.shadow.mapSize.set(2048, 2048);
+    sun.shadow.camera.near = 2;
+    sun.shadow.camera.far = 80;
+    sun.shadow.camera.left = -22;
+    sun.shadow.camera.right = 22;
+    sun.shadow.camera.top = 18;
+    sun.shadow.camera.bottom = -18;
+    sun.shadow.bias = -0.00025;
+    scene.add(sun);
+
+    const fill = new THREE.DirectionalLight(0x89a8c8, 0.35);
+    fill.position.set(-12, 8, -10);
+    scene.add(fill);
+
+    // ---------------------------------------------------------------------------
+    // Materials
+    // ---------------------------------------------------------------------------
+    function paintTexture(base, blotches) {
+      const c = document.createElement('canvas');
+      c.width = c.height = 512;
+      const ctx = c.getContext('2d');
+      ctx.fillStyle = base;
+      ctx.fillRect(0, 0, 512, 512);
+      for (let i = 0; i < 70; i++) {
+        ctx.fillStyle = blotches[i % blotches.length];
+        ctx.globalAlpha = 0.18 + Math.random() * 0.22;
+        ctx.beginPath();
+        ctx.ellipse(
+          Math.random() * 512, Math.random() * 512,
+          18 + Math.random() * 70, 12 + Math.random() * 40,
+          Math.random() * Math.PI, 0, Math.PI * 2
+        );
+        ctx.fill();
+      }
+      ctx.globalAlpha = 0.08;
+      for (let i = 0; i < 1800; i++) {
+        ctx.fillStyle = Math.random() > 0.5 ? '#000' : '#fff';
+        ctx.fillRect(Math.random() * 512, Math.random() * 512, 1, 1);
+      }
+      const tex = new THREE.CanvasTexture(c);
+      tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+      tex.repeat.set(3, 2);
+      tex.colorSpace = THREE.SRGBColorSpace;
+      return tex;
+    }
+
+    const oliveMap = paintTexture('#3f4a2c', ['#2d3620', '#556338', '#3a4528', '#2a311c']);
+    const desertMap = paintTexture('#c2a36d', ['#a88850', '#d4b888', '#8c7344', '#b89a62']);
+
+    const mats = {
+      skin: new THREE.MeshStandardMaterial({
+        color: 0xffffff, map: oliveMap, roughness: 0.78, metalness: 0.12,
+      }),
+      skinDark: new THREE.MeshStandardMaterial({
+        color: 0xb0b0b0, map: oliveMap, roughness: 0.82, metalness: 0.1,
+      }),
+      metal: new THREE.MeshStandardMaterial({ color: 0x2a2c2e, roughness: 0.38, metalness: 0.72 }),
+      metalDark: new THREE.MeshStandardMaterial({ color: 0x161718, roughness: 0.45, metalness: 0.65 }),
+      blade: new THREE.MeshStandardMaterial({ color: 0x1c1d1f, roughness: 0.55, metalness: 0.35 }),
+      tip: new THREE.MeshStandardMaterial({ color: 0xe6b422, roughness: 0.45, metalness: 0.15 }),
+      glass: new THREE.MeshStandardMaterial({
+        color: 0x245a44, metalness: 0.35, roughness: 0.1,
+        transparent: true, opacity: 0.32, side: THREE.DoubleSide,
+      }),
+      frame: new THREE.MeshStandardMaterial({ color: 0x1a1c16, roughness: 0.5, metalness: 0.4 }),
+      rubber: new THREE.MeshStandardMaterial({ color: 0x111111, roughness: 0.92, metalness: 0.05 }),
+      seeker: new THREE.MeshStandardMaterial({ color: 0x6a7360, roughness: 0.15, metalness: 0.55 }),
+      exhaust: new THREE.MeshStandardMaterial({ color: 0x0a0a0a, roughness: 0.7, metalness: 0.2 }),
+      lens: new THREE.MeshStandardMaterial({ color: 0x102010, roughness: 0.08, metalness: 0.85 }),
+      concrete: new THREE.MeshStandardMaterial({ color: 0x8d8778, roughness: 0.95, metalness: 0.02 }),
+      sand: new THREE.MeshStandardMaterial({ color: 0x9a8764, roughness: 1, metalness: 0 }),
+    };
+
+    const skinMats = [mats.skin, mats.skinDark];
+
+    function setLivery(name) {
+      const map = name === 'desert' ? desertMap : oliveMap;
+      const tint = name === 'desert' ? 0xf0e6d0 : 0xffffff;
+      for (const m of skinMats) {
+        m.map = map;
+        m.color.setHex(tint);
+        m.needsUpdate = true;
+      }
+    }
+
+    // ---------------------------------------------------------------------------
+    // Helpers
+    // ---------------------------------------------------------------------------
+    function add(parent, geo, mat, x = 0, y = 0, z = 0, rx = 0, ry = 0, rz = 0) {
+      const mesh = new THREE.Mesh(geo, mat);
+      mesh.position.set(x, y, z);
+      mesh.rotation.set(rx, ry, rz);
+      mesh.castShadow = true;
+      mesh.receiveShadow = true;
+      parent.add(mesh);
+      return mesh;
+    }
+
+    function box(w, h, d) { return new THREE.BoxGeometry(w, h, d); }
+    function cyl(rt, rb, h, seg = 12) { return new THREE.CylinderGeometry(rt, rb, h, seg); }
+    function sph(r, seg = 16) { return new THREE.SphereGeometry(r, seg, seg); }
+
+    function loftGeometry(sections) {
+      const radial = sections[0].pts.length;
+      const positions = [];
+      const uvs = [];
+      const index = [];
+
+      for (let s = 0; s < sections.length; s++) {
+        const { z, pts } = sections[s];
+        for (let i = 0; i < radial; i++) {
+          const [x, y] = pts[i];
+          positions.push(x, y, z);
+          uvs.push(i / radial, s / (sections.length - 1));
+        }
+      }
+
+      for (let s = 0; s < sections.length - 1; s++) {
+        for (let i = 0; i < radial; i++) {
+          const j = (i + 1) % radial;
+          const a = s * radial + i;
+          const b = s * radial + j;
+          const c = (s + 1) * radial + i;
+          const d = (s + 1) * radial + j;
+          index.push(a, c, b, b, c, d);
+        }
+      }
+
+      const geo = new THREE.BufferGeometry();
+      geo.setAttribute('position', new THREE.Float32BufferAttribute(positions, 3));
+      geo.setAttribute('uv', new THREE.Float32BufferAttribute(uvs, 2));
+      geo.setIndex(index);
+      geo.computeVertexNormals();
+      return geo;
+    }
+
+    function section(z, half) {
+      const pts = half.slice();
+      for (let i = half.length - 2; i >= 1; i--) pts.push([-half[i][0], half[i][1]]);
+      return { z, pts };
+    }
+
+    // ---------------------------------------------------------------------------
+    // AH-64E
+    // ---------------------------------------------------------------------------
+    function createApache() {
+      const apache = new THREE.Group();
+      apache.name = 'AH-64E';
+
+      // Deep tandem fuselage + thick boom (y is world height)
+      add(apache, loftGeometry([
+        section( 4.95, [[0, 1.38],[0.14, 1.32],[0.20, 1.18],[0.20, 1.02],[0.12, 0.92],[0, 0.88]]),
+        section( 4.35, [[0, 1.78],[0.28, 1.68],[0.40, 1.38],[0.40, 1.05],[0.24, 0.90],[0, 0.86]]),
+        section( 3.55, [[0, 1.98],[0.42, 1.90],[0.58, 1.48],[0.58, 1.08],[0.34, 0.90],[0, 0.86]]),
+        section( 2.45, [[0, 2.00],[0.44, 1.92],[0.62, 1.48],[0.62, 1.06],[0.36, 0.88],[0, 0.84]]),
+        section( 1.35, [[0, 2.10],[0.46, 2.00],[0.64, 1.50],[0.62, 1.06],[0.36, 0.88],[0, 0.84]]),
+        section( 0.20, [[0, 2.62],[0.50, 2.42],[0.70, 1.70],[0.64, 1.10],[0.36, 0.92],[0, 0.88]]),
+        section(-1.15, [[0, 2.68],[0.52, 2.46],[0.72, 1.68],[0.62, 1.12],[0.34, 0.96],[0, 0.92]]),
+        section(-2.45, [[0, 2.28],[0.42, 2.10],[0.54, 1.62],[0.48, 1.22],[0.28, 1.08],[0, 1.02]]),
+        section(-3.70, [[0, 1.98],[0.28, 1.90],[0.36, 1.68],[0.34, 1.42],[0.20, 1.32],[0, 1.28]]),
+        section(-6.40, [[0, 1.88],[0.20, 1.82],[0.26, 1.66],[0.24, 1.46],[0.14, 1.38],[0, 1.34]]),
+        section(-9.15, [[0, 1.90],[0.18, 1.84],[0.24, 1.66],[0.22, 1.46],[0.13, 1.38],[0, 1.34]]),
+        section(-9.95, [[0, 1.78],[0.14, 1.72],[0.18, 1.60],[0.16, 1.48],[0.10, 1.42],[0, 1.38]]),
+      ]), mats.skin);
+
+      // EFAB cheeks
+      add(apache, box(0.46, 0.58, 2.05), mats.skinDark,  0.78, 1.42, 3.05);
+      add(apache, box(0.46, 0.58, 2.05), mats.skinDark, -0.78, 1.42, 3.05);
+      add(apache, box(0.20, 0.30, 0.58), mats.metal,     0.92, 1.36, 3.95);
+      add(apache, box(0.20, 0.30, 0.58), mats.metal,    -0.92, 1.36, 3.95);
+
+      // Stepped tandem greenhouse — gunner forward/low, pilot aft/high
+      add(apache, box(0.96, 0.42, 1.40), mats.glass, 0, 2.14, 3.18);
+      add(apache, box(1.00, 0.54, 1.30), mats.glass, 0, 2.32, 1.70);
+      const ws = add(apache, box(0.94, 0.46, 0.05), mats.glass, 0, 2.08, 3.86);
+      ws.rotation.x = 0.38;
+      add(apache, box(0.03, 0.40, 1.40), mats.frame, 0, 2.14, 3.18);
+      add(apache, box(0.03, 0.52, 1.30), mats.frame, 0, 2.32, 1.70);
+      add(apache, box(0.98, 0.03, 1.40), mats.frame, 0, 2.36, 3.18);
+      add(apache, box(1.02, 0.03, 1.30), mats.frame, 0, 2.60, 1.70);
+      add(apache, box(1.02, 0.06, 0.12), mats.frame, 0, 1.98, 2.48);
+      add(apache, box(1.04, 0.06, 0.12), mats.frame, 0, 2.06, 1.04);
+
+      // Crew
+      add(apache, cyl(0.12, 0.16, 0.40, 10), mats.frame, 0, 1.78, 3.15);
+      add(apache, sph(0.12, 10), mats.frame, 0, 2.04, 3.15);
+      add(apache, cyl(0.13, 0.17, 0.44, 10), mats.frame, 0, 1.92, 1.68);
+      add(apache, sph(0.13, 10), mats.frame, 0, 2.22, 1.68);
+
+      // Chin: TADS turret flush under the drooped nose
+      add(apache, box(0.42, 0.22, 0.55), mats.metal, 0, 1.18, 4.62);
+      const tads = new THREE.Group();
+      tads.position.set(0, 0.98, 4.88);
+      add(tads, sph(0.20, 16), mats.metal);
+      add(tads, sph(0.13, 14), mats.lens, 0, -0.02, 0.12);
+      add(tads, cyl(0.06, 0.06, 0.07, 10), mats.metalDark, 0.08, 0.01, 0.16, Math.PI / 2);
+      apache.add(tads);
+
+      const pnvs = new THREE.Group();
+      pnvs.position.set(0, 1.58, 4.58);
+      add(pnvs, sph(0.12, 14), mats.metal);
+      add(pnvs, sph(0.08, 12), mats.lens, 0, 0.02, 0.08);
+      apache.add(pnvs);
+
+      add(apache, cyl(0.014, 0.014, 0.48, 6), mats.metal, 0.18, 1.78, 4.35, 0.55, 0, 0.18);
+      add(apache, cyl(0.014, 0.014, 0.48, 6), mats.metal, -0.18, 1.78, 4.35, 0.55, 0, -0.18);
+
+      // M230 30mm chain gun — offset to port
+      const gun = new THREE.Group();
+      gun.position.set(-0.18, 0.92, 3.85);
+      add(gun, cyl(0.16, 0.16, 0.22, 14), mats.metalDark, 0, 0.08, 0);
+      add(gun, box(0.28, 0.18, 0.42), mats.metal, 0, 0.02, 0.05);
+      add(gun, cyl(0.038, 0.038, 1.15, 10), mats.metal, 0, 0.00, 0.72, Math.PI / 2);
+      add(gun, cyl(0.05, 0.05, 0.16, 10), mats.metalDark, 0, 0.00, 0.28, Math.PI / 2);
+      apache.add(gun);
+
+      // Twin T700 nacelles + doghouse
+      add(apache, box(1.35, 0.38, 2.25), mats.skin, 0, 2.58, -0.55);
+      for (const side of [-1, 1]) {
+        const x = side * 1.08;
+        add(apache, box(0.78, 0.64, 2.45), mats.skin, x, 2.48, -0.40);
+        add(apache, cyl(0.26, 0.28, 0.20, 16), mats.exhaust, x, 2.50, 0.88, Math.PI / 2);
+        add(apache, cyl(0.22, 0.22, 0.10, 16), mats.metalDark, x, 2.50, 0.98, Math.PI / 2);
+        add(apache, box(0.68, 0.40, 0.90), mats.metalDark, x, 2.46, -1.62);
+        add(apache, cyl(0.18, 0.24, 0.42, 12), mats.exhaust, x + side * 0.10, 2.42, -2.18, Math.PI / 2, 0, side * 0.18);
+      }
+
+      // Stub wings
+      const wings = new THREE.Group();
+      add(wings, box(5.23, 0.12, 0.95), mats.skin, 0, 1.42, -0.15);
+      add(wings, box(5.05, 0.05, 0.22), mats.skinDark, 0, 1.48, 0.28);
+      for (const side of [-1, 1]) {
+        add(wings, box(0.10, 0.55, 0.55), mats.skinDark, side * 1.15, 1.18, -0.12);
+        add(wings, box(0.10, 0.55, 0.55), mats.skinDark, side * 2.15, 1.18, -0.12);
+        add(wings, box(0.18, 0.10, 0.55), mats.metal, side * 2.58, 1.42, -0.10);
+      }
+      apache.add(wings);
+
+      // Inboard Hellfire racks (2×2 each side)
+      function hellfire(parent, x, y, z) {
+        const m = new THREE.Group();
+        add(m, cyl(0.085, 0.085, 1.45, 10), mats.metal, 0, 0, 0, Math.PI / 2);
+        add(m, sph(0.085, 10), mats.seeker, 0, 0, 0.74);
+        add(m, box(0.28, 0.02, 0.16), mats.metalDark, 0, 0, -0.58);
+        add(m, box(0.02, 0.28, 0.16), mats.metalDark, 0, 0, -0.58);
+        add(m, box(0.22, 0.02, 0.10), mats.metalDark, 0, 0, 0.15);
+        add(m, box(0.02, 0.22, 0.10), mats.metalDark, 0, 0, 0.15);
+        m.position.set(x, y, z);
+        parent.add(m);
+        return m;
+      }
+      function hellfireRack(xSign) {
+        const rack = new THREE.Group();
+        add(rack, box(0.42, 0.42, 1.15), mats.metalDark, 0, 0, 0);
+        const xs = [-0.12, 0.12];
+        const ys = [0.12, -0.12];
+        for (const dx of xs) for (const dy of ys) hellfire(rack, dx, dy, 0.15);
+        rack.position.set(xSign * 1.15, 0.92, -0.10);
+        apache.add(rack);
+      }
+      hellfireRack(-1);
+      hellfireRack(1);
+
+      // Outboard Hydra 70 pods
+      function hydra(xSign) {
+        const pod = new THREE.Group();
+        add(pod, cyl(0.22, 0.22, 1.55, 14), mats.metal, 0, 0, 0, Math.PI / 2);
+        add(pod, cyl(0.23, 0.23, 0.08, 14), mats.metalDark, 0, 0, 0.78, Math.PI / 2);
+        const coords = [
+          [0, 0], [0.09, 0.05], [0.09, -0.05], [-0.09, 0.05], [-0.09, -0.05],
+          [0, 0.10], [0, -0.10], [0.05, 0.09], [0.05, -0.09], [-0.05, 0.09],
+          [-0.05, -0.09], [0.12, 0], [-0.12, 0],
+        ];
+        for (const [dx, dy] of coords) {
+          add(pod, cyl(0.028, 0.028, 0.06, 8), mats.exhaust, dx, dy, 0.82, Math.PI / 2);
+        }
+        pod.position.set(xSign * 2.15, 0.92, -0.10);
+        apache.add(pod);
+      }
+      hydra(-1);
+      hydra(1);
+
+      // Landing gear — tailwheel layout, main gear under the cockpit
+      for (const side of [-1, 1]) {
+        add(apache, cyl(0.045, 0.045, 1.05, 8), mats.metal, side * 0.52, 0.78, 2.02, 0.10, 0, -side * 0.22);
+        add(apache, cyl(0.16, 0.16, 0.12, 14), mats.rubber, side * 0.78, 0.16, 1.92, 0, 0, Math.PI / 2);
+        add(apache, cyl(0.065, 0.065, 0.09, 10), mats.metal, side * 0.78, 0.16, 1.92, 0, 0, Math.PI / 2);
+      }
+      add(apache, cyl(0.035, 0.035, 0.85, 8), mats.metal, 0, 0.92, -8.05, 0.22);
+      add(apache, cyl(0.11, 0.11, 0.08, 12), mats.rubber, 0, 0.16, -8.28, 0, 0, Math.PI / 2);
+
+      // Main rotor
+      const mainRotor = new THREE.Group();
+      mainRotor.position.set(0, 3.52, 0);
+      add(apache, cyl(0.11, 0.13, 0.95, 12), mats.metal, 0, 3.10, 0);
+      add(mainRotor, cyl(0.22, 0.22, 0.12, 16), mats.metalDark);
+      add(mainRotor, cyl(0.16, 0.16, 0.10, 16), mats.metal, 0, 0.12, 0);
+      add(mainRotor, cyl(0.08, 0.08, 0.18, 10), mats.metal, 0, 0.24, 0);
+
+      for (let i = 0; i < 4; i++) {
+        const blade = new THREE.Group();
+        add(blade, box(6.55, 0.045, 0.32), mats.blade, 3.55, 0, 0);
+        add(blade, box(0.62, 0.05, 0.32), mats.tip, 7.00, 0, 0);
+        add(blade, box(0.55, 0.07, 0.38), mats.metalDark, 0.55, 0, 0);
+        blade.rotation.y = (Math.PI / 2) * i;
+        blade.rotation.z = 0.04;
+        blade.rotation.x = 0.03;
+        mainRotor.add(blade);
+      }
+
+      const disc = add(
+        mainRotor,
+        new THREE.RingGeometry(0.45, 7.31, 72),
+        new THREE.MeshBasicMaterial({
+          color: 0x1a1a1a, transparent: true, opacity: 0.14,
+          side: THREE.DoubleSide, depthWrite: false,
+        }),
+        0, 0.01, 0, -Math.PI / 2
+      );
+      disc.castShadow = false;
+      apache.add(mainRotor);
+
+      // Longbow AN/APG-78
+      const longbow = new THREE.Group();
+      longbow.position.set(0, 4.05, 0);
+      add(longbow, cyl(0.045, 0.045, 0.42, 10), mats.metal);
+      add(longbow, sph(0.28, 18), mats.metalDark, 0, 0.32, 0).scale.set(1, 0.42, 1);
+      apache.add(longbow);
+
+      // Vertical fin + left-side tail rotor + stabilator
+      const finShape = new THREE.Shape();
+      finShape.moveTo(0.35, 0);
+      finShape.lineTo(1.25, 0);
+      finShape.lineTo(0.25, 2.65);
+      finShape.lineTo(-1.15, 2.65);
+      finShape.lineTo(-0.55, 0);
+      finShape.closePath();
+      const finGeo = new THREE.ExtrudeGeometry(finShape, { depth: 0.14, bevelEnabled: false });
+      finGeo.rotateY(Math.PI / 2);
+      finGeo.translate(0.07, 0, 0);
+      add(apache, finGeo, mats.skin, 0, 1.55, -9.05);
+
+      add(apache, box(3.35, 0.09, 0.78), mats.skin, 0, 1.92, -8.75);
+      add(apache, box(0.58, 0.58, 0.58), mats.metal, -0.38, 3.35, -9.15);
+
+      const tailRotor = new THREE.Group();
+      tailRotor.position.set(-0.70, 3.35, -9.15);
+      // Apache: two 2-blade teetering rotors at 55° — not a 90° cross
+      const tailAngles = [0, Math.PI, 55 * Math.PI / 180, 55 * Math.PI / 180 + Math.PI];
+      for (const ang of tailAngles) {
+        const b = new THREE.Group();
+        add(b, box(1.28, 0.035, 0.14), mats.blade, 0.64, 0, 0);
+        add(b, box(0.12, 0.038, 0.14), mats.tip, 1.28, 0, 0);
+        b.rotation.z = ang;
+        tailRotor.add(b);
+      }
+      add(tailRotor, cyl(0.07, 0.07, 0.12, 10), mats.metal, 0, 0, 0, 0, 0, Math.PI / 2);
+      apache.add(tailRotor);
+
+      // Nav / anti-collision lights
+      const lite = (color, x, y, z) => {
+        const m = add(apache, sph(0.035, 8), new THREE.MeshBasicMaterial({ color }), x, y, z);
+        m.castShadow = false;
+        return m;
+      };
+      lite(0xff2020, -2.58, 1.48, -0.10);
+      lite(0x20ff50,  2.58, 1.48, -0.10);
+      lite(0xffffff, 0, 4.02, -9.15);
+      lite(0xff2200, 0, 2.72, -0.4);
+
+      apache.userData = { mainRotor, tailRotor, disc, longbow, tads, pnvs };
+      return apache;
+    }
+
+    // ---------------------------------------------------------------------------
+    // Environment
+    // ---------------------------------------------------------------------------
+    const ground = add(scene, new THREE.CircleGeometry(90, 64), mats.sand, 0, 0, 0, -Math.PI / 2);
+    ground.receiveShadow = true;
+    ground.castShadow = false;
+
+    const pad = add(scene, new THREE.CircleGeometry(8.5, 48), mats.concrete, 0, 0.015, 0, -Math.PI / 2);
+    pad.receiveShadow = true;
+    pad.castShadow = false;
+
+    const markMat = new THREE.MeshBasicMaterial({ color: 0xc9c2b0 });
+    add(scene, new THREE.RingGeometry(6.4, 6.62, 64), markMat, 0, 0.03, 0, -Math.PI / 2).castShadow = false;
+    add(scene, box(0.18, 0.01, 2.4), markMat, 0, 0.03, 0).castShadow = false;
+    add(scene, box(1.4, 0.01, 0.18), markMat, 0, 0.03, 1.1).castShadow = false;
+    add(scene, box(1.4, 0.01, 0.18), markMat, 0, 0.03, -1.1).castShadow = false;
+
+    // Distant ridges
+    for (let i = 0; i < 7; i++) {
+      const ridge = add(
+        scene,
+        new THREE.ConeGeometry(18 + Math.random() * 14, 6 + Math.random() * 8, 5),
+        new THREE.MeshStandardMaterial({ color: 0x6d624c, roughness: 1 }),
+        (i - 3) * 22 + (i % 2) * 6, 2.2, -70 - (i % 3) * 8
+      );
+      ridge.rotation.y = i;
+      ridge.castShadow = false;
+    }
+
+    const apache = createApache();
+    scene.add(apache);
+
+    // Rotor wash
+    const washMat = new THREE.MeshBasicMaterial({
+      color: 0xcfc4a8, transparent: true, opacity: 0.07,
+      side: THREE.DoubleSide, depthWrite: false,
+    });
+    const wash = [];
+    for (let i = 0; i < 4; i++) {
+      const ring = add(scene, new THREE.RingGeometry(0.6, 2.4, 32), washMat.clone(), 0, 0.04, 0, -Math.PI / 2);
+      ring.castShadow = false;
+      wash.push(ring);
+    }
+
+    // ---------------------------------------------------------------------------
+    // Interaction
+    // ---------------------------------------------------------------------------
+    const state = {
+      rotors: true,
+      hover: true,
+      fly: false,
+      rpm: 0,
+    };
+
+    addEventListener('keydown', (e) => {
+      if (e.code === 'Space') { e.preventDefault(); state.rotors = !state.rotors; }
+      if (e.key === '1') setLivery('olive');
+      if (e.key === '2') setLivery('desert');
+      if (e.key === 'h' || e.key === 'H') state.hover = !state.hover;
+      if (e.key === 'l' || e.key === 'L') apache.userData.longbow.visible = !apache.userData.longbow.visible;
+      if (e.key === 'f' || e.key === 'F') {
+        state.fly = !state.fly;
+        controls.enabled = !state.fly;
+      }
+    });
+
+    addEventListener('resize', () => {
+      camera.aspect = innerWidth / innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(innerWidth, innerHeight);
+    });
+
+    window.__view = (name) => {
+      const views = {
+        threeQuarter: { pos: [11.2, 5.2, 9.6], target: [0, 2.05, -0.8] },
+        side: { pos: [16.5, 3.4, -1.8], target: [0, 2.05, -1.8] },
+        front: { pos: [0.4, 3.1, 13.5], target: [0, 2.0, 0.5] },
+        rear: { pos: [3.2, 4.4, -16.5], target: [0, 2.2, -2.0] },
+        top: { pos: [1.5, 20, -1.2], target: [0, 0, -1.2] },
+      };
+      const v = views[name] || views.threeQuarter;
+      camera.position.set(...v.pos);
+      controls.target.set(...v.target);
+      controls.update();
+    };
+    window.__state = state;
+
+    // ---------------------------------------------------------------------------
+    // Animate
+    // ---------------------------------------------------------------------------
+    const clock = new THREE.Clock();
+    let t = 0;
+
+    function animate() {
+      requestAnimationFrame(animate);
+      const dt = Math.min(clock.getDelta(), 0.05);
+      t += dt;
+
+      const targetRpm = state.rotors ? 1 : 0;
+      state.rpm += (targetRpm - state.rpm) * (1 - Math.exp(-dt * 2.4));
+
+      const { mainRotor, tailRotor, disc, tads, pnvs } = apache.userData;
+      mainRotor.rotation.y += 16.5 * state.rpm * dt;
+      tailRotor.rotation.x += 28 * state.rpm * dt;
+      disc.material.opacity = 0.16 * state.rpm;
+
+      const hoverY = state.hover ? 0.85 + Math.sin(t * 1.15) * 0.045 : 0;
+      apache.position.y = hoverY;
+      apache.rotation.z = state.hover ? Math.sin(t * 0.7) * 0.012 : 0;
+      apache.rotation.x = state.hover ? Math.sin(t * 0.55) * 0.008 : 0;
+
+      tads.rotation.y = Math.sin(t * 0.35) * 0.35;
+      tads.rotation.x = Math.sin(t * 0.22) * 0.12;
+      pnvs.rotation.y = Math.sin(t * 0.4 + 1) * 0.45;
+
+      for (let i = 0; i < wash.length; i++) {
+        const phase = (t * 0.55 + i * 0.25) % 1;
+        const s = 1 + phase * 3.8;
+        wash[i].scale.set(s, s, s);
+        wash[i].material.opacity = state.hover && state.rpm > 0.2 ? (1 - phase) * 0.08 * state.rpm : 0;
+        wash[i].position.y = 0.04;
+      }
+
+      if (state.fly) {
+        const r = 14;
+        camera.position.set(Math.cos(t * 0.18) * r, 5.2 + Math.sin(t * 0.12) * 1.4, Math.sin(t * 0.18) * r);
+        camera.lookAt(0, 2.1, -0.5);
+      } else {
+        controls.update();
+      }
+
+      renderer.render(scene, camera);
+    }
+
+    animate();
+  </script>
+</body>
+</html>
