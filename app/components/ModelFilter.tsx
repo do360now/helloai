@@ -1,6 +1,7 @@
 'use client';
 
 import type { Category } from '@/data/types';
+import { categoryTaskKeyword } from '@/data/recommend';
 
 const COST_OPTIONS = [
   { label: 'Any price', value: null },
@@ -48,7 +49,7 @@ export default function ModelFilter({
 
       <div className="model-filter-chips">
         {categories.map((cat) => {
-          const keyword = cat.name.split(' ')[0].toLowerCase();
+          const keyword = categoryTaskKeyword(cat);
           const active = task.toLowerCase().includes(keyword);
           return (
             <button
