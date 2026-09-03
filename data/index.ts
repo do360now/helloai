@@ -26,3 +26,23 @@ export const formatDate = (dateStr: string): string => {
     timeZone: 'UTC',
   });
 };
+
+export function formatUsdPerMillion(n: number): string {
+  if (!Number.isFinite(n)) return '—';
+  const rounded = Math.round(n * 100) / 100;
+  const body = Number.isInteger(rounded) ? String(rounded) : rounded.toFixed(2);
+  return `$${body}/M`;
+}
+
+export function formatContextWindow(tokens: number): string {
+  if (!Number.isFinite(tokens) || tokens <= 0) return '—';
+  if (tokens >= 1_000_000) {
+    const m = tokens / 1_000_000;
+    const body = Number.isInteger(m) ? String(m) : String(Math.round(m * 10) / 10);
+    return `${body}M ctx`;
+  }
+  if (tokens >= 1_000) {
+    return `${Math.round(tokens / 1_000)}K ctx`;
+  }
+  return `${tokens} ctx`;
+}
