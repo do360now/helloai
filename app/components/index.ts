@@ -4,6 +4,5 @@ export { default as ModelCard } from './ModelCard';
 export { default as CategoryIcon } from './CategoryIcon';
 export { default as SectionHeader } from './SectionHeader';
 export { default as ArticleCard } from './ArticleCard';
-export { default as ParticleCanvas } from './ParticleCanvas';
 export { default as ModelFilter } from './ModelFilter';
 export { default as OpenWeightCard } from './OpenWeightCard';
