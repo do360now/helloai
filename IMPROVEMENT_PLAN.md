@@ -37,7 +37,8 @@ State (verified via dig 2026-07-04): SPF ✅ hard-fail, DKIM ✅ (selector `dkim
 
 | Item | Why deferred |
 |---|---|
-| Homepage RSC refactor (`app/page.tsx` is one big `'use client'` tree; full articles JSON ships in the client bundle) | Invasive — deserves its own plan with visual regression checks |
+| Homepage design evolution (compact hero, comparable cards, leaderboard table, clickable insights, article shelf, craft) | Sequenced plans, implement one-by-one: `docs/superpowers/plans/2026-09-03-homepage-design-evolution.md`. Spec: `docs/superpowers/specs/2026-09-03-homepage-design-evolution-design.md` |
+| Homepage RSC refactor (`app/page.tsx` is one big `'use client'` tree; full articles JSON ships in the client bundle) | Invasive — deserves its own plan with visual regression checks. Do **after** the 2026-09-03 homepage sequence, not instead of it. |
 | Pay-loop pre-mainnet hardening (funding concurrency race, unsigned proposals, ledger tail-truncation, sweep-range validation) | Gated behind `MAINNET_ENABLED=false`; see `docs/pay-loop.md:32-58` |
 | Replace the frozen Arena Elo source | The >30d staleness guard makes it safe; picking a new source is an editorial decision — see `.claude/agent-memory/leaderboard-updater.md` |
 | Pro-endpoint rate-limit isolation (paying agents share the public 100/min per-IP bucket) | Revisit with demand data from `scripts/pro_demand_report.py` |
