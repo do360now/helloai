@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import type { SiteConfig } from '@/data/types';
 
 export default function Hero({ config }: { config: SiteConfig }) {
@@ -23,8 +24,8 @@ export default function Hero({ config }: { config: SiteConfig }) {
         <p className="hero-tagline">{config.tagline}</p>
 
         <div className="hero-ctas">
-          <a href="#models" className="btn-primary">See this week's models →</a>
-          <a href="/articles" className="btn-secondary">Read latest →</a>
+          <a href="#models" className="btn-primary">See this week&apos;s models →</a>
+          <Link href="/articles" className="btn-secondary">Read latest →</Link>
         </div>
       </div>
     </section>
