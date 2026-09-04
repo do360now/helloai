@@ -13,7 +13,7 @@ html { scroll-behavior: smooth; }
 body {
   background: #080A12;
   color: #fff;
-  font-family: 'DM Sans', var(--font-geist-sans), system-ui, sans-serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
 }
 
 /* ─── ANIMATIONS ────────────────────────────────────────── */
@@ -36,7 +36,7 @@ body {
   background: rgba(8, 10, 18, 0.85);
   backdrop-filter: blur(20px) saturate(180%);
   border-bottom: 1px solid rgba(255,255,255,0.06);
-  font-family: 'JetBrains Mono', var(--font-geist-mono), monospace;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
 }
 
 .nav-brand {
@@ -167,7 +167,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
 .hero-pill {
   display: inline-block;
   font-size: 12px;
-  font-family: 'JetBrains Mono', var(--font-geist-mono), monospace;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
   color: #00E5A0;
   border: 1px solid rgba(0,229,160,0.3);
   border-radius: 100px;
@@ -178,7 +178,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
 }
 
 .hero-title {
-  font-family: 'Space Grotesk', var(--font-geist-sans), sans-serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
   font-size: clamp(40px, 7vw, 72px);
   font-weight: 700;
   line-height: 0.95;
@@ -216,7 +216,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
   gap: 8px;
   background: #00E5A0;
   color: #080A12;
-  font-family: 'JetBrains Mono', var(--font-geist-mono), monospace;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-weight: 700;
   font-size: 14px;
   padding: 16px 36px;
@@ -237,7 +237,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
   gap: 8px;
   background: transparent;
   color: rgba(255,255,255,0.6);
-  font-family: 'JetBrains Mono', var(--font-geist-mono), monospace;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-weight: 600;
   font-size: 14px;
   padding: 16px 36px;
@@ -264,7 +264,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
 
 .section-label {
   font-size: 11px;
-  font-family: 'JetBrains Mono', var(--font-geist-mono), monospace;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-weight: 700;
   color: #00E5A0;
   letter-spacing: 3px;
@@ -276,7 +276,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
   font-size: clamp(28px, 5vw, 48px);
   font-weight: 700;
   color: #fff;
-  font-family: 'Space Grotesk', var(--font-geist-sans), sans-serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
   letter-spacing: -0.03em;
   margin-bottom: 12px;
   line-height: 1.1;
@@ -363,7 +363,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
   border-radius: 100px;
   padding: 5px 14px;
   font-size: 12px;
-  font-family: 'JetBrains Mono', var(--font-geist-mono), monospace;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
   color: rgba(255,255,255,0.4);
   cursor: pointer;
   transition: all 0.2s;
@@ -382,7 +382,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
   top: -1px;
   right: 16px;
   font-size: 11px;
-  font-family: 'JetBrains Mono', var(--font-geist-mono), monospace;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
   color: #00E5A0;
   font-weight: 600;
   letter-spacing: 0.04em;
@@ -398,7 +398,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
   color: rgba(255,255,255,0.3);
   font-size: 14px;
   margin-top: 32px;
-  font-family: 'JetBrains Mono', var(--font-geist-mono), monospace;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
 }
 
 /* ─── MODEL CARDS ───────────────────────────────────────── */
@@ -434,7 +434,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
   position: absolute;
   top: 20px;
   right: 24px;
-  font-family: 'JetBrains Mono', var(--font-geist-mono), monospace;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 64px;
   font-weight: 800;
   color: rgba(255,255,255,0.03);
@@ -444,7 +444,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
 .model-tag {
   display: inline-block;
   font-size: 10px;
-  font-family: 'JetBrains Mono', var(--font-geist-mono), monospace;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-weight: 700;
   border: 1px solid;
   border-radius: 6px;
@@ -466,7 +466,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
   font-weight: 700;
   color: #fff;
   margin-bottom: 12px;
-  font-family: 'Space Grotesk', var(--font-geist-sans), sans-serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
   letter-spacing: -0.02em;
 }
 
@@ -487,13 +487,13 @@ a.nav-brand { text-decoration: none; color: inherit; }
 }
 
 .model-elo {
-  font-family: 'JetBrains Mono', var(--font-geist-mono), monospace;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 13px;
   color: rgba(255,255,255,0.25);
 }
 
 .model-cta {
-  font-family: 'JetBrains Mono', var(--font-geist-mono), monospace;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 13px;
   transition: color 0.3s;
 }
@@ -507,7 +507,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
 
 .model-spec {
   font-size: 11px;
-  font-family: 'JetBrains Mono', var(--font-geist-mono), monospace;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-weight: 600;
   color: rgba(255,255,255,0.5);
   background: rgba(255,255,255,0.04);
@@ -538,7 +538,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
 
 .ow-spec {
   font-size: 11px;
-  font-family: 'JetBrains Mono', var(--font-geist-mono), monospace;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-weight: 600;
   color: rgba(255,255,255,0.4);
   background: rgba(255,255,255,0.04);
@@ -558,7 +558,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
 .ow-hardware {
   margin-top: 6px;
   font-size: 11px;
-  font-family: 'JetBrains Mono', var(--font-geist-mono), monospace;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
   color: rgba(255,255,255,0.18);
   letter-spacing: 0.3px;
 }
@@ -587,7 +587,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
   display: flex;
   flex-wrap: wrap;
   gap: 8px 14px;
-  font-family: 'JetBrains Mono', var(--font-geist-mono), monospace;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 12px;
   color: rgba(255,255,255,0.45);
   letter-spacing: 0.02em;
@@ -614,7 +614,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
 }
 
 .leaderboard-rank {
-  font-family: 'JetBrains Mono', var(--font-geist-mono), monospace;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 28px;
   font-weight: 800;
   width: 36px;
@@ -639,7 +639,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
   font-size: 16px;
   font-weight: 600;
   color: #fff;
-  font-family: 'Space Grotesk', var(--font-geist-sans), sans-serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
 }
 
 .leaderboard-provider {
@@ -649,7 +649,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
 }
 
 .leaderboard-elo {
-  font-family: 'JetBrains Mono', var(--font-geist-mono), monospace;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 14px;
   font-weight: 700;
 }
@@ -703,12 +703,12 @@ a.nav-brand { text-decoration: none; color: inherit; }
   font-weight: 700;
   color: #fff;
   margin-bottom: 6px;
-  font-family: 'Space Grotesk', var(--font-geist-sans), sans-serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
 }
 
 .insight-leader {
   font-size: 12px;
-  font-family: 'JetBrains Mono', var(--font-geist-mono), monospace;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
   margin-bottom: 12px;
   letter-spacing: 0.5px;
 }
@@ -740,7 +740,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
 }
 
 .articles-more {
-  font-family: 'JetBrains Mono', var(--font-geist-mono), monospace;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 13px;
   font-weight: 600;
   color: #00E5A0;
@@ -771,7 +771,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
 
 .article-category {
   font-size: 11px;
-  font-family: 'JetBrains Mono', var(--font-geist-mono), monospace;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-weight: 700;
   color: #6366F1;
   text-transform: uppercase;
@@ -783,7 +783,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
 
 .article-readtime {
   font-size: 12px;
-  font-family: 'JetBrains Mono', var(--font-geist-mono), monospace;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
   color: rgba(255,255,255,0.2);
 }
 
@@ -793,7 +793,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
   color: #fff;
   margin-bottom: 10px;
   line-height: 1.3;
-  font-family: 'Space Grotesk', var(--font-geist-sans), sans-serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
   letter-spacing: -0.01em;
 }
 
@@ -806,7 +806,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
 
 .article-date {
   font-size: 12px;
-  font-family: 'JetBrains Mono', var(--font-geist-mono), monospace;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
   color: rgba(255,255,255,0.2);
 }
 
@@ -825,7 +825,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
   font-size: clamp(32px, 5vw, 48px);
   font-weight: 700;
   color: #fff;
-  font-family: 'Space Grotesk', var(--font-geist-sans), sans-serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
   letter-spacing: -0.03em;
   line-height: 1.15;
   margin: 12px 0 16px;
@@ -865,7 +865,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
   font-size: clamp(18px, 3vw, 22px);
   font-weight: 600;
   color: #fff;
-  font-family: 'Space Grotesk', var(--font-geist-sans), sans-serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
   letter-spacing: -0.02em;
   line-height: 1.3;
   margin: 12px 0 10px;
@@ -875,7 +875,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
   display: inline-block;
   margin-top: 16px;
   font-size: 13px;
-  font-family: 'JetBrains Mono', var(--font-geist-mono), monospace;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
   color: #00E5A0;
   font-weight: 600;
 }
@@ -897,7 +897,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
   align-items: center;
   gap: 6px;
   font-size: 13px;
-  font-family: 'JetBrains Mono', var(--font-geist-mono), monospace;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
   color: rgba(255,255,255,0.35);
   text-decoration: none;
   margin-bottom: 40px;
@@ -918,7 +918,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
   font-size: clamp(28px, 5vw, 42px);
   font-weight: 700;
   color: #fff;
-  font-family: 'Space Grotesk', var(--font-geist-sans), sans-serif;
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
   letter-spacing: -0.03em;
   line-height: 1.15;
   margin-bottom: 16px;
@@ -950,7 +950,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
 .article-page-footer a {
   color: #00E5A0;
   text-decoration: none;
-  font-family: 'JetBrains Mono', var(--font-geist-mono), monospace;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 14px;
   font-weight: 600;
 }
@@ -963,7 +963,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
 }
 
 .footer-site {
-  font-family: 'JetBrains Mono', var(--font-geist-mono), monospace;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 13px;
   color: rgba(255,255,255,0.25);
   margin-bottom: 12px;
@@ -985,7 +985,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
 .footer-version {
   margin-top: 20px;
   font-size: 11px;
-  font-family: 'JetBrains Mono', var(--font-geist-mono), monospace;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
   color: rgba(255,255,255,0.25);
   letter-spacing: 0.04em;
   transition: color 0.3s;
@@ -997,7 +997,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
   display: flex;
   justify-content: center;
   gap: 24px;
-  font-family: 'JetBrains Mono', var(--font-geist-mono), monospace;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 12px;
 }
 
