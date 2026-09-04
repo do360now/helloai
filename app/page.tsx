@@ -225,13 +225,18 @@ function Footer() {
 }
 
 export default function Home() {
-  const [activeSection, setActiveSection] = useState('models');
+  const [activeSection, setActiveSection] = useState('');
   const [task, setTask] = useState('');
   const [maxCost, setMaxCost] = useState<number | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ['articles', 'insights', 'local', 'leaderboard', 'models'];
+      const modelsEl = document.getElementById('models');
+      if (!modelsEl || modelsEl.getBoundingClientRect().top >= 300) {
+        setActiveSection('');
+        return;
+      }
+      const sections = ['articles', 'insights', 'local', 'leaderboard', 'models'] as const;
       for (const id of sections) {
         const el = document.getElementById(id);
         if (el && el.getBoundingClientRect().top < 300) {
@@ -240,6 +245,7 @@ export default function Home() {
         }
       }
     };
+    handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
