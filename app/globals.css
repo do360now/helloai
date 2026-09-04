@@ -722,6 +722,22 @@ body {
   gap: 20px;
 }
 
+.articles-more-wrap {
+  margin-top: 32px;
+  text-align: center;
+}
+
+.articles-more {
+  font-family: 'JetBrains Mono', var(--font-geist-mono), monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: #00E5A0;
+  text-decoration: none;
+  letter-spacing: 0.04em;
+}
+
+.articles-more:hover { color: #5EEAD4; }
+
 .article-card {
   display: block;
   padding: 32px;
