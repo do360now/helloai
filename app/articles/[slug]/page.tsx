@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getArticleBySlug, getArticles, formatDate } from '@/data';
 import type { Metadata } from 'next';
+import Nav from '../../components/Nav';
 
 // Generate static paths for all articles
 export function generateStaticParams() {
@@ -58,6 +59,7 @@ export default async function ArticlePage({
 
   return (
     <article className="article-page">
+      <Nav />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

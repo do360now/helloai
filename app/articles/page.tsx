@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import { getArticles, formatDate } from '@/data';
 import type { Metadata } from 'next';
+import Nav from '../components/Nav';
 
 export const metadata: Metadata = {
   title: 'AI Model Reviews & Analysis',
@@ -26,6 +27,7 @@ export default function ArticlesPage() {
 
   return (
     <div className="articles-index-page">
+      <Nav activeSection="articles" />
       <Link href="/" className="article-page-back">
         ← Back to Hello, AI
       </Link>

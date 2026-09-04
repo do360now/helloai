@@ -7,7 +7,7 @@
  * structural issues before they hit production.
  */
 
-import { getSiteConfig, getModels, getCategories, getArticles, getArticleBySlug } from '../data';
+import { getSiteConfig, getModels, getCategories, getArticles, getArticleBySlug, getHomepageArticles, HOMEPAGE_ARTICLE_COUNT } from '../data';
 
 describe('Site Config', () => {
   const config = getSiteConfig();
@@ -112,6 +112,17 @@ describe('Articles', () => {
     for (let i = 1; i < articles.length; i++) {
       expect(articles[i - 1].date >= articles[i].date).toBe(true);
     }
+  });
+
+  test('HOMEPAGE_ARTICLE_COUNT is 3', () => {
+    expect(HOMEPAGE_ARTICLE_COUNT).toBe(3);
+  });
+
+  test('getHomepageArticles returns the newest three', () => {
+    const home = getHomepageArticles();
+    const all = getArticles();
+    expect(home).toHaveLength(Math.min(3, all.length));
+    expect(home.map((a) => a.slug)).toEqual(all.slice(0, 3).map((a) => a.slug));
   });
 });
 

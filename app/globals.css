@@ -45,6 +45,8 @@ body {
   gap: 8px;
 }
 
+a.nav-brand { text-decoration: none; color: inherit; }
+
 .nav-logo {
   font-size: 20px;
   font-weight: 800;
@@ -109,10 +111,11 @@ body {
   top: 64px;
   left: 0;
   right: 0;
-  background: rgba(8,10,18,0.95);
+  background: rgba(8,10,18,0.97);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(255,255,255,0.06);
   padding: 16px 24px;
+  z-index: 101;
 }
 
 .nav-mobile-link {
@@ -721,6 +724,22 @@ body {
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 20px;
 }
+
+.articles-more-wrap {
+  margin-top: 32px;
+  text-align: center;
+}
+
+.articles-more {
+  font-family: 'JetBrains Mono', var(--font-geist-mono), monospace;
+  font-size: 13px;
+  font-weight: 600;
+  color: #00E5A0;
+  text-decoration: none;
+  letter-spacing: 0.04em;
+}
+
+.articles-more:hover { color: #5EEAD4; }
 
 .article-card {
   display: block;

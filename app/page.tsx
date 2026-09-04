@@ -1,15 +1,16 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
+import Link from 'next/link';
 import { Nav, Hero, ModelCard, CategoryIcon, SectionHeader, ArticleCard, OpenWeightCard } from './components';
 import ModelFilter from './components/ModelFilter';
-import { getSiteConfig, getModels, getCategories, getArticles, getOpenWeightModels, formatDate, formatUsdPerMillion, formatContextWindow } from '@/data';
+import { getSiteConfig, getModels, getCategories, getHomepageArticles, getOpenWeightModels, formatDate, formatUsdPerMillion, formatContextWindow } from '@/data';
 import { scoreAndRank, categoryTaskKeyword } from '@/data/recommend';
 
 const config = getSiteConfig();
 const models = getModels();
 const categories = getCategories();
-const articles = getArticles();
+const homepageArticles = getHomepageArticles();
 const openWeightModels = getOpenWeightModels();
 
 function ModelsSection({
@@ -182,9 +183,12 @@ function ArticlesSection() {
           subtitle="Weekly analysis, honest takes, and hidden gems. No engagement bait."
         />
         <div className="articles-grid">
-          {articles.map((article, i) => (
+          {homepageArticles.map((article, i) => (
             <ArticleCard key={article.slug} article={article} index={i} />
           ))}
+        </div>
+        <div className="articles-more-wrap">
+          <Link href="/articles" className="articles-more">All dispatches →</Link>
         </div>
       </div>
     </section>
