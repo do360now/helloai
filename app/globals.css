@@ -251,6 +251,15 @@ a.nav-brand { text-decoration: none; color: inherit; }
 .btn-secondary:hover { border-color: rgba(255,255,255,0.25); }
 
 /* ─── SECTIONS ──────────────────────────────────────────── */
+#top,
+#models,
+#leaderboard,
+#local,
+#insights,
+#articles {
+  scroll-margin-top: 88px;
+}
+
 .section-header { margin-bottom: 48px; }
 
 .section-label {
@@ -650,7 +659,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
 
 .insights-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 16px;
 }
 
