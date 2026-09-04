@@ -10,6 +10,12 @@ export const getSiteConfig = (): SiteConfig => siteData;
 export const getModels = (): Model[] => modelsData;
 export const getCategories = (): Category[] => categoriesData;
 export const getArticles = (): Article[] => articlesData;
+
+export const HOMEPAGE_ARTICLE_COUNT = 3;
+
+export const getHomepageArticles = (): Article[] =>
+  getArticles().slice(0, HOMEPAGE_ARTICLE_COUNT);
+
 // JSON imports widen "first-party" to string; the jest data suite enforces the literal value.
 export const getOpenWeightModels = (): OpenWeightModel[] =>
   openWeightModelsData as OpenWeightModel[];
