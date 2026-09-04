@@ -19,6 +19,10 @@ export const SCORING_WEIGHTS = {
   withoutTask: { task: 0.00, elo: 0.55, cost: 0.25, context: 0.20 },
 } as const;
 
+export function categoryTaskKeyword(cat: Category): string {
+  return cat.name.split(' ')[0].toLowerCase();
+}
+
 // Match a free-text task to a category. Two-clause fallback:
 //   1. category name contains the task string (e.g. "reasoning" → "Hard Reasoning
 //      & Science"), OR

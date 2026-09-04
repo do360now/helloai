@@ -7,7 +7,7 @@
  * existing contract.
  */
 
-import { scoreAndRank, findMatchingCategory, SCORING_WEIGHTS } from '../data/recommend';
+import { scoreAndRank, findMatchingCategory, categoryTaskKeyword, SCORING_WEIGHTS } from '../data/recommend';
 import { getModels, getCategories } from '../data';
 import type { Model, Category } from '../data/types';
 
@@ -70,6 +70,21 @@ describe('findMatchingCategory', () => {
     // doesn't blow up on a category with no space in its name.
     expect(findMatchingCategory('whatevs', singleTokenCats)?.name).toBe('Whatevs');
     expect(findMatchingCategory('nope', singleTokenCats)).toBeNull();
+  });
+});
+
+describe('categoryTaskKeyword', () => {
+  test('returns the first word, lowercased', () => {
+    expect(categoryTaskKeyword({ name: 'Overall Preference', leader: 'x', insight: '', icon: '', color: '#000000' })).toBe('overall');
+    expect(categoryTaskKeyword({ name: 'Coding & Engineering', leader: 'x', insight: '', icon: '', color: '#000000' })).toBe('coding');
+    expect(categoryTaskKeyword({ name: 'Hard Reasoning & Science', leader: 'x', insight: '', icon: '', color: '#000000' })).toBe('hard');
+    expect(categoryTaskKeyword({ name: 'Honest Daily Use', leader: 'x', insight: '', icon: '', color: '#000000' })).toBe('honest');
+  });
+
+  test('matches live category records', () => {
+    for (const cat of categories) {
+      expect(categoryTaskKeyword(cat)).toBe(cat.name.split(' ')[0].toLowerCase());
+    }
   });
 });
 

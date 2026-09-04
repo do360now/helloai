@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { Nav, Hero, ModelCard, CategoryIcon, SectionHeader, ArticleCard, OpenWeightCard } from './components';
 import ModelFilter from './components/ModelFilter';
 import { getSiteConfig, getModels, getCategories, getArticles, getOpenWeightModels, formatDate, formatUsdPerMillion, formatContextWindow } from '@/data';
-import { scoreAndRank } from '@/data/recommend';
+import { scoreAndRank, categoryTaskKeyword } from '@/data/recommend';
 
 const config = getSiteConfig();
 const models = getModels();
@@ -12,9 +12,17 @@ const categories = getCategories();
 const articles = getArticles();
 const openWeightModels = getOpenWeightModels();
 
-function ModelsSection() {
-  const [task, setTask] = useState('');
-  const [maxCost, setMaxCost] = useState<number | null>(null);
+function ModelsSection({
+  task,
+  maxCost,
+  onTaskChange,
+  onMaxCostChange,
+}: {
+  task: string;
+  maxCost: number | null;
+  onTaskChange: (t: string) => void;
+  onMaxCostChange: (v: number | null) => void;
+}) {
   const hasFilters = task.trim() !== '' || maxCost !== null;
 
   const ranked = useMemo(() => {
@@ -36,9 +44,9 @@ function ModelsSection() {
         categories={categories}
         task={task}
         maxCost={maxCost}
-        onTaskChange={setTask}
-        onMaxCostChange={setMaxCost}
-        onClear={() => { setTask(''); setMaxCost(null); }}
+        onTaskChange={onTaskChange}
+        onMaxCostChange={onMaxCostChange}
+        onClear={() => { onTaskChange(''); onMaxCostChange(null); }}
         hasFilters={hasFilters}
       />
       <div className="models-grid">
@@ -120,29 +128,45 @@ function OpenWeightSection() {
   );
 }
 
-function InsightsSection() {
+function InsightsSection({
+  task,
+  onTaskChange,
+}: {
+  task: string;
+  onTaskChange: (t: string) => void;
+}) {
   return (
     <section id="insights" className="insights-section">
       <SectionHeader
         label="Category Breakdown"
-        title="The real picture"
-        subtitle="No hype. Where each model actually leads, based on benchmarks and real-world usage as of today."
+        title="Where each one leads"
+        subtitle="Category leaders from the tracked set, as of this week's snapshot."
       />
       <div className="insights-grid">
-        {categories.map((cat, i) => (
-          <div
-            key={i}
-            className="insight-card"
-            style={{ animationDelay: `${i * 0.1}s` }}
-            onMouseEnter={(e) => (e.currentTarget.style.borderColor = cat.color + '30')}
-            onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.05)')}
-          >
-            <CategoryIcon icon={cat.icon} color={cat.color} />
-            <h3 className="insight-name">{cat.name}</h3>
-            <div className="insight-leader" style={{ color: cat.color }}>Leader: {cat.leader}</div>
-            <p className="insight-text">{cat.insight}</p>
-          </div>
-        ))}
+        {categories.map((cat, i) => {
+          const keyword = categoryTaskKeyword(cat);
+          const active = task.toLowerCase().includes(keyword);
+          return (
+            <button
+              key={cat.name}
+              type="button"
+              className={`insight-card${active ? ' insight-card-active' : ''}`}
+              style={{
+                animationDelay: `${i * 0.1}s`,
+                borderColor: active ? cat.color + '60' : undefined,
+              }}
+              onClick={() => {
+                onTaskChange(active ? '' : keyword);
+                document.getElementById('models')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              }}
+            >
+              <CategoryIcon icon={cat.icon} color={cat.color} />
+              <h3 className="insight-name">{cat.name}</h3>
+              <div className="insight-leader" style={{ color: cat.color }}>Leader: {cat.leader}</div>
+              <p className="insight-text">{cat.insight}</p>
+            </button>
+          );
+        })}
       </div>
     </section>
   );
@@ -198,6 +222,8 @@ function Footer() {
 
 export default function Home() {
   const [activeSection, setActiveSection] = useState('models');
+  const [task, setTask] = useState('');
+  const [maxCost, setMaxCost] = useState<number | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -218,10 +244,15 @@ export default function Home() {
     <>
       <Nav activeSection={activeSection} />
       <Hero config={config} />
-      <ModelsSection />
+      <ModelsSection
+        task={task}
+        maxCost={maxCost}
+        onTaskChange={setTask}
+        onMaxCostChange={setMaxCost}
+      />
       <LeaderboardSection />
       <OpenWeightSection />
-      <InsightsSection />
+      <InsightsSection task={task} onTaskChange={setTask} />
       <ArticlesSection />
       <Footer />
     </>
