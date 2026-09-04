@@ -652,12 +652,27 @@ body {
 }
 
 .insight-card {
+  display: block;
+  width: 100%;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
   padding: 28px;
   border-radius: 16px;
   background: rgba(255,255,255,0.02);
   border: 1px solid rgba(255,255,255,0.05);
   animation: fadeUp 0.5s both;
-  transition: border-color 0.3s;
+  transition: border-color 0.3s, background 0.3s, transform 0.2s;
+}
+
+.insight-card:hover {
+  transform: translateY(-2px);
+  background: rgba(255,255,255,0.04);
+}
+
+.insight-card-active {
+  background: rgba(255,255,255,0.04);
 }
 
 .category-icon {
