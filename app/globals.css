@@ -16,6 +16,11 @@ body {
   font-family: var(--font-geist-sans), system-ui, sans-serif;
 }
 
+:focus-visible {
+  outline: 2px solid #00E5A0;
+  outline-offset: 3px;
+}
+
 /* ─── ANIMATIONS ────────────────────────────────────────── */
 @keyframes fadeUp {
   from { opacity: 0; transform: translateY(20px); }
@@ -304,10 +309,10 @@ a.nav-brand { text-decoration: none; color: inherit; }
 .model-filter-icon {
   position: absolute;
   left: 16px;
-  font-size: 20px;
-  color: rgba(255,255,255,0.25);
+  width: 18px;
+  height: 18px;
+  color: rgba(255,255,255,0.35);
   pointer-events: none;
-  line-height: 1;
 }
 
 .model-filter-input {
@@ -472,7 +477,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
 
 .model-desc {
   font-size: 15px;
-  color: rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.58);
   line-height: 1.6;
   flex: 1;
 }
@@ -489,7 +494,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
 .model-elo {
   font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 13px;
-  color: rgba(255,255,255,0.25);
+  color: rgba(255,255,255,0.40);
 }
 
 .model-cta {
@@ -715,7 +720,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
 
 .insight-text {
   font-size: 14px;
-  color: rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.58);
   line-height: 1.65;
 }
 
@@ -784,7 +789,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
 .article-readtime {
   font-size: 12px;
   font-family: var(--font-geist-mono), ui-monospace, monospace;
-  color: rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.40);
 }
 
 .article-title {
@@ -799,7 +804,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
 
 .article-excerpt {
   font-size: 14px;
-  color: rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.58);
   line-height: 1.65;
   margin-bottom: 16px;
 }
@@ -807,7 +812,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
 .article-date {
   font-size: 12px;
   font-family: var(--font-geist-mono), ui-monospace, monospace;
-  color: rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.40);
 }
 
 /* ─── ARTICLES INDEX PAGE ───────────────────────────────── */
@@ -971,7 +976,7 @@ a.nav-brand { text-decoration: none; color: inherit; }
 
 .footer-credits {
   font-size: 14px;
-  color: rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.35);
   line-height: 1.6;
   margin-bottom: 20px;
 }

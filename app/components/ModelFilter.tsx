@@ -31,7 +31,10 @@ export default function ModelFilter({
   return (
     <div className="model-filter">
       <div className="model-filter-search">
-        <span className="model-filter-icon">⌕</span>
+        <svg className="model-filter-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
+          <circle cx="11" cy="11" r="7" />
+          <path d="M20 20l-3.5-3.5" />
+        </svg>
         <input
           type="text"
           className="model-filter-input"
@@ -64,7 +67,7 @@ export default function ModelFilter({
         })}
         <div className="model-filter-divider" />
         {COST_OPTIONS.map((opt) => {
-          const active = maxCost === opt.value;
+          const active = opt.value !== null && maxCost === opt.value;
           return (
             <button
               key={opt.label}
