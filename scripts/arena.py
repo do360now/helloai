@@ -102,6 +102,7 @@ _NAME_MAP: dict[str, list[str]] = {
         "muse-spark",
     ],
     "qwen": [
+        "qwen3.8-max-0902",
         "qwen3.8-max",
         "qwen3.8-max-preview",
     ],

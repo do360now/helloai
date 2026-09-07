@@ -1,9 +1,71 @@
 # Article Idea Generator — Cross-Session Memory
 
 ## Last Run
-- Date: 2026-09-03 (weekly update — rank-1 brief written this cycle)
+- Date: 2026-09-07 (weekly update — rank-1 brief written this cycle)
 
-## News landscape this week (2026-09-03)
+## News landscape this week (2026-09-07)
+- **GPT-6 Astra** GA Sep 3. API `gpt-6-astra`, $10/$50, 1,050,000 ctx, cache reads $1 (4x Fable 5.1's $0.25). Code Arena WebDev Sep 5: gpt-6-astra-max **1797** rank 1 / 1199 votes; Fable 5.1-max 1762. Not on Sep 2 text-overall board. Fails helloai's 2-week Elo hard req. Rank-1 article written this cycle.
+- Qwen3.8-Max-0902 snapshot Sep 1/2: same $2/$6, 1M, coding/cowork post-train. Code Arena 1686 Preliminary. Card name unchanged; arena alias prepended.
+- Muse Spark 1.3 (xHigh) now on Code Arena at 1622 / 1274. Still no 1.3 slug on Sep 2 text board. Max reasoning still mixed (product page vs launch blog).
+- GLM-5.3-max day 24: text still Sep 2 1482/7668; Code WebDev 1609/2930. Human hold vs Grok stands.
+- Grok 4.7 not shipped. Musk Sep 2 "10 days" → ~Sep 12. Docs still recommend 4.6.
+- Gemini 3.5 Pro still absent from official pricing. 3.8 Flash is GA — do not write Flash-ships-Pro-waits.
+- Arena text overall still dated **Sep 2** (5 days stale). Elo scrapers still dead.
+
+## Brief Queue (reconciled 2026-09-07) — 5 delivered this run, ranked
+1. **gpt-6-astra-takes-webdev-elo-gate-holds** (Discovery) — WRITTEN this cycle. Same-price Mythos competitor; WebDev 1797; Elo gate holds.
+2. **qwen3-8-max-0902-same-price-coding-snapshot** (Discovery) — in-place snapshot, Code Arena 1686 Preliminary. Not written (Astra dominated). Write if 0902 gets a text-overall slug or the alias becomes the live flagship.
+3. **glm-5-3-max-day-24-still-held** (Analysis) — six-model cap case study. Human hold still in force; do not narrate as an admit. Astra now makes the drop-who question louder.
+4. **muse-spark-1-3-code-arena-slug** (Discovery) — 1.3 xHigh 1622 on Code Arena. Standalone if max-reasoning GA is confirmed or text Elo lands.
+5. **six-model-cap-openai-return** (Opinion) — overlapping with #1. Do not write a second cap-mechanics piece this week.
+
+**CARRY-FORWARD / STILL HELD:**
+- **gemini-3.5-pro-2m-context-deep-think** — WRITE WHEN GA CONFIRMED. Still not on official pricing Sep 7.
+- **best-model-for-reasoning-right-now** — HOLD until Gemini 3.5 Pro GA.
+- **kimi-k3-open-weights-not-local** — low priority, increasingly stale.
+- **grok-4-6-preliminary-cools** — still Preliminary / 3453 votes on frozen Sep 2 snapshot. Not a new event.
+- **glm-5-3-flash-open-weight-not-single-gpu** — still valid (320B-A18B). Lower than Astra this week.
+- **muse-spark-1-3-same-price-token-diet** — 1.3 mentioned in Sep 3 Fable piece; code slug is new (brief #4).
+- **muse-glimmer-vs-qwen14b-two-gpu-niche** — human held. Re-surface only if votes or a drop case change.
+- **frontier-labs-sandbox-escape-disclosures** — still uncovered; news hook now ~7 weeks old.
+
+**DROPPED / SUPERSEDED:**
+- **claude-fable-5-1-cheaper-cache-webdev-lead** — WRITTEN 2026-09-03. WebDev lead is now stale (Astra 1797).
+- **openai-gpt-5-6-sol-price-cut-terminal-bench-lead** — WRITTEN 2026-08-30.
+- **qwen3-8-27b-open-weight-discovery** — admitted Aug 30 as qwen27b.
+- **grok-4-6-admission-revisit** — WRITTEN Aug 26 + APPLIED.
+
+## Angles Already Covered (avoid repeating within 30 days)
+- GPT-6 Astra WebDev lead / Elo gate holds (2026-09-07)
+- Claude Fable 5.1 cache cut / WebDev lead (2026-09-03) — WebDev #1 claim is now stale
+- OpenAI GPT-5.6 Sol 20% price cut / Terminal-Bench lead (2026-08-30)
+- Grok Bot cloud teammates vs Grok Build local CLI (2026-08-26)
+- Qwen3.8-Max cools below Gemini 3.1 Pro (2026-08-22)
+- DeepSeek V4 Pro price hike / still cheapest (2026-08-16) — set membership changed Aug 26
+- Grok 4.6 ships after helloai drop (2026-08-12)
+- Muse Spark 1.2 / Muse Code agentic upgrade (2026-08-07)
+- Qwen3.8-Max + DeepSeek V4 Pro rebalance / Grok+Kimi exit (2026-08-07)
+- Claude Opus 5 launch vs Fable 5 (2026-07-25)
+
+## Recurring Gaps to Watch
+- GPT-6 Astra text-overall listing + 2-week Elo → immediate Discovery and a human cap-6 drop call (likely grok)
+- Gemini 3.5 Pro GA → immediate Discovery + same-provider gemini replace
+- grok-4.6-high Preliminary flag drop / vote growth
+- muse-spark-1.3 **text** arena slug (code slug is live)
+- Fable 5.1 text sample maturing past 2,906 votes
+- Human decision on GLM-5.3-max vs Grok 4.6 under six-model cap — now also vs Astra
+- Human decision on Muse Glimmer vs qwen14b under OW six-model cap
+- Grok 4.7 actual ship (~Sep 12 ETA; not brief-worthy until it ships)
+- Do not write another Flash-ships-Pro-waits piece (3.8 Flash is the same angle as 3.6/3.7)
+- Do not write another Grok 4.6 model-card recap
+- Do not write a second Astra recap next week unless text Elo lands
+
+## Notes (2026-09-07)
+- Rank 1 mentions Claude Fable 5.1, Grok 4.6, and Muse Spark 1.3. Corpus still covers Opus 5, Gemini 3.1 Pro, Qwen3.8-Max from earlier articles.
+- add_article.py trimmed `gemini-3-6-flash-ships-3-5-pro-still-waiting` (2026-07-22) to stay at max_articles=10.
+- Last article on the site before this cycle: claude-fable-5-1-cheaper-cache-webdev-lead (2026-09-03).
+
+## Previous landscape: 2026-09-03
 - Two same-provider flagship bumps in 48 hours: Anthropic GA'd **Claude Fable 5.1** on Sep 1 (same $10/$50, cache reads $1→$0.25, API `claude-fable-5-1`); Meta shipped **Muse Spark 1.3** on Sep 2 (same $1.25/$4.25, ~20% fewer tool calls / ~25% fewer tokens vs 1.2; max reasoning still in safety testing). Catalog guard missed both (Fable `[0-9]+` regex; stale Meta blog URL). helloai replaced both rows.
 - Arena.ai text overall dated **Sep 2**: fable 5.1-max 1504±11 / 2906 votes; Fable 5 still 1507±5 / 27,189; muse-spark-1.2 (xHigh) 1499 (no 1.3 slug yet); opus-5-high 1493; gemini-3.1-pro-preview 1487; qwen3.8-max 1480; grok-4.6-high still Preliminary 1461 / 3453. Code Arena WebDev: claude-fable-5.1-max **1765** rank 1; grok-4.6-high 1629 Preliminary.
 - Gemini 3.8 Flash GA Sep 2 at intro $0.75/$3.75 through 2026-12-31. gemini-3.8-flash-high 1494±9 Preliminary / 5125 votes. **Do not write Flash-ships-Pro-waits** — 3.5 Pro still absent from official pricing.

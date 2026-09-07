@@ -1,5 +1,20 @@
 [
   {
+    "slug": "gpt-6-astra-takes-webdev-elo-gate-holds",
+    "title": "Astra Takes WebDev. helloai's Elo Gate Still Holds",
+    "excerpt": "OpenAI shipped GPT-6 Astra at Fable's $10/$50. Code Arena WebDev lists it at 1797. helloai still waits on two weeks of text Elo before it can take a slot.",
+    "date": "2026-09-07",
+    "category": "Discovery",
+    "readTime": "2 min",
+    "content": [
+      "OpenAI shipped GPT-6 Astra on September 3, 2026 at the same $10 input / $50 output per million tokens as Claude Fable 5.1. The API id is gpt-6-astra. Official docs list a 1,050,000-token context window, 128K max output, and cache reads at $1 — four times Fable 5.1's $0.25 cache-read rate. Prompts over 272K input double input and cache rates and multiply output by 1.5 for the whole request. Fast mode is 2x Standard: a Fable-class sticker with a worse cache line.",
+      "The independent signal that moved this week is Code Arena, not OpenAI's scorecard. Arena.ai's September 5, 2026 WebDev board lists gpt-6-astra-max at 1797 on 1,199 votes, rank 1. Claude Fable 5.1-max is 1762 on 2,275 votes. Grok 4.6-high is 1625. Muse Spark 1.3 (xHigh) finally has a code-arena slug at 1622. The text-overall snapshot is still dated September 2 — the day before Astra launched — so gpt-6-astra is not on helloai's Elo table yet.",
+      "Vendor benches are noisier and should be read as vendor benches. OpenAI reports Terminal-Bench 4.0 at 57.9% for Astra versus 55.8% for Fable 5.1 and 37.3% for GPT-5.6 Sol. It reports ARC-AGI-3 at 99.9% using its own Responses API harness, with a footnote that two settings were changed to match real-world performance. Greg Kamradt of the ARC Prize Foundation said Astra surpassed their human action-efficiency baseline on 96% of levels. Those numbers are why the launch post talks about AGI. They are not why helloai would add a row.",
+      "helloai's tracked six is gated on LMArena text-overall Elo, sustained two weeks, with a public API. Astra clears the API and the 200K context bar but fails the Elo bar: it is four days old, the live text board has not listed it, and 1,199 WebDev votes is a debut sample. The set is already at six, so admitting OpenAI as a new provider would force a drop — Grok 4.6 at 1461 is still Preliminary and is the lowest tracked Elo. The owner already held GLM-5.3-max, 1482 on 7,668 votes, rather than drop Grok. Astra does not get a shortcut.",
+      "The routing question this week is not whether Astra is good at computers. It is whether a same-price Mythos competitor with a 4x worse cache read belongs on a directory that currently leads coding with Fable 5.1 and daily use with Muse Spark 1.3 at $1.25/$4.25. If the next text-overall snapshot puts Astra inside 25 points of the floor and keeps it there for two weeks, the six-model rule has to name who leaves. Until then, /api/recommend still has no OpenAI row, and the WebDev crown sits on a model the table does not track."
+    ]
+  },
+  {
     "slug": "claude-fable-5-1-cheaper-cache-webdev-lead",
     "title": "Fable 5.1 Cuts Cache Cost While Taking WebDev",
     "excerpt": "Claude Fable 5.1 keeps the $10/$50 list but cuts cache reads 75%. Code Arena WebDev lists it at 1765, well ahead of Grok 4.6.",
@@ -132,21 +147,6 @@
       "Early third-party signal points the same direction. Lovable's internal eval found that Opus 5 \"isn't just better on our hardest agentic coding tasks, up 22% over Opus 4.7, it's steadier, with far less variance run to run.\" Variance is the metric that matters for agentic workloads and the one benchmarks rarely capture. A model that scores well on average but fails one run in five forces you to build retry scaffolding around it; a steadier model at half the price changes the shape of the system you build, not just the invoice.",
       "The caveats are real. The Frontier-Bench figures are a launch-day Anthropic claim, reported by Vellum and tech-ish but not independently rerun. Benchmarks published by the vendor on release day have a way of narrowing under outside scrutiny. Fable 5 may still hold edges Anthropic has not chosen to publish — long-horizon agent runs, safety headroom, behavior under adversarial load are all places where a premium tier could justify itself without ever appearing on a leaderboard. Declaring it dead 24 hours in would be its own kind of hype.",
       "That leaves an uncomfortable question for this site. helloai's models.json has already swapped Opus 4.8 for Opus 5, but Fable 5 remains separately tracked at 1507 Elo, still listed as leader in both Overall Preference and Coding & Engineering. Those two facts are now in tension, and the honest answer is that our admission rules do not yet say what to do when a lab undercuts its own flagship — Elo and published benchmarks are disagreeing, and we have not decided which wins. If same-lab cannibalization becomes the pattern rather than the exception, every directory tracking premium tiers as a separate rank will need a rule for how long a flagship keeps its crown after a cheaper sibling passes it."
-    ]
-  },
-  {
-    "slug": "gemini-3-6-flash-ships-3-5-pro-still-waiting",
-    "title": "Gemini 3.6 Flash Ships — 3.5 Pro Still Waiting",
-    "excerpt": "Google GA'd Gemini 3.6 Flash on July 21 while 3.5 Pro stays partner-only. helloai still tracks Gemini 3.1 Pro — and arena already scores the new Flash near frontier.",
-    "date": "2026-07-22",
-    "category": "Analysis",
-    "readTime": "2 min",
-    "content": [
-      "On July 21, Google made Gemini 3.6 Flash and Gemini 3.5 Flash-Lite generally available on the Gemini API — and still did not ship Gemini 3.5 Pro. The official blog frames 3.6 Flash as the new workhorse for coding, knowledge work, and multimodal agents, with lower output verbosity than 3.5 Flash. Pricing lands at $1.50 input and $7.50 output per million tokens. Logan Kilpatrick said 3.5 Pro is testing with partners and will land when ready; Gemini 4 pre-training has already started. For teams waiting since Google's May I/O tease of a June Pro launch, that is another week of Flash-only news.",
-      "helloai still tracks Gemini 3.1 Pro Preview as the Google frontier entry: $2/$12 for prompts under 200K tokens, 1M context, and 1486 Elo on LMArena text overall as of July 21. That is deliberate. Admission rules keep one model per positioning slot, and Flash does not replace Pro on hard reasoning even when arena scores get close. Gemini 3.6 Flash already sits at 1485 Elo with preliminary votes — one point under 3.1 Pro and inside the 25-point floor of the tracked set. It would pass the Elo hard filter if scored as a new Google flagship. It fails the product test: same provider, speed-and-cost tier, and no claim on the Hard Reasoning & Science niche 3.1 Pro still holds.",
-      "The delay is no longer rumor. Bloomberg reported mid-July that 3.5 Pro missed internal performance goals; TechCrunch and Ars covered the July 21 Flash release as confirmation that Pro remains gated. Google's own post says 3.5 Pro will be broadly available \"as soon as it's ready.\" Meanwhile rivals moved: Claude Fable 5 leads helloai's set at 1507 Elo, Muse Spark 1.1 sits second at 1495 after this week's arena refresh, and Moonshot's Kimi K3 holds 1486 on the public API. Google's Flash line is getting more efficient; its Pro line is getting older relative to the board.",
-      "What developers should do this week is separate agent economics from flagship aspiration. If your workload is multi-step tool use and long-horizon planning where output tokens dominate cost, retest 3.6 Flash first — the rate card is live on Google's pricing page. If you need PhD-level science, multimodal understanding, or the highest-capability Google brain you can buy today, 3.1 Pro remains the helloai pick until 3.5 Pro appears on that same pricing page with public API access.",
-      "helloai will not promote 3.6 Flash into the six-model frontier table while 3.1 Pro is still the documented multimodal leader and 3.5 Pro is still not GA. The moment 3.5 Pro ships with transparent rates and arena signal, it becomes a same-provider replace candidate for gemini, not an expansion. Until then, the news is efficiency, not a new crown."
     ]
   }
 ]
