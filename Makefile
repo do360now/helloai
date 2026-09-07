@@ -1,4 +1,4 @@
-VERSION=2.14.58
+VERSION=2.14.60
 
 # ─── Rootless Docker ─────────────────────────────────────
 # Point at the rootless per-user socket. ?= preserves any DOCKER_HOST
