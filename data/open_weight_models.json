@@ -30,7 +30,7 @@
     "tag": "Coding Champion",
     "desc": "Alibaba's Qwen3.8 generation dense flagship, replacing the Qwen3 32B card at a smaller footprint: 27B parameters, 262K native context, and hybrid tool-use. Fits a single RTX 4090 at Q4 (~15.3 GiB weights); community-reported 65 tok/s decode. Apache 2.0.",
     "color": "#5B4AE8",
-    "elo": 1436,
+    "elo": 1437,
     "context_window": 262144,
     "strengths": [
       "Coding & Engineering",

@@ -1,5 +1,20 @@
 [
   {
+    "slug": "gpt-6-astra-text-elo-lands-two-week-clock",
+    "title": "Astra Hits the Text Board. The Two-Week Clock Is Still Ticking",
+    "excerpt": "Astra is on the Sep 13 text board at 1480 Elo. helloai still waits on two weeks and a thicker sample before it can take a slot.",
+    "date": "2026-09-18",
+    "category": "Discovery",
+    "readTime": "2 min",
+    "content": [
+      "The listing last week's article said was missing is now on the board. Arena.ai's September 13, 2026 text-overall snapshot puts gpt-6-astra-max at 1480±12 Elo on 2,693 votes, rank 24. OpenAI shipped GPT-6 Astra on September 3, so this is a ten-day sample, not two weeks of sustained Elo. helloai's admission rule cares about that distinction more than the rank.",
+      "The invoice did not change while the Elo arrived. The API id is gpt-6-astra at $10 input / $50 output per million tokens, cache reads at $1, and a 1,050,000-token context. Prompts over 272K input double input and cache rates and multiply output by 1.5; Fast mode is 2x Standard. Claude Fable 5.1 is the same $10/$50 list with cache reads at $0.25 — four times cheaper than Astra's $1 cache read. A same-sticker competitor with a worse cache still has to clear the Elo gate, not the price sheet.",
+      "Code Arena is not the gate, and it already crowned Astra. The September 11, 2026 WebDev board lists gpt-6-astra-max at 1800 on 2,281 votes, rank 1, with claude-fable-5.1-max at 1758 on 3,036 votes. On text overall, Claude Fable 5.1-max is 1498±8 on 5,783 votes, and Muse Spark 1.3-max is now on that board at 1493±9 on 4,723 votes. Gemini 3.1 Pro Preview remains 1487; Qwen3.8-Max is 1481. Astra's 1480 sits a point under Qwen, with a ±12 interval wider than Fable's ±8 and Muse's ±9.",
+      "helloai tracks six frontier APIs, and the floor is now Grok 4.6 at 1456 on 15,521 votes, no longer Preliminary. Admission requires LMArena text-overall Elo within 25 points of that floor, sustained two weeks, not a fresh debut with few votes. 1480 clears the 25-point bar versus 1456; 2,693 votes and a ±12 interval on a September 13 snapshot do not clear the two-week / thin-sample bar. Admitting Astra as a new provider would drop Grok — the owner already held GLM-5.3-max at 1483 on 10,960 votes rather than make that cut.",
+      "Ten days after ship, the two-week clock is still ticking. The interesting fight is no longer whether GPT-6 Astra has a text Elo. It is whether a 2,693-vote debut at rank 24 is allowed to displace a 15,521-vote floor the table already refused to drop for GLM-5.3-max. If later snapshots keep Astra inside 25 points of Grok 4.6 once that clock runs out, the six-model rule has to name who leaves."
+    ]
+  },
+  {
     "slug": "gpt-6-astra-takes-webdev-elo-gate-holds",
     "title": "Astra Takes WebDev. helloai's Elo Gate Still Holds",
     "excerpt": "OpenAI shipped GPT-6 Astra at Fable's $10/$50. Code Arena WebDev lists it at 1797. helloai still waits on two weeks of text Elo before it can take a slot.",
@@ -132,21 +147,6 @@
       "helloai applies the same rule it uses for every same-provider bump: replace 1.1 with 1.2 under the existing muse id. Pricing and context do not change; the card copy and arena aliases do. Muse remains the cheapest agentic option we track, undercutting Opus 5 ($5/$25), Kimi K3 ($3/$15), and Grok 4.5 ($2/$6) on both sides of the meter for teams that want multi-agent orchestration without Mythos-class bills.",
       "Trade-offs stay real. Arena votes for 1.2 are still early compared with Fable and the long-lived Claude Opus lines, and Meta's contributor tier — roughly $0.10/$0.20 when you opt in to training use of prompts and completions — is a different product from the standard no-train production rate. Standard tier is the default for anyone treating this as a production dependency. Coding-agent previews also move faster than public Elo; treat Muse Code claims as vendor-directed until your own harness evals land.",
       "The wider board did not freeze while Meta shipped. Qwen3.8-Max is pressing the $2/$6 tier with high preliminary arena scores, and Gemini 3.5 Pro is still missing from Google's pricing page. For /api/recommend today, Meta's slot is 1.2: same budget, slightly higher human preference, and a coding-agent surface that did not exist when 1.1 replaced Qwen in July. The next decision is whether that stack holds once Alibaba's Max-class model and Google's delayed Pro both finish their launches."
-    ]
-  },
-  {
-    "slug": "claude-opus-5-outscores-fable-5-at-half-price",
-    "title": "Claude Opus 5 Just Beat Anthropic's Own Flagship",
-    "excerpt": "Anthropic's $5/$25 Opus 5 beats its own $10/$50 Fable 5 on Frontier-Bench and ARC-AGI-3, raising an uncomfortable question about who really leads the Claude lineup.",
-    "date": "2026-07-25",
-    "category": "Analysis",
-    "readTime": "2 min",
-    "content": [
-      "Anthropic's cheapest flagship is now its best one. Claude Opus 5 landed on July 24, 2026 at $5/$25 per million tokens — the same rate card as Opus 4.8 — and it beats Fable 5, the $10/$50 premium tier, on Frontier-Bench and ARC-AGI-3. On Frontier-Bench v0.1 the spread is not subtle: 43.3% for Opus 5 against 33.7% for Fable 5 and 18.7% for Opus 4.8. A lab does not usually ship a model that makes its own top SKU look overpriced.",
-      "The price comparison is the part that should make anyone with a budget line pay attention. Opus 5 costs exactly half of Fable 5 on both input and output. Fable 5's position has also been eroding independently — since its June 30 relaunch it has been credits-only, no longer bundled into standard Claude plans, and it ships without Zero Data Retention support. For a team evaluating both today, the expensive model is harder to buy, harder to compliance-approve, and now behind on the published numbers.",
-      "Early third-party signal points the same direction. Lovable's internal eval found that Opus 5 \"isn't just better on our hardest agentic coding tasks, up 22% over Opus 4.7, it's steadier, with far less variance run to run.\" Variance is the metric that matters for agentic workloads and the one benchmarks rarely capture. A model that scores well on average but fails one run in five forces you to build retry scaffolding around it; a steadier model at half the price changes the shape of the system you build, not just the invoice.",
-      "The caveats are real. The Frontier-Bench figures are a launch-day Anthropic claim, reported by Vellum and tech-ish but not independently rerun. Benchmarks published by the vendor on release day have a way of narrowing under outside scrutiny. Fable 5 may still hold edges Anthropic has not chosen to publish — long-horizon agent runs, safety headroom, behavior under adversarial load are all places where a premium tier could justify itself without ever appearing on a leaderboard. Declaring it dead 24 hours in would be its own kind of hype.",
-      "That leaves an uncomfortable question for this site. helloai's models.json has already swapped Opus 4.8 for Opus 5, but Fable 5 remains separately tracked at 1507 Elo, still listed as leader in both Overall Preference and Coding & Engineering. Those two facts are now in tension, and the honest answer is that our admission rules do not yet say what to do when a lab undercuts its own flagship — Elo and published benchmarks are disagreeing, and we have not decided which wins. If same-lab cannibalization becomes the pattern rather than the exception, every directory tracking premium tiers as a separate rank will need a rule for how long a flagship keeps its crown after a cheaper sibling passes it."
     ]
   }
 ]

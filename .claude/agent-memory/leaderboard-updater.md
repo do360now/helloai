@@ -1,6 +1,64 @@
 # leaderboard-updater agent memory
 
-## Last run: 2026-09-07 weekly (Grok) — GPT-6 Astra watch; Qwen 0902 alias; WebDev numbers
+## Last run: 2026-09-18 weekly (Grok) — Astra text Elo lands; Muse 1.3-max alias; Elo --set
+
+### Applied
+- **muse arena alias**: prepend `muse-spark-1.3-max` (Sep 13 text overall 1493±9 / 4723). Card name stays Muse Spark 1.3.
+- **muse desc**: max reasoning is live (product page + 1.3-max slug).
+- **fable desc + Coding insight**: Code Arena WebDev 1762→**1758**; Astra 1797→**1800**.
+- **Overall insight**: 1504→**1498**.
+- **grok desc**: text 1461→**1456** / 15,521 votes, Preliminary flag dropped; WebDev 1625→**1618**.
+- **Elo** (arena.ai Sep 13, manual `--set`/`--set-ow`; nakasyou 484d, CSV 381d): fable 1504→**1498**, muse 1499→**1493**, qwen 1480→**1481**, grok 1461→**1456**, qwen27b 1436→**1437**. claude 1493, gemini 1487, gemma 1451, mistral 1357, qwen30ba3b 1327, gptoss20b 1317, qwen14b 1300 unmatched.
+
+### Catalog / cluster
+- Catalog guard exit 0. Tracked names still current: Fable 5.1, Opus 5, Gemini 3.1 Pro, Muse Spark 1.3, Qwen3.8-Max, Grok 4.6.
+- Cluster bench: no drift vs the **2026-07-15** "Model comparison — cluster-only" table. Same untracked bench candidates as Sep 7; skipped (rejected Aug 30, within 30 days). qwen27b still has no first-party `bench_source`. Last-integrated bench date remains **2026-07-15**; current-rig leaderboard in results.md is still the 2026-08-27 dual-5060 table the guard does not map.
+
+### Verified model states
+**Frontier (Elo desc, text overall Sep 13):**
+- **fable**: Claude Fable 5.1 — $10/$50, 1M, **1498** (claude-fable-5.1-max 1498±8 / 5783)
+- **muse**: Muse Spark 1.3 — $1.25/$4.25, 1M, **1493** (muse-spark-1.3-max 1493±9 / 4723). Max reasoning GA.
+- **claude**: Claude Opus 5 — $5/$25, 1M, **1493** (claude-opus-5-high 1493±4 / 42617)
+- **gemini**: Gemini 3.1 Pro — $2/$12, 1M, **1487** (gemini-3.1-pro-preview 1487±3 / 106951)
+- **qwen**: Qwen3.8-Max — $2/$6, 1M, **1481** (qwen3.8-max 1481±6 / 16670). 0902 still code-only.
+- **grok**: Grok 4.6 — $2/$6, 500K, **1456** (grok-4.6-high 1456±6 / 15521, no Preliminary)
+
+**Open-weight:** gemma 1451, qwen27b **1437**, mistral 1357, qwen30ba3b 1327, gptoss20b 1317, qwen14b 1300 (unmatched)
+
+### Official pricing still current
+- Fable 5.1 $10/$50, cache reads $0.25 (https://platform.claude.com/docs/en/about-claude/pricing)
+- Opus 5 $5/$25
+- Gemini 3.1 Pro Preview $2/$12 ≤200k (https://ai.google.dev/gemini-api/docs/pricing) — 3.5 Pro still absent. 3.8 Flash GA $0.75/$3.75 intro through 2026-12-31.
+- Muse Spark 1.3 $1.25/$4.25 (contributor $0.10/$0.20) — https://developer.meta.com/ai/models/muse-spark/
+- Qwen3.8-Max $2/$6, 1M — https://www.qwencloud.com/models/qwen3.8-max
+- Grok 4.6 $2/$6 (<200k) / $4/$12 (≥200k), 500K; docs still recommend 4.6
+- GPT-6 Astra (untracked) $10/$50, cache $1, 1,050,000 ctx — https://developers.openai.com/api/docs/models/gpt-6-astra
+
+### Rejected this run
+- **gpt-6-astra**: now on Sep 13 text board at **1480±12 / 2693**. Clears 25-pt floor vs grok 1456. Snapshot is 10 days after Sep 3 launch; thin sample / ±12. **Fails 2-week Elo hard req.** Cap-6 drop would be grok. Top watch for next cycle.
+- **grok-4.7**: not shipped. Docs still recommend 4.6. Sep 12 ETA missed; GCP quota leaks are not a model card.
+- **gemini-3.5-pro**: still absent from official pricing.
+- **gemini-3.8-flash**: 1493±9 Preliminary / 5076. Same-provider Flash; replacing 3.1 Pro would lose Hard Reasoning.
+- **Mistral Small 4**: Apache 2.0 119B MoE; official min infra 4x H100. Fails single-GPU. Keep Small 3.2 24B.
+- Cluster leftovers, GLM OW, Hy3, gpt-5.6-sol, muse-glimmer: skipped (rejected/held within 30 days, no material new drop case). muse-glimmer still 1427±10 / 3666 (votes slightly down).
+
+### Needs human review / pending
+- **gpt-6-astra**: top watch. Text Elo landed. Revisit the moment the board is 2+ weeks post-launch with a thicker sample. Cap-6 drop would be grok (lowest Elo, now 1456 on 15k votes).
+- **glm-5.3-max**: Day 35 from Aug 14. Text Sep 13: **1483±6 / 10960**. Grok gap widened 21→27 pts. Human held Aug 30 (whiplash vs Grok). Re-surface; do not auto-drop grok.
+- **muse-glimmer**: human held Aug 30 (qwen14b two-GPU niche). Votes unchanged/down. No new drop case.
+- Watch Fable 5.1 text sample as votes grow past 5783 (interval ±8 vs Fable 5-high's ±5 / 30057).
+- Wire arena.ai into Elo scraper (nakasyou 484d; CSV 381d). Text board itself is 5 days stale (Sep 13 vs today Sep 18).
+- Cluster guard still bound to 2026-07-15 table; consider mapping the 2026-08-27 dual-5060 leaderboard before treating 112.28 tok/s as the gptoss20b card number.
+
+### Notes
+- `--set` is `nargs="+"`: pass `--set fable=1498 muse=1493 qwen=1481`, not repeated `--set` flags (later flags overwrite).
+- Dated snapshots (qwen3.8-max-0902) still do not change the catalog product name. 0902 remains code-arena only on Sep 13 text board.
+- Grok 4.6 long-context surcharge still $4/$12 when prompt ≥200k. Card uses standard $2/$6.
+- Astra cache reads are $1 vs Fable 5.1 $0.25 at the same $10/$50 list — material if/when Astra is admitted.
+- Muse 1.3-max is now the live text slug; do not fall back to 1.2 xHigh Elo.
+- Claude Sonnet 5 $2/$10 intro price is now the permanent standard. We do not track Sonnet.
+
+## Previous run: 2026-09-07 weekly (Grok) — GPT-6 Astra watch; Qwen 0902 alias; WebDev numbers
 
 ### Applied
 - **qwen arena alias**: prepend `qwen3.8-max-0902` (QwenCloud Sep 2 coding/cowork snapshot; same $2/$6, 1M). Card name stays Qwen3.8-Max.

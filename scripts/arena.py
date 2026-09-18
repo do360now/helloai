@@ -94,6 +94,7 @@ _NAME_MAP: dict[str, list[str]] = {
         "gemini-3-flash",
     ],
     "muse": [
+        "muse-spark-1.3-max",
         "muse-spark-1.3",
         "muse-spark-1.3 (xHigh)",
         "muse-spark-1.2",

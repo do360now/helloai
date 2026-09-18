@@ -2,14 +2,14 @@
   {
     "name": "Overall Preference",
     "leader": "Claude Fable 5.1",
-    "insight": "Highest Elo in the tracked set at 1504 on LMArena text overall. Mythos-class capability with cheaper cache reads than Fable 5 and more precise cyber/biology safeguards.",
+    "insight": "Highest Elo in the tracked set at 1498 on LMArena text overall. Mythos-class capability with cheaper cache reads than Fable 5 and more precise cyber/biology safeguards.",
     "icon": "trophy",
     "color": "#FBBF24"
   },
   {
     "name": "Coding & Engineering",
     "leader": "Claude Fable 5.1",
-    "insight": "Leads the tracked set on Code Arena WebDev at 1762, behind untracked gpt-6-astra-max at 1797. Same $10/$50 list as Fable 5, with cache reads cut to $0.25.",
+    "insight": "Leads the tracked set on Code Arena WebDev at 1758, behind untracked gpt-6-astra-max at 1800. Same $10/$50 list as Fable 5, with cache reads cut to $0.25.",
     "icon": "code",
     "color": "#00E5A0"
   },
