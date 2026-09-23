@@ -1,7 +1,40 @@
 # Article Idea Generator — Cross-Session Memory
 
 ## Last Run
-- Date: 2026-09-18 (weekly update — rank-1 brief written this cycle)
+- Date: 2026-09-23 (weekly update — rank-1 brief written this cycle)
+
+## News landscape this week (2026-09-23)
+- **Claude Opus 5.5** shipped Sep 22 at **$4/$20**, cache reads **$0.20**, 1M context. API id `claude-opus-5-5`. Anthropic: Fable 5.1-level on most work, ~40% less to run than Opus 5, output >30% faster. Not on the Sep 13 text board or the Sep 22 WebDev board. Rank-1 article written: same-row replace, card Elo stays the Opus 5 slug.
+- **Grok 4.7** shipped Sep 21. Docs recommend it for chat and code. Same **$2/$6** and 500K window ($4/$12 at ≥200k). WebDev Sep 22: grok-4.7-xhigh **1632** +17/-17 / **1425** votes, rank 10. Text board has no 4.7 slug. Card Elo stays grok-4.6-high **1456**.
+- Text overall is still **Sep 13**. Astra still **1480±12 / 2693**. Calendar age is day 20; no second text point, so the two-week sustainment bar is still unmet. WebDev Sep 22: Astra **1793** / 4230 rank 1; Fable 5.1-max **1755** / 4887.
+- Gemini 3.5 Pro still absent. Do not write Flash-ships-Pro-waits.
+- GLM-5.3-max text unchanged (1483±6 / 10960). WebDev now 1620 / 5763. Human hold from Aug 30 still in force.
+- Arena scrapers still dead (nakasyou 489d, CSV 385d).
+
+## Brief Queue (reconciled 2026-09-23) — 5 delivered this run, ranked
+1. **opus-5-5-cuts-price-grok-4-7-same-rate** (Analysis) — WRITTEN this cycle. Opus $4/$20 vs Grok same $2/$6; both Elos are predecessor fallbacks; Astra gate still holds.
+2. **gpt-6-astra-day-20-text-board-frozen** (Analysis) — second Astra piece would repeat Sep 18. Hold unless a text snapshot newer than Sep 13 lands. WebDev 1793 is a number update, not a new thesis.
+3. **glm-5-3-max-webdev-1620-hold-stands** (Analysis) — code votes grew; text Elo did not. Human hold still blocks the drop. Do not narrate as an admit.
+4. **grok-4-7-webdev-debut-1425-votes** (Discovery) — folded into #1. Standalone only if 4.7 gets a text slug with a real sample.
+5. **opus-5-5-cache-020-vs-fable-025** (Analysis) — cache-read comparison ($0.20 vs Fable $0.25 vs Astra $1) is inside #1. Do not split it out this week.
+
+**CARRY-FORWARD / STILL HELD:**
+- **gemini-3.5-pro-2m-context-deep-think** — WRITE WHEN GA CONFIRMED. Still not on official pricing Sep 23.
+- **best-model-for-reasoning-right-now** — HOLD until Gemini 3.5 Pro GA.
+- **kimi-k3-open-weights-not-local** — low priority, stale.
+- **glm-5-3-flash-open-weight-not-single-gpu** — still valid. Lower than the price-cut story this week.
+- **muse-glimmer-vs-qwen14b-two-gpu-niche** — human held Aug 30. No new drop case.
+- **frontier-labs-sandbox-escape-disclosures** — still uncovered; news hook is stale.
+
+**DROPPED / SUPERSEDED:**
+- **gpt-6-astra-text-elo-lands-two-week-clock** — WRITTEN 2026-09-18. Text number unchanged; do not rewrite until the board moves.
+- **gpt-6-astra-takes-webdev-elo-gate-holds** — WRITTEN 2026-09-07. WebDev #1 still true at 1793.
+- **grok-4-6-preliminary-drops-elo-cools** — superseded by the 4.7 replace. Card Elo is now explicitly a 4.6 fallback.
+
+## Angles Already Covered (avoid repeating within 30 days)
+- Opus 5.5 price cut and Grok 4.7 same-rate replace, Elo still predecessor fallbacks (2026-09-23)
+- Astra text Elo lands / two-week clock still ticking (2026-09-18)
+- GPT-6 Astra WebDev lead / Elo gate holds (2026-09-07)
 
 ## News landscape this week (2026-09-18)
 - **GPT-6 Astra text Elo landed.** Arena.ai text overall dated **Sep 13**: gpt-6-astra-max **1480±12 / 2693** rank 24. Launch was Sep 3, so the snapshot is 10 days, not two weeks. Code Arena WebDev Sep 11: **1800** rank 1 / 2281 votes; Fable 5.1-max **1758**. Rank-1 article written this cycle: gate still holds on the two-week / thin-sample bar.

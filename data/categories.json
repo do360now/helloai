@@ -9,7 +9,7 @@
   {
     "name": "Coding & Engineering",
     "leader": "Claude Fable 5.1",
-    "insight": "Leads the tracked set on Code Arena WebDev at 1758, behind untracked gpt-6-astra-max at 1800. Same $10/$50 list as Fable 5, with cache reads cut to $0.25.",
+    "insight": "Leads the tracked set on Code Arena WebDev at 1755, behind untracked gpt-6-astra-max at 1793. Same $10/$50 list as Fable 5, with cache reads cut to $0.25.",
     "icon": "code",
     "color": "#00E5A0"
   },

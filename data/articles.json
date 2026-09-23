@@ -1,5 +1,20 @@
 [
   {
+    "slug": "opus-5-5-cuts-price-grok-4-7-same-rate",
+    "title": "Opus 5.5 Cuts the Price. Grok 4.7 Keeps Its Rate",
+    "excerpt": "Claude Opus 5.5 drops to $4/$20 while Grok 4.7 keeps $2/$6. Text Arena is still the September 13 snapshot, so both cards keep the prior Elo.",
+    "date": "2026-09-23",
+    "category": "Analysis",
+    "readTime": "2 min",
+    "content": [
+      "Anthropic cut the Opus list price on September 22, 2026, and helloai is replacing Claude Opus 5 with Claude Opus 5.5 in the same row. The API id is claude-opus-5-5. Input falls from $5 to $4 per million tokens, output from $25 to $20, and cache reads from $0.50 to $0.20. Anthropic says the model performs at the level of Claude Fable 5.1 on most work, costs about 40% less to run than Opus 5 on typical workloads, and generates output more than 30% faster. The context window stays 1 million tokens.",
+      "The invoice moved before the leaderboard did. Arena.ai's text-overall table is still the September 13 snapshot, nine days before Claude Opus 5.5 shipped, and the September 22 Code Arena WebDev board still lists claude-opus-5-max and claude-opus-5-high rather than a 5.5 slug. helloai keeps the prior text score on the card: claude-opus-5-high at 1493. New aliases prefer claude-opus-5.5 names and fall back to the Opus 5 slugs, so the next live scrape can replace that number without inventing one today.",
+      "xAI's release is a version bump with the same bill. Grok 4.7 shipped on September 21, and the developer docs now say to use Grok 4.7 for chat and for code. The API id is grok-4.7. The window is still 500,000 tokens. Standard rates are still $2 input and $6 output per million tokens when the prompt stays under 200,000 tokens, and $4 and $12 once a prompt crosses that line. SpaceXAI's launch post says the model is served at the same price and speed as Grok 4.6.",
+      "The only independent score for Grok 4.7 is a one-day code sample. On the September 22 WebDev board, grok-4.7-xhigh sits at 1632 with a plus-or-minus 17 interval on 1,425 votes, rank 10. grok-4.6-high is 1616 on 6,447 votes. gpt-6-astra-max still leads that board at 1793 on 4,230 votes, and claude-fable-5.1-max is 1755 on 4,887. Text overall has not listed grok-4.7. The card Elo stays 1456, which is grok-4.6-high on the September 13 text snapshot, not a measurement of 4.7.",
+      "The six-model set does not grow on either launch. GPT-6 Astra's only text score is still 1480 plus-or-minus 12 on 2,693 votes from September 13, ten days after its September 3 debut. The model is twenty days old today, but the board has not published a second point, so the two-week sustainment bar is still unmet. Admitting OpenAI would mean dropping a tracked row at a cap of six. helloai updates Claude Opus 5.5 and Grok 4.7 because the catalogs did, and it leaves both Elo fields on the last slug the text board actually scored."
+    ]
+  },
+  {
     "slug": "gpt-6-astra-text-elo-lands-two-week-clock",
     "title": "Astra Hits the Text Board. The Two-Week Clock Is Still Ticking",
     "excerpt": "Astra is on the Sep 13 text board at 1480 Elo. helloai still waits on two weeks and a thicker sample before it can take a slot.",
@@ -132,21 +147,6 @@
       "DeepSeek V4 Pro is the price shock. Official DeepSeek API pricing puts cache-miss input at $0.435 and output at $0.87 per million tokens, with the same 1M context as the rest of the frontier table. Arena deepseek-v4-pro sits around 1457 Elo — low enough that prior weeks rejected it when the set floor was higher, but within the 25-point threshold of today's floor. It becomes helloai's Honest Daily Use leader: the default when token volume dominates and Mythos-class quality is not required.",
       "The drops are pure set-size math under the six-model rule. Grok 4.5 was the lowest Elo entry at 1468 with Honest Daily Use leadership that DeepSeek now owns on cost; Kimi K3 at 1485 loses the Moonshot slot to free room for Alibaba's higher arena score. Neither lab vanished from the market — only from the curated recommend table. Teams still routing to Grok or Kimi can keep those APIs; /api/recommend will no longer surface them.",
       "Open-weight admission is separate. gpt-oss-20b is Apache 2.0, ~21B total / ~3.6B active MoE, native MXFP4 around 16 GB, and 1317 Elo on Arena. On our budget two-GPU cluster it measured 53.73 tok/s — the fastest open-weight throughput we track — which is why it replaces Qwen3 8B rather than expanding past six local cards. The result is a frontier set that spans Anthropic, Meta, Alibaba, Google, and DeepSeek, plus an open-weight shelf that finally includes OpenAI weights without pretending a 2.8T Kimi dump fits a single GPU."
-    ]
-  },
-  {
-    "slug": "muse-spark-1-2-muse-code-agentic-upgrade",
-    "title": "Muse Spark 1.2 Ships With Muse Code",
-    "excerpt": "Meta ships Muse Spark 1.2 with Muse Code at the same $1.25/$4.25 rates. helloai bumps 1.1 to 1.2 at 1498 Elo — still the cheapest agentic pick.",
-    "date": "2026-08-07",
-    "category": "Discovery",
-    "readTime": "2 min",
-    "content": [
-      "Meta just upgraded its cheapest frontier API without raising the price. Muse Spark 1.2 landed on the Meta Model API and OpenRouter around August 5–6 at the same $1.25 per million input tokens and $4.25 per million output tokens that made 1.1 the budget agentic pick — still with a full 1M-token context window. On Arena's text overall board dated August 6, muse-spark-1.2 (xHigh) sits at 1498 Elo, second only to Claude Fable 5 at 1507 in helloai's tracked set.",
-      "The model did not arrive alone. Meta AI chief Alexandr Wang said Spark 1.2 was developed and trained alongside Muse Code, Meta's first coding-agent product, now in preview with pay-as-you-go pricing described as similar to the Spark API. That pairing matters more than a version digit: Meta is selling a harness and a model as one stack, the same play Anthropic and OpenAI have been running with Claude Code/Cowork and Codex-style surfaces. For teams already on the Meta Model API, the path is a same-id upgrade, not a vendor switch.",
-      "helloai applies the same rule it uses for every same-provider bump: replace 1.1 with 1.2 under the existing muse id. Pricing and context do not change; the card copy and arena aliases do. Muse remains the cheapest agentic option we track, undercutting Opus 5 ($5/$25), Kimi K3 ($3/$15), and Grok 4.5 ($2/$6) on both sides of the meter for teams that want multi-agent orchestration without Mythos-class bills.",
-      "Trade-offs stay real. Arena votes for 1.2 are still early compared with Fable and the long-lived Claude Opus lines, and Meta's contributor tier — roughly $0.10/$0.20 when you opt in to training use of prompts and completions — is a different product from the standard no-train production rate. Standard tier is the default for anyone treating this as a production dependency. Coding-agent previews also move faster than public Elo; treat Muse Code claims as vendor-directed until your own harness evals land.",
-      "The wider board did not freeze while Meta shipped. Qwen3.8-Max is pressing the $2/$6 tier with high preliminary arena scores, and Gemini 3.5 Pro is still missing from Google's pricing page. For /api/recommend today, Meta's slot is 1.2: same budget, slightly higher human preference, and a coding-agent surface that did not exist when 1.1 replaced Qwen in July. The next decision is whether that stack holds once Alibaba's Max-class model and Google's delayed Pro both finish their launches."
     ]
   }
 ]

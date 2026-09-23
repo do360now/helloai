@@ -12,7 +12,7 @@
       "model_id": "claude",
       "provider": "Anthropic",
       "catalog_url": "https://platform.claude.com/docs/en/about-claude/pricing",
-      "news_url": "https://www.anthropic.com/news",
+      "news_url": "https://www.anthropic.com/news/claude-opus-5-5",
       "tracked_name_pattern": "Claude Opus ([0-9.]+)",
       "catalog_name_patterns": ["Claude Opus ([0-9.]+)"]
     },
@@ -44,7 +44,7 @@
       "model_id": "grok",
       "provider": "xAI",
       "catalog_url": "https://docs.x.ai/developers/models",
-      "news_url": "https://x.ai/news/grok-4-6",
+      "news_url": "https://x.ai/news/grok-4-7",
       "tracked_name_pattern": "Grok ([0-9.]+)",
       "catalog_name_patterns": ["Grok ([0-9.]+)"],
       "recommendation_patterns": [
