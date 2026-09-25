@@ -6,7 +6,8 @@
 //
 // No dependencies: it drives a local Chromium over the DevTools protocol using Node's built-in fetch and
 // WebSocket (Node 22+). Set CHROME=/path/to/chrome, or it looks in the Playwright cache and common paths.
-// Exits 0 with a message when no Chromium is found (a missing browser never fails a deploy).
+// Exit codes: 0 = PASS, 1 = FAIL, 2 = SKIP (no Chromium found or browser unreachable). A skip prints `SKIP` on its
+// own line so it can never be mistaken for a pass; a wrapper decides whether a skip is acceptable.
 import { spawn } from 'node:child_process';
 import { existsSync, readdirSync, mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir, homedir } from 'node:os';
@@ -29,8 +30,8 @@ function findChrome() {
 
 const chrome = findChrome();
 if (!chrome) {
-  console.log('ui_smoke: no Chromium found (set CHROME=...); skipping.');
-  process.exit(0);
+  console.log('SKIP: no Chromium found (set CHROME=/path/to/chrome).');
+  process.exit(2);
 }
 
 const profile = mkdtempSync(join(tmpdir(), 'ui-smoke-'));
@@ -43,7 +44,7 @@ let target;
 for (let i = 0; i < 30 && !target; i++) {
   try { target = await (await fetch(`http://127.0.0.1:${PORT}/json/new?about:blank`, { method: 'PUT' })).json(); } catch { await sleep(300); }
 }
-if (!target) { console.log('ui_smoke: could not reach the browser.'); process.exit(1); }
+if (!target) { console.log('SKIP: could not reach the browser.'); cleanup(); process.exit(2); }
 
 const ws = new WebSocket(target.webSocketDebuggerUrl);
 await new Promise((r) => (ws.onopen = r));
