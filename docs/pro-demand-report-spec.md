@@ -255,4 +255,13 @@ python3 scripts/api_usage_report.py app.log
 
 `az webapp log tail` (also `make az_logs`) cannot return past lines. For history use `az webapp log download` (needs App Service filesystem logging on) or a Log Analytics query such as `AppServiceConsoleLogs | where ResultDescription has "[api-metrics]"` (needs diagnostic settings sending logs to a workspace). Turn one of them on before relying on these lines: without retention, history is lost.
 
+Check what is on now (results not known when this was written):
+
+```bash
+az webapp log show --name $AZURE_APP --resource-group $AZURE_RG          # application/container logging config
+az monitor diagnostic-settings list --resource <webapp resource id>       # is anything feeding Log Analytics?
+```
+
+Durable option (recommended): diagnostic settings to a Log Analytics workspace with the `AppServiceConsoleLogs` category; retention is set on the workspace. Cheaper option: `az webapp log config --docker-container-logging filesystem`, then `az webapp log download`; its retention is quota-based, so it suits a weekly report, not history.
+
 UA classes are labels, not proof of intent, and `/go/` hits are redirect requests, not visits. See `docs/review/observability.md`.
