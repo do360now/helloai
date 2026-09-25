@@ -14,8 +14,11 @@ check_cluster_bench.py).
 Reading the numbers: UA classes are labels, not proof of intent. The
 declared_ai_client, programmatic and empty columns are reported separately and
 never summed into "agents". ip_hash rotates daily, so distinct counts are only
-comparable within a day, and it hashes the first X-Forwarded-For entry (client-controlled), so a distinct
-count is an upper bound until client-IP handling is fixed. A null ip_hash means METRICS_SALT was unset. Requests with no X-Forwarded-For share one ip_hash (not one caller). CORS preflights (method OPTIONS) are counted as requests.
+comparable within a day. A distinct ip_hash count is the number of hashes observed, NOT unique callers,
+and the error runs both ways: shared/NAT IPs, requests with no X-Forwarded-For (they share one input) and
+truncated-hash collisions undercount; a spoofed X-Forwarded-For (the first entry is client-controlled)
+overcounts. Records with a null or missing ip_hash (METRICS_SALT unset) are excluded from the distinct set and
+counted separately as requests_without_ip_hash. CORS preflights (method OPTIONS) are counted as requests.
 """
 
 from __future__ import annotations
@@ -60,13 +63,17 @@ def _day(ts) -> str:
 
 
 def build_report(api, go):
-    days = defaultdict(lambda: {"requests": 0, "by_ua": Counter(), "ips": set(), "rate_limited": 0})
+    days = defaultdict(lambda: {"requests": 0, "by_ua": Counter(), "ips": set(), "no_hash": 0, "rate_limited": 0})
     by_path, params = Counter(), Counter()
     for r in api:
         d = days[_day(r["ts"])]
         d["requests"] += 1
         d["by_ua"][r.get("ua", "unknown")] += 1
-        d["ips"].add(r.get("ip_hash"))  # null hashes collapse to one entry
+        h = r.get("ip_hash")
+        if h:
+            d["ips"].add(h)
+        else:
+            d["no_hash"] += 1  # null/missing hash is missing data, not an identity
         d["rate_limited"] += bool(r.get("rate_limited"))
         by_path[r.get("path", "?")] += 1
         params.update(r.get("param_keys", []))
@@ -75,6 +82,8 @@ def build_report(api, go):
             "requests": v["requests"],
             "by_ua": dict(v["by_ua"]),
             "distinct_ip_hash": len(v["ips"]),
+            "requests_without_ip_hash": v["no_hash"],
+            "distinct_ip_hash_available": len(v["ips"]) > 0,
             "rate_limited": v["rate_limited"],
         }
         for k, v in sorted(days.items())
@@ -92,7 +101,13 @@ def render(r) -> str:
     out = ["# API usage report", ""]
     for day, d in r["days"].items():
         ua = ", ".join(f"{k}={v}" for k, v in sorted(d["by_ua"].items()))
-        out.append(f"{day}: {d['requests']} requests, {d['distinct_ip_hash']} distinct ip_hash, "
+        if d["distinct_ip_hash_available"]:
+            ident = f"{d['distinct_ip_hash']} distinct ip_hash observed"
+        else:
+            ident = "distinct ip_hash unavailable (no hashed records)"
+        if d["requests_without_ip_hash"]:
+            ident += f", {d['requests_without_ip_hash']} requests without ip_hash"
+        out.append(f"{day}: {d['requests']} requests, {ident}, "
                    f"{d['rate_limited']} rate-limited | {ua}")
     out += ["", "By path: " + ", ".join(f"{k}={v}" for k, v in sorted(r["by_path"].items())),
             "Top param keys: " + ", ".join(f"{k}={v}" for k, v in r["top_param_keys"]),
@@ -102,8 +117,9 @@ def render(r) -> str:
             "Notes: UA classes are labels, not proof of intent; declared_ai_client, programmatic and empty are",
             "separate columns and are never summed into \"agents\". Anyone sending an X-Agent-Id header is labelled declared_ai_client. redirect_requests counts /go/ hits, not visits",
             "or activations (link previews and bots trigger them). Whether a visitor did anything in the app needs",
-            "app-side data, which does not exist yet. ip_hash rotates daily and hashes the first X-Forwarded-For entry (client-controlled):",
-            "compare distinct counts within a day only and treat them as an upper bound. A null ip_hash means METRICS_SALT was unset."]
+            "app-side data, which does not exist yet. ip_hash rotates daily: compare distinct counts within a day only.",
+            "Distinct ip_hash is hashes observed, not unique callers; shared/NAT IPs and hash collisions undercount, a",
+            "spoofed X-Forwarded-For overcounts. Requests without an ip_hash (METRICS_SALT unset) are excluded and counted separately."]
     return "\n".join(out)
 
 
