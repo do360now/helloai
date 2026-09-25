@@ -5,6 +5,11 @@
 # plus ONE request with a fake X-Forwarded-For. Keep it at that: this is a
 # measurement, not a rate-limit bypass test.
 #
+# NOTE: the app does not log the raw X-Forwarded-For (middleware.ts keeps only the
+# first entry, and logs only on alert paths), so these requests will NOT show up in
+# app logs. Read the platform's ingress/HTTP logs (Azure App Service) for the UA tag,
+# or add a temporary gated console.log in middleware.ts first.
+#
 # Usage: scripts/xff_probe.sh [BASE_URL] [LABEL]
 set -eu
 BASE="${1:-https://helloai.com}"

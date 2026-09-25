@@ -218,7 +218,7 @@ Run these via Claude Code (`/agent <name>`):
 | Agent | Executor | Advisor | When to run | What it does |
 |-------|----------|---------|-------------|--------------|
 | `data-validator` | Haiku | Sonnet | After any data change | Structural + semantic checks on all `data/*.json` |
-| `api-smoke-tester` | Haiku | Sonnet | After every deploy | Validates all 5 public API endpoints are healthy |
+| `api-smoke-tester` | Haiku | Sonnet | After every deploy | Validates all public API and OG image endpoints are healthy |
 | `leaderboard-updater` | Sonnet | Opus | Weekly | Detects stale model versions, pricing, arena name map drift; syncs first-party cluster benchmarks (local runs); tracks staleness streaks across runs |
 | `article-idea-generator` | Sonnet | Opus | Weekly | Scouts AI news, returns 5 prioritized article briefs; maintains brief queue across runs |
 | `seo-auditor` | Sonnet | Opus | Before major deploys | Audits live pages for title, OG, canonical, structured data |

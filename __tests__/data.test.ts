@@ -7,6 +7,8 @@
  * structural issues before they hit production.
  */
 
+import fs from 'fs';
+import path from 'path';
 import { getSiteConfig, getModels, getCategories, getArticles, getArticleBySlug, getHomepageArticles, HOMEPAGE_ARTICLE_COUNT } from '../data';
 
 describe('Site Config', () => {
@@ -185,8 +187,6 @@ describe('Cross-file integrity (Category ↔ Model)', () => {
 describe('Public copy names only tracked models', () => {
   // Families the ai-plugin.json list must cover (every tracked family).
   const FAMILIES = ['Claude', 'Gemini', 'Grok', 'Qwen', 'Muse Spark'];
-  const fs = require('fs') as typeof import('fs');
-  const path = require('path') as typeof import('path');
   const read = (p: string) => fs.readFileSync(path.join(__dirname, '..', p), 'utf8');
 
   const layout = read('app/layout.tsx');
