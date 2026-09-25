@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getModels, getSiteConfig } from '@/data';
+import { isRated } from '@/data/recommend';
 import { apiHeaders, publicUnlessParameterized } from '@/lib/api';
 
 export async function GET(req: NextRequest) {
@@ -21,7 +22,9 @@ export async function GET(req: NextRequest) {
 
   return NextResponse.json(
     {
-      models,
+      // `rated` is false when the stored elo is a predecessor's, missing or stale: an agent that reads
+      // only `elo` must not mistake it for the model's own score (see elo_source).
+      models: models.map((m) => ({ ...m, rated: isRated(m) })),
       count: models.length,
       last_updated: config.lastUpdated,
     },

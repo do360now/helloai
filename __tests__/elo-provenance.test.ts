@@ -25,13 +25,25 @@ describe('Elo provenance', () => {
     for (const m of models) expect(m.elo_source?.board).toBe('text_overall');
   });
 
-  test('no snapshot is older than the limit (fails at update time, naming the model)', () => {
+  // Two different dates. snapshot_date is what the BOARD says and stays honest even when arena.ai
+  // stops publishing. checked_date is when we last looked. The freshness rule applies to OUR checking,
+  // so a stalled board never forces anyone to edit a date or mark every model stale.
+  test('every model was checked recently (fails at update time, naming the model)', () => {
     const stale: string[] = [];
     for (const m of models) {
-      const age = (Date.now() - new Date(`${m.elo_source!.snapshot_date}T00:00:00Z`).getTime()) / DAY_MS;
-      if (age > MAX_SNAPSHOT_AGE_DAYS) stale.push(`${m.name} (${m.elo_source!.snapshot_date}, ${Math.floor(age)} days)`);
+      const checked = m.elo_source!.checked_date;
+      expect(checked).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+      const age = (Date.now() - new Date(`${checked}T00:00:00Z`).getTime()) / DAY_MS;
+      if (age > MAX_SNAPSHOT_AGE_DAYS) stale.push(`${m.name} (checked ${checked}, ${Math.floor(age)} days ago)`);
     }
     expect(stale).toEqual([]);
+  });
+
+  test('a snapshot is never dated after the day we checked it', () => {
+    for (const m of models) {
+      const s = m.elo_source!;
+      expect(s.snapshot_date <= s.checked_date).toBe(true);
+    }
   });
 
   test('an interval brackets the score when present', () => {

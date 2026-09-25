@@ -18,6 +18,12 @@ describe('formatElo', () => {
     expect(f.state).toBe('rated');
   });
 
+  test('an asymmetric interval prints as a range, never a misleading ±', () => {
+    const f = formatElo(mk({ elo: 1500 }, { ci_low: 1490, ci_high: 1512 }));
+    expect(f.score).toBe('1500 [1490–1512]');
+    expect(f.score).not.toMatch(/±/);
+  });
+
   test('an own score without an interval shows the exact score and says the interval is unavailable', () => {
     const m = mk({ elo: 1490 }, { ci_low: undefined, ci_high: undefined });
     const f = formatElo(m);

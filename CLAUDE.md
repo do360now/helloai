@@ -125,7 +125,7 @@ Only **rated** models rank (`isRated`): a model whose stored Elo is a predecesso
 **Elo is the only quantitative ranking signal.** It is the arena.ai **text-overall** board (LMArena), **curated by the `leaderboard-updater` agent** and recorded per model in `elo_source` (exact Arena slug, snapshot date, interval, votes, and whether the slug is the listed model or a predecessor).
 - The scripted fetch in `scripts/arena.py` (nakasyou `lmarena-history` primary, `fboulnois/llm-leaderboard-csv` fallback) is **dormant**: both sources are far older than the 30-day freshness guard, so it produces nothing today. It is kept, and now matches **exact** identities only (`_NAME_MAP`); older versions live in `_PREDECESSOR_MAP` and never resolve unless `allow_predecessor=True`.
 - Precedence in `update_models`: an explicit `--set` override, else a fetched exact-match score, else the stored value stays. A stored curated value is NOT protected from a fetched one, so do not describe Elo as "curated Elos are authoritative".
-- `__tests__/elo-provenance.test.ts` fails when a snapshot is older than 21 days, so stale numbers surface at update time.
+- `__tests__/elo-provenance.test.ts` fails when `elo_source.checked_date` (when the agent last looked) is older than 21 days, so unchecked numbers surface at update time. `snapshot_date` (what the board says) stays honest and is shown on the site; a stalled board never forces a date edit.
 
 `models.json` has **no benchmark fields** — the schema is the 12 keys listed above plus `elo_source` (provenance of `elo`, not a second signal). (`open_weight_models.json` separately carries `bench_source` for first-party throughput numbers; unrelated to any external leaderboard.)
 

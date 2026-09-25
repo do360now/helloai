@@ -27,8 +27,10 @@ export interface EloSource {
   ci_low?: number;
   ci_high?: number;
   votes?: number;
-  /** YYYY-MM-DD of the Arena snapshot. */
+  /** YYYY-MM-DD of the Arena snapshot. Stays honest even when the board stops publishing. */
   snapshot_date: string;
+  /** YYYY-MM-DD when we last looked at the board. The freshness test applies to this, not to snapshot_date. */
+  checked_date: string;
   source_url: string;
   set_by: 'override' | 'fetched' | 'agent_curated';
   /** Set to 'missing' or 'stale' when no usable score exists; treated as unrated. */

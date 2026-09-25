@@ -26,6 +26,14 @@ describe('GET /api/models', () => {
     expect(typeof body.last_updated).toBe('string');
   });
 
+  it('flags every model with rated true/false so an agent reading only `elo` is not misled', async () => {
+    const body = await (await modelsGET(req('/api/models'))).json();
+    const flags = Object.fromEntries(body.models.map((m: { id: string; rated: boolean }) => [m.id, m.rated]));
+    expect(flags).toEqual({ fable: true, muse: true, claude: false, gemini: true, qwen: true, grok: false });
+    const claude = body.models.find((m: { id: string }) => m.id === 'claude');
+    expect(claude.elo_source.matches_listed_model).toBe(false);
+  });
+
   it('filters by provider (case-insensitive, substring match)', async () => {
     const res = await modelsGET(req('/api/models?provider=anthropic'));
     expect(res.status).toBe(200);

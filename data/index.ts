@@ -61,7 +61,13 @@ export function formatElo(m: Model): FormattedElo {
     };
   }
   if (s.ci_low !== undefined && s.ci_high !== undefined) {
-    return { score: `${m.elo} ± ${Math.round((s.ci_high - s.ci_low) / 2)}`, note: null, state: 'rated' };
+    const below = m.elo - s.ci_low;
+    const above = s.ci_high - m.elo;
+    // "±" only when the interval really is symmetric (within rounding); otherwise print the range.
+    if (Math.abs(above - below) <= 1) {
+      return { score: `${m.elo} ± ${Math.round((s.ci_high - s.ci_low) / 2)}`, note: null, state: 'rated' };
+    }
+    return { score: `${m.elo} [${s.ci_low}–${s.ci_high}]`, note: null, state: 'rated' };
   }
   return { score: String(m.elo), note: 'Interval not available from source.', state: 'rated' };
 }
