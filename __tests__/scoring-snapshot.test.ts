@@ -60,6 +60,25 @@ describe('scoring snapshot hash (a fingerprint of the SCORING inputs only)', () 
     expect(snapshotHash(b, categories)).toBe(snapshotHash(a, categories));
   });
 
+  test('the order of models.json and categories.json does not change it (d8, a3)', () => {
+    expect(snapshotHash([...models].reverse(), categories)).toBe(snapshotHash(models, categories));
+    expect(snapshotHash(models, [...categories].reverse())).toBe(snapshotHash(models, categories));
+  });
+
+  test('a rename that breaks a leader or strength match changes it, even though id, price and strengths did not', () => {
+    // Scoring matches on the model NAME (leader === name), so renaming the leader silently drops its +0.40.
+    const leaderName = categories[0].leader;
+    const renamed = clone(models).map((m) => (m.name === leaderName ? { ...m, name: `${m.name} Fast` } : m));
+    expect(snapshotHash(renamed, categories)).not.toBe(snapshotHash(models, categories));
+  });
+
+  test('renaming the category leader to another model changes it', () => {
+    const other = models.find((m) => m.name !== categories[0].leader)!;
+    const cats = clone(categories);
+    cats[0].leader = other.name;
+    expect(snapshotHash(models, cats)).not.toBe(snapshotHash(models, categories));
+  });
+
   test('exposes the scoring version and normalization basis', () => {
     expect(SCORING_VERSION).toBe(1);
     expect(normalizationBasis).toBe('all_tracked_models');
