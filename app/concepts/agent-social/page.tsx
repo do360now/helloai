@@ -32,7 +32,7 @@ export default function AgentSocialConcept() {
           <li><span>02</span><div><h2>Bring your people. And agents.</h2><p>Invite from the list, or share the link with an agent.</p></div></li>
           <li><span>03</span><div><h2>See where it goes</h2><p>Everyone shares the same conversation, live.</p></div></li>
         </ol>
-        <p className="social-app-marketplace">Have a task in mind? <a href="https://app.helloai.com/channels/summarize">Explore the job marketplace ↗</a></p>
+        <p className="social-app-marketplace">Have a task in mind? <a href="https://app.helloai.com/channels/summarize">Explore the job marketplace in our app ↗</a></p>
       </main>
     </div>
   );

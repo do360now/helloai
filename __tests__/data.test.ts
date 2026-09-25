@@ -183,7 +183,7 @@ describe('Cross-file integrity (Category ↔ Model)', () => {
 });
 
 describe('Public copy names only tracked models', () => {
-  // Families the site may name in metadata; each must exist in models.json.
+  // Families the ai-plugin.json list must cover (every tracked family).
   const FAMILIES = ['Claude', 'Gemini', 'Grok', 'Qwen', 'Muse Spark'];
   const fs = require('fs') as typeof import('fs');
   const path = require('path') as typeof import('path');
@@ -197,9 +197,25 @@ describe('Public copy names only tracked models', () => {
     'ai-plugin.json description_for_model': plugin.description_for_model,
   };
 
-  test('every family named in the copy is tracked in models.json', () => {
+  // Names actually listed in the copy: "Compare A, B and C with ..." (layout) and "(A, B, Meta C)" (plugin).
+  const listed = (text: string, re: RegExp) =>
+    (text.match(re)?.[1] ?? '')
+      .split(/,\s*|\s+and\s+/)
+      .map((t) => t.replace(/^Meta\s+/, '').trim())
+      .filter(Boolean);
+  const listedNames: Record<string, string[]> = {
+    'layout.tsx openGraph': listed(metadataBlock, /'Compare ([^']+?) with weekly/),
+    'layout.tsx description': listed(metadataBlock, /leading AI models — ([^—]+?) — with/),
+    'ai-plugin.json': listed(plugin.description_for_model, /frontier AI models \(([^)]+)\)/),
+  };
+
+  test.each(Object.keys(listedNames))('%s lists at least one name', (key) => {
+    expect(listedNames[key].length).toBeGreaterThan(0);
+  });
+
+  test.each(Object.keys(listedNames))('every name listed in %s is tracked in models.json', (key) => {
     const names = getModels().map((m) => m.name);
-    for (const f of FAMILIES) {
+    for (const f of listedNames[key]) {
       expect(names.some((n) => n.includes(f))).toBe(true);
     }
   });

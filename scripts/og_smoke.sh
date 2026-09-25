@@ -5,8 +5,10 @@ set -u
 BASE="${1:-http://localhost:3000}"
 SLUG=$(node -e "console.log(require('./data/articles.json')[0].slug)")
 fail=0
+BODY=$(mktemp)
+trap 'rm -f "$BODY"' EXIT
 for path in "/opengraph-image" "/articles/${SLUG}/opengraph-image"; do
-  out=$(curl -s -o /tmp/og_smoke_body -w '%{http_code} %{content_type} %{size_download}' "${BASE}${path}")
+  out=$(curl -s -o "$BODY" -w '%{http_code} %{content_type} %{size_download}' "${BASE}${path}")
   read -r code ctype size <<<"$out"
   if [ "$code" = "200" ] && [ "$ctype" = "image/png" ] && [ "${size:-0}" -gt 10240 ]; then
     echo "PASS ${path} ${code} ${ctype} ${size}B"
@@ -14,5 +16,4 @@ for path in "/opengraph-image" "/articles/${SLUG}/opengraph-image"; do
     echo "FAIL ${path} ${code} ${ctype} ${size}B"; fail=1
   fi
 done
-rm -f /tmp/og_smoke_body
 exit $fail

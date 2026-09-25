@@ -19,7 +19,7 @@ export const metadata: Metadata = {
     template: '%s | Hello, AI',
   },
   description:
-    'Compare the leading AI models — Claude, Gemini, Grok, Qwen and Muse Spark — with LMArena Elo, cost and context data, weekly analysis, and one-click access. No hype, just real talk.',
+    'Compare the leading AI models — Claude, Gemini, Grok, Qwen and Muse Spark — with LMArena Elo, cost and context data, weekly analysis, and one-click access.',
   keywords: [
     'AI comparison', 'AI leaderboard', 'Claude', 'Gemini', 'Qwen',
     'Grok', 'Muse Spark', 'AI chatbot', 'best AI model', 'LLM comparison',
