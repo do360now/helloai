@@ -7,7 +7,9 @@ import articlesData from './articles.json';
 import openWeightModelsData from './open_weight_models.json';
 
 export const getSiteConfig = (): SiteConfig => siteData;
-export const getModels = (): Model[] => modelsData;
+// JSON imports widen the elo_source string unions (board, set_by) to `string`, so cast; the
+// allowed values are enforced by __tests__/elo-provenance.test.ts.
+export const getModels = (): Model[] => modelsData as Model[];
 export const getCategories = (): Category[] => categoriesData;
 export const getArticles = (): Article[] => articlesData;
 
