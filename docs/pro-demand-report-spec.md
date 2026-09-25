@@ -247,10 +247,12 @@ harness wired up — the sample-input self-check above is sufficient.
 The free API and the `/go/` redirect log on their own prefixes, separate from `[pro-metrics]`. Do not merge them.
 
 ```bash
-az webapp log tail ... > app.log          # operator: save the stream to a file
+az webapp log tail ... > app.log          # operator: live stream only, captures traffic from when it starts
 grep '\[api-metrics\]' app.log            # one line per /api request (ua class, ip_hash, param keys)
 grep '\[go-metrics\]'  app.log            # /go/ redirect requests
 python3 scripts/api_usage_report.py app.log
 ```
+
+`az webapp log tail` (also `make az_logs`) cannot return past lines. For history use `az webapp log download` (needs App Service filesystem logging on) or a Log Analytics query such as `AppServiceConsoleLogs | where ResultDescription has "[api-metrics]"` (needs diagnostic settings sending logs to a workspace). Turn one of them on before relying on these lines: without retention, history is lost.
 
 UA classes are labels, not proof of intent, and `/go/` hits are redirect requests, not visits. See `docs/review/observability.md`.
