@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getArticleBySlug, getArticles, formatDate } from '@/data';
 import type { Metadata } from 'next';
+import { articleJsonLd } from '@/lib/structured-data';
 import Nav from '../../components/Nav';
 
 // Generate static paths for all articles
@@ -63,25 +64,7 @@ export default async function ArticlePage({
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'Article',
-            headline: article.title,
-            description: article.excerpt,
-            datePublished: article.date,
-            dateModified: article.date,
-            mainEntityOfPage: `https://helloai.com/articles/${slug}`,
-            author: {
-              '@type': 'Person',
-              name: 'Clement Machado',
-              url: 'https://x.com/helloaix',
-            },
-            publisher: {
-              '@type': 'Organization',
-              name: 'Hello, AI',
-              url: 'https://helloai.com',
-            },
-          }),
+          __html: JSON.stringify(articleJsonLd(article)),
         }}
       />
       <Link href="/#articles" className="article-page-back">

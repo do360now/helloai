@@ -1,0 +1,7 @@
+{
+  "_note": "There is no ratified .well-known/mcp.json standard, so this file is minimal. helloai.com does not run an MCP server: the directory is a plain HTTP API described by OpenAPI. The HelloAI Marketplace at app.helloai.com has an MCP server, but it is per-account (tenant-scoped, behind a token) and has no public discovery URL yet, so no server is listed here. A server entry will be added when the app publishes one.",
+  "http_api": {
+    "openapi": "https://helloai.com/api/openapi.json",
+    "llms_txt": "https://helloai.com/llms.txt"
+  }
+}

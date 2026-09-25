@@ -21,6 +21,13 @@ setInterval(() => {
   }
 }, 60 * 1000).unref?.(); // cleanup every minute
 
+// Search engines should not index the JSON documents. Agents are unaffected: robots.txt still allows everything,
+// and X-Robots-Tag only tells indexers to skip the response.
+function noindex<T extends NextResponse>(res: T): T {
+  res.headers.set('X-Robots-Tag', 'noindex');
+  return res;
+}
+
 export function proxy(request: NextRequest) {
   // Only apply to API routes
   if (!request.nextUrl.pathname.startsWith('/api/')) {
@@ -90,7 +97,7 @@ export function proxy(request: NextRequest) {
     response.headers.set('X-RateLimit-Limit', RATE_LIMIT.toString());
     response.headers.set('X-RateLimit-Remaining', (RATE_LIMIT - 1).toString());
     response.headers.set('X-RateLimit-Reset', resetTime.toString());
-    return response;
+    return noindex(response);
   }
 
   if (record.count >= RATE_LIMIT) {
@@ -105,7 +112,7 @@ export function proxy(request: NextRequest) {
     );
 
     recordApiRequest({ ...metricsInfo, rateLimited: true });
-    return new NextResponse('Too Many Requests', {
+    return noindex(new NextResponse('Too Many Requests', {
       status: 429,
       headers: {
         'Retry-After': Math.ceil((record.resetTime - now) / 1000).toString(),
@@ -113,7 +120,7 @@ export function proxy(request: NextRequest) {
         'X-RateLimit-Remaining': '0',
         'X-RateLimit-Reset': record.resetTime.toString(),
       },
-    });
+    }));
   }
 
   record.count++;
@@ -125,7 +132,7 @@ export function proxy(request: NextRequest) {
   response.headers.set('X-RateLimit-Remaining', (RATE_LIMIT - record.count).toString());
   response.headers.set('X-RateLimit-Reset', record.resetTime.toString());
 
-  return response;
+  return noindex(response);
 }
 
 export const config = {

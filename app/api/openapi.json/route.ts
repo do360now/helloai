@@ -152,6 +152,7 @@ export async function GET(req: NextRequest) {
         },
       },
     },
+    externalDocs: { description: 'Machine-readable overview of the site, models and articles', url: 'https://helloai.com/llms.txt' },
     components: {
       schemas: {
         Model: {
