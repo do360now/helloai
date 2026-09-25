@@ -171,6 +171,7 @@ class _ArenaEntry:
     name: str
     score: float
     votes: int = 0
+    snapshot_date: str | None = None  # YYYY-MM-DD of the board this score came from, when known
 
 
 def _fetch_from_nakasyou() -> dict[str, "_ArenaEntry"]:
@@ -202,8 +203,9 @@ def _fetch_from_nakasyou() -> dict[str, "_ArenaEntry"]:
 
     board = data[latest].get("text", {}).get("overall") or {}
 
+    snapshot_date = f"{latest[:4]}-{latest[4:6]}-{latest[6:8]}"
     entries: dict[str, _ArenaEntry] = {
-        name: _ArenaEntry(name=name, score=float(elo))
+        name: _ArenaEntry(name=name, score=float(elo), snapshot_date=snapshot_date)
         for name, elo in board.items()
     }
     log.info(f"nakasyou: {len(entries)} models from snapshot {latest} (text/overall)")

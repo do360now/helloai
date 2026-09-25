@@ -249,7 +249,17 @@ export async function GET(req: NextRequest) {
                 properties: {
                   reason: { type: 'string', enum: ['borrowed_score', 'missing_score', 'stale_score'] },
                   arena_model: { type: 'string', description: 'The Arena slug the stored Elo belongs to, when known.', example: 'claude-opus-5-high' },
-                  model: { $ref: '#/components/schemas/RecommendModel' },
+                  elo_source: { $ref: '#/components/schemas/Model/properties/elo_source' },
+                  model: {
+                    type: 'object',
+                    description: 'Like RecommendModel but WITHOUT elo: for an unrated model that number is a predecessor\'s, missing or stale. See elo_source.',
+                    properties: {
+                      id: { type: 'string' }, name: { type: 'string' }, provider: { type: 'string' },
+                      url: { type: 'string', format: 'uri' }, tag: { type: 'string' },
+                      cost_per_million_tokens: { type: 'number' }, cost_per_million_tokens_output: { type: 'number' },
+                      context_window: { type: 'integer' },
+                    },
+                  },
                 },
               },
             },

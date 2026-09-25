@@ -18,6 +18,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from config import config
 from utils import setup_logger, read_json, write_json, today_iso, report_changes
 import arena
+from datetime import date
 
 log = setup_logger("leaderboard")
 
@@ -47,8 +48,21 @@ def update_models(
         elif mid in scores:
             new_elo = int(scores[mid])
             if matches and mid in matches:
+                entry = matches[mid]
                 src = model.setdefault("elo_source", {})
-                src.update({"arena_model": matches[mid].name, "matches_listed_model": True, "set_by": "fetched"})
+                src.update({"arena_model": entry.name, "matches_listed_model": True, "set_by": "fetched"})
+                # The old interval and vote count belong to the OLD number; never leave them next to a new one.
+                for stale_key in ("ci_low", "ci_high", "votes"):
+                    src.pop(stale_key, None)
+                if entry.votes:
+                    src["votes"] = entry.votes
+                src["checked_date"] = date.today().isoformat()
+                if entry.snapshot_date:
+                    src["snapshot_date"] = entry.snapshot_date
+                    src.pop("status", None)
+                else:
+                    # A score whose board date is unknown cannot be presented as fresh: treat it as unrated.
+                    src["status"] = "stale"
                 has_changes = True
         else:
             log.info(f"  No score for '{mid}', keeping Elo={old_elo}")

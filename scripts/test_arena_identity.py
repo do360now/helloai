@@ -87,3 +87,40 @@ def test_update_models_records_the_arena_slug_for_a_fetched_score():
     assert src["arena_model"] == "claude-opus-5.5-max"
     assert src["matches_listed_model"] is True
     assert src["set_by"] == "fetched"
+
+
+def _model_with_old_provenance():
+    return {
+        "id": "claude", "elo": 1493,
+        "elo_source": {
+            "board": "text_overall", "arena_model": "claude-opus-5-high", "matches_listed_model": False,
+            "snapshot_date": "2026-09-13", "checked_date": "2026-09-23", "source_url": "https://arena.ai/leaderboard/text",
+            "set_by": "agent_curated", "ci_low": 1489, "ci_high": 1497, "votes": 42617,
+        },
+    }
+
+
+def test_fetched_score_takes_its_own_snapshot_date_and_drops_the_old_interval_and_votes():
+    entry = _ArenaEntry(name="claude-opus-5.5-max", score=1510.0, snapshot_date="2026-10-04")
+    out, _ = update_models([_model_with_old_provenance()], {"claude": 1510.0}, {}, matches={"claude": entry})
+    src = out[0]["elo_source"]
+    assert src["snapshot_date"] == "2026-10-04"
+    assert "ci_low" not in src and "ci_high" not in src and "votes" not in src  # never the old number's interval
+    assert src["matches_listed_model"] is True and src["arena_model"] == "claude-opus-5.5-max"
+    assert src["checked_date"] >= "2026-10-04" or src["checked_date"] > "2026-09-23"
+
+
+def test_fetched_score_with_unknown_snapshot_date_is_marked_stale_not_fresh():
+    entry = _ArenaEntry(name="claude-opus-5.5-max", score=1510.0)  # no snapshot_date known
+    out, _ = update_models([_model_with_old_provenance()], {"claude": 1510.0}, {}, matches={"claude": entry})
+    assert out[0]["elo_source"]["status"] == "stale"
+
+
+def test_nakasyou_entries_carry_the_snapshot_date(monkeypatch):
+    class R:
+        def raise_for_status(self): pass
+        def json(self): return {"20990101": {"text": {"overall": {"claude-opus-5.5-max": 1510}}}}
+    monkeypatch.setattr(arena.requests, "get", lambda *a, **k: R())
+    monkeypatch.setattr(arena, "MAX_SNAPSHOT_AGE_DAYS", 10**6)
+    entries = arena._fetch_from_nakasyou()
+    assert entries["claude-opus-5.5-max"].snapshot_date == "2099-01-01"

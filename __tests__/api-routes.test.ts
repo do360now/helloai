@@ -90,6 +90,10 @@ describe('GET /api/recommend', () => {
     expect(claude.reason).toBe('borrowed_score');
     expect(claude.arena_model).toBe('claude-opus-5-high');
     expect(claude.model).not.toHaveProperty('desc');
+    // A caller reading model.elo must not get a predecessor's number as this model's score.
+    expect(claude.model).not.toHaveProperty('elo');
+    expect(claude.elo_source.matches_listed_model).toBe(false);
+    expect(claude.elo_source.arena_model).toBe('claude-opus-5-high');
     expect(body.notes).toEqual(expect.any(Array));
   });
 

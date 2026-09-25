@@ -1,4 +1,4 @@
-import type { Model } from './types';
+import type { Model, EloSource } from './types';
 
 // DTO for the model subset serialized in /api/recommend responses. Kept narrow
 // (no desc/color/strengths) so the public recommend payload stays lean. The (now
@@ -53,14 +53,20 @@ export interface UnratedDTO {
   reason: 'borrowed_score' | 'missing_score' | 'stale_score';
   /** The Arena slug the stored Elo actually belongs to, when known. */
   arena_model?: string;
-  model: RecommendModelDTO;
+  /** Full provenance. The stored number is deliberately NOT exposed as `model.elo`. */
+  elo_source?: EloSource;
+  /** No `elo`: for an unrated model that number is a predecessor's, missing or stale. */
+  model: Omit<RecommendModelDTO, 'elo'>;
 }
 
 export function toUnratedDTO(u: { model: Model; reason: UnratedDTO['reason']; arena_model?: string }): UnratedDTO {
   return {
     reason: u.reason,
     ...(u.arena_model ? { arena_model: u.arena_model } : {}),
-    model: toRecommendationDTO({ model: u.model, score: 0, reasons: [] }, 0).model,
+    ...(u.model.elo_source ? { elo_source: u.model.elo_source } : {}),
+    model: Object.fromEntries(
+      Object.entries(toRecommendationDTO({ model: u.model, score: 0, reasons: [] }, 0).model).filter(([k]) => k !== 'elo')
+    ) as Omit<RecommendModelDTO, 'elo'>,
   };
 }
 
