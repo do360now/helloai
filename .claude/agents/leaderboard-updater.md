@@ -232,7 +232,7 @@ Before presenting the report to the user, append one JSONL record per proposed c
 - Only propose changes you have evidence for (search results or official sources). Do not guess.
 - For pricing, cite the source URL or announcement.
 - If you can't verify a claim confidently, mark it as "⚠️ verify manually" rather than proposing a change.
-- Do not propose Elo changes — the Python script owns that for both `models.json` and `open_weight_models.json`.
+- Elo values: the Python script's Elo fetch is dormant (its sources are stale), so the frontier Elos in `models.json` are curated by hand from arena.ai. Whenever you set or change a frontier `elo`, you MUST also write/refresh that model's `elo_source`: `board` (text_overall), `arena_model` (the exact Arena slug the number belongs to), `matches_listed_model` (false when that slug is a predecessor, for example Opus 5 for Opus 5.5), `config` (for example `max`), `ci_low`/`ci_high`/`votes` (only when the slug matches the listed model; never attach a predecessor's interval or votes), `snapshot_date` (YYYY-MM-DD of the Arena snapshot), `source_url`, and `set_by: "agent_curated"`. Never present a predecessor's score as the listed model's own, and never cross product tiers. If the newest text board is older than 21 days, say so loudly in the report instead of quietly keeping old numbers. Open-weight Elos are still owned by the Python script.
 - Do not propose changes to `categories.json` — that's driven by frontier Elo, which the Python script updates.
 - The `strengths[]` array maps to category names exactly — only propose a strengths change if the model's leadership in that category has demonstrably shifted.
 

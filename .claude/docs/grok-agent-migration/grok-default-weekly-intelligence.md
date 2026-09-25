@@ -18,6 +18,8 @@ Article prose writing (`article-writer` / Opus) and all deterministic steps rema
 
 ### 1. Leaderboard Drift (`leaderboard-updater`)
 
+> Since 2026-09-25: when you set or change a frontier `elo`, also write its `elo_source` (exact Arena slug, snapshot date, interval, votes, `matches_listed_model`). See the Elo bullet in `.claude/agents/leaderboard-updater.md`. `__tests__/elo-provenance.test.ts` fails on a snapshot older than 21 days.
+
 **Command to user (in this session):**
 
 > "Run the leaderboard-updater for this week's update. Follow the specification in `.claude/agents/leaderboard-updater.md`, using the latest memory and state files. Append proposals correctly to the audit log before showing the report."

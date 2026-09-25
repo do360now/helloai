@@ -110,21 +110,24 @@ Any AI agent can self-discover the API via `/.well-known/ai-plugin.json`, read t
   cost_per_million_tokens,        // USD input
   cost_per_million_tokens_output, // USD output
   context_window,                 // tokens
-  strengths[]                     // category names this model leads/excels at
+  strengths[],                    // category names this model leads/excels at
+  elo_source                      // provenance of `elo`: arena_model slug, board, snapshot_date, ci_low/ci_high/votes,
+                                  // matches_listed_model, set_by (types: EloSource in data/types.ts)
 }
 ```
 
 ### Scoring logic (data/recommend.ts)
 Shared between `/api/recommend` and the interactive homepage filter. Hard filters (cost, context, provider) exclude models first. Remaining models get weighted scores: task match (40%), Elo (35%), cost efficiency (15%), context size (10%). With no task, weights shift to Elo (55%), cost (25%), context (20%).
+Only **rated** models rank (`isRated`): a model whose stored Elo is a predecessor's (`elo_source.matches_listed_model` false), missing or stale is returned separately as `unrated`, never appears in `recommendations`, and never sets the Elo min/max used to normalize the others. The homepage shows these under "Not yet rated" (`formatElo`, `data/index.ts`).
 
 ### Benchmark sources — what is and isn't ingested
 
-**Elo is the only quantitative ranking signal.** It comes from LMArena only, via `scripts/arena.py`:
-- Primary: nakasyou `lmarena-history` JSON snapshots
-- Fallback: `fboulnois/llm-leaderboard-csv` GitHub releases
-- Curated Elos in `models.json` stay authoritative over both
+**Elo is the only quantitative ranking signal.** It is the arena.ai **text-overall** board (LMArena), **curated by the `leaderboard-updater` agent** and recorded per model in `elo_source` (exact Arena slug, snapshot date, interval, votes, and whether the slug is the listed model or a predecessor).
+- The scripted fetch in `scripts/arena.py` (nakasyou `lmarena-history` primary, `fboulnois/llm-leaderboard-csv` fallback) is **dormant**: both sources are far older than the 30-day freshness guard, so it produces nothing today. It is kept, and now matches **exact** identities only (`_NAME_MAP`); older versions live in `_PREDECESSOR_MAP` and never resolve unless `allow_predecessor=True`.
+- Precedence in `update_models`: an explicit `--set` override, else a fetched exact-match score, else the stored value stays. A stored curated value is NOT protected from a fetched one, so do not describe Elo as "curated Elos are authoritative".
+- `__tests__/elo-provenance.test.ts` fails when a snapshot is older than 21 days, so stale numbers surface at update time.
 
-`models.json` has **no benchmark fields** — the schema is the 12 keys listed above. (`open_weight_models.json` separately carries `bench_source` for first-party throughput numbers; unrelated to any external leaderboard.)
+`models.json` has **no benchmark fields** — the schema is the 12 keys listed above plus `elo_source` (provenance of `elo`, not a second signal). (`open_weight_models.json` separately carries `bench_source` for first-party throughput numbers; unrelated to any external leaderboard.)
 
 **ARC Prize (`https://arcprize.org/leaderboard`) is NOT ingested anywhere.** ARC-AGI appears in exactly three places, all hand-written editorial prose that no script verifies or refreshes:
 - `data/models.json` — Gemini `desc` ("77% on ARC-AGI-2")
