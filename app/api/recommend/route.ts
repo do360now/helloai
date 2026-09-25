@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getModels, getCategories, getSiteConfig } from '@/data';
 import { scoreAndRank } from '@/data/recommend';
-import { toRecommendationDTO, type RecommendResponseBody } from '@/data/api-types';
+import { toRecommendationDTO, toUnratedDTO, type RecommendResponseBody } from '@/data/api-types';
 import { apiHeaders, parseRecommendParams, publicUnlessParameterized } from '@/lib/api';
 
 // SOL-002 / SOL-005: input sanitization + cache-key safety. Validation lives
@@ -27,14 +27,16 @@ export async function GET(req: NextRequest) {
   const categories = getCategories();
   const config = getSiteConfig();
 
-  const { recommendations, excluded, matchedCategory } = scoreAndRank(models, categories, {
+  const { recommendations, excluded, matchedCategory, unrated, notes } = scoreAndRank(models, categories, {
     task,
     maxCost,
     minContext,
     provider: providerParam,
   });
 
-  if (recommendations.length === 0) {
+  // 404 only when nothing survived the filters at all. A filter that leaves only unrated models
+  // is a real answer: an empty ranking plus the unrated list.
+  if (recommendations.length === 0 && unrated.length === 0) {
     return NextResponse.json(
       {
         error: 'No models match filters',
@@ -57,6 +59,8 @@ export async function GET(req: NextRequest) {
   const body: RecommendResponseBody = {
     query: { task, max_cost: maxCost, min_context: minContext, provider: providerParam ?? null, limit },
     recommendations: output,
+    unrated: unrated.map(toUnratedDTO),
+    notes,
     filters_applied: filtersApplied,
     models_considered: models.length,
     models_excluded: excluded,

@@ -19,6 +19,31 @@ export const SCORING_WEIGHTS = {
   withoutTask: { task: 0.00, elo: 0.55, cost: 0.25, context: 0.20 },
 } as const;
 
+// Which models may be ranked. A model is RATED when its Elo is the model's OWN Arena score (its
+// elo_source slug matches the listed model) and is neither missing nor stale. A borrowed
+// (predecessor's), missing or stale score must not rank, and must not move anyone else's
+// normalization: docs/review/elo-provenance.md, decision 1 (labelled and excluded).
+// Flip includeBorrowed to change the policy in ONE place; __tests__/recommend.test.ts proves it matters.
+export const RATING_POLICY = { includeBorrowed: false };
+
+export type UnratedReason = 'borrowed_score' | 'missing_score' | 'stale_score';
+
+export function unratedReason(m: Model): UnratedReason | null {
+  const s = m.elo_source;
+  if (!s || s.status === 'missing') return 'missing_score';
+  if (s.status === 'stale') return 'stale_score';
+  if (!s.matches_listed_model && !RATING_POLICY.includeBorrowed) return 'borrowed_score';
+  return null;
+}
+
+export const isRated = (m: Model): boolean => unratedReason(m) === null;
+
+export interface UnratedModel {
+  model: Model;
+  reason: UnratedReason;
+  arena_model?: string;
+}
+
 export function categoryTaskKeyword(cat: Category): string {
   return cat.name.split(' ')[0].toLowerCase();
 }
@@ -54,7 +79,15 @@ export function scoreAndRank(
     minContext?: number | null;
     provider?: string | null;
   }
-): { recommendations: Recommendation[]; excluded: number; matchedCategory: Category | null } {
+): {
+  recommendations: Recommendation[];
+  excluded: number;
+  matchedCategory: Category | null;
+  /** Filtered-in models that cannot be ranked (borrowed, missing or stale Elo), shown outside the ranking. */
+  unrated: UnratedModel[];
+  /** Human-readable explanations, e.g. an unrated category leader. */
+  notes: string[];
+} {
   const { task, maxCost, minContext, provider } = opts;
 
   const matchedCategory = task ? findMatchingCategory(task, categories) : null;
@@ -73,15 +106,28 @@ export function scoreAndRank(
 
   const excluded = models.length - candidates.length;
 
-  // Empty-candidates guard: without this, Math.min(...[]) → Infinity and
+  // Split off models that may not be ranked. Only RATED candidates are ranked, and only they
+  // set the Elo min/max used to normalize everyone else (a borrowed score can move nobody).
+  const rated = candidates.filter(isRated);
+  const unrated: UnratedModel[] = candidates
+    .filter((m) => !isRated(m))
+    .map((m) => ({ model: m, reason: unratedReason(m)!, ...(m.elo_source?.arena_model ? { arena_model: m.elo_source.arena_model } : {}) }));
+  const notes: string[] = [];
+  if (matchedCategory && candidates.some((m) => m.name === matchedCategory.leader) && !rated.some((m) => m.name === matchedCategory.leader)) {
+    notes.push(`The ${matchedCategory.name} leader (${matchedCategory.leader}) is not yet rated, so no model gets the leader bonus.`);
+  }
+
+  // Empty-rated guard: without this, Math.min(...[]) → Infinity and
   // Math.max(...[]) → -Infinity would produce NaN scores. Returning early keeps
   // the normalization below well-defined.
-  if (candidates.length === 0) return { recommendations: [], excluded, matchedCategory };
+  if (rated.length === 0) return { recommendations: [], excluded, matchedCategory, unrated, notes };
 
   const hasTask = matchedCategory !== null;
   const weights = hasTask ? SCORING_WEIGHTS.withTask : SCORING_WEIGHTS.withoutTask;
 
-  const elos = candidates.map((m) => m.elo);
+  // Elo extrema come from RATED candidates only. Cost and context are the model's own
+  // fields, so they keep using every filtered-in model.
+  const elos = rated.map((m) => m.elo);
   const costs = candidates.map((m) => m.cost_per_million_tokens);
   const contexts = candidates.map((m) => m.context_window);
 
@@ -89,7 +135,7 @@ export function scoreAndRank(
   const minCost = Math.min(...costs), maxCost2 = Math.max(...costs);
   const minCtx = Math.min(...contexts), maxCtx = Math.max(...contexts);
 
-  const recommendations: Recommendation[] = candidates.map((m) => {
+  const recommendations: Recommendation[] = rated.map((m) => {
     const reasons: string[] = [];
 
     let taskScore = 0;
@@ -123,5 +169,5 @@ export function scoreAndRank(
   });
 
   recommendations.sort((a, b) => b.score - a.score);
-  return { recommendations, excluded, matchedCategory };
+  return { recommendations, excluded, matchedCategory, unrated, notes };
 }

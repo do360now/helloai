@@ -173,6 +173,23 @@ export async function GET(req: NextRequest) {
               items: { type: 'string' },
               example: ['Coding & Engineering'],
             },
+            elo_source: {
+              type: 'object',
+              description: 'Where elo comes from. matches_listed_model is false when the score belongs to a predecessor model (see arena_model).',
+              properties: {
+                board: { type: 'string', enum: ['text_overall', 'webdev', 'other'] },
+                arena_model: { type: 'string', example: exampleModel.elo_source?.arena_model },
+                matches_listed_model: { type: 'boolean' },
+                config: { type: 'string' },
+                ci_low: { type: 'integer' },
+                ci_high: { type: 'integer' },
+                votes: { type: 'integer' },
+                snapshot_date: { type: 'string', format: 'date' },
+                source_url: { type: 'string', format: 'uri' },
+                set_by: { type: 'string', enum: ['override', 'fetched', 'agent_curated'] },
+                status: { type: 'string', enum: ['ok', 'missing', 'stale'] },
+              },
+            },
           },
         },
         // Model subset serialized in /api/recommend responses. Mirrors
@@ -221,6 +238,20 @@ export async function GET(req: NextRequest) {
               },
             },
             recommendations: { type: 'array', items: { $ref: '#/components/schemas/Recommendation' } },
+            unrated: {
+              type: 'array',
+              description:
+                'Models that pass the filters but are not ranked because their stored Elo is a predecessor\'s (borrowed_score), missing or stale. They never appear in recommendations and never affect the ranking.',
+              items: {
+                type: 'object',
+                properties: {
+                  reason: { type: 'string', enum: ['borrowed_score', 'missing_score', 'stale_score'] },
+                  arena_model: { type: 'string', description: 'The Arena slug the stored Elo belongs to, when known.', example: 'claude-opus-5-high' },
+                  model: { $ref: '#/components/schemas/RecommendModel' },
+                },
+              },
+            },
+            notes: { type: 'array', items: { type: 'string' }, description: 'Plain-language explanations, for example an unrated category leader.' },
             filters_applied: { type: 'array', items: { type: 'string' } },
             models_considered: { type: 'integer' },
             models_excluded: { type: 'integer' },

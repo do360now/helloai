@@ -71,6 +71,56 @@ describe('GET /api/recommend', () => {
     expect(body.recommendations[0].model).not.toHaveProperty('desc');
   });
 
+  it('lists unrated models separately, with a reason and the Arena slug, and never ranks them', async () => {
+    const body = await (await recommendGET(req('/api/recommend?limit=10'))).json();
+    expect(body.recommendations.map((r: { model: { id: string } }) => r.model.id)).not.toEqual(
+      expect.arrayContaining(['claude'])
+    );
+    const ids = body.unrated.map((u: { model: { id: string } }) => u.model.id).sort();
+    expect(ids).toEqual(['claude', 'grok']);
+    const claude = body.unrated.find((u: { model: { id: string } }) => u.model.id === 'claude');
+    expect(claude.reason).toBe('borrowed_score');
+    expect(claude.arena_model).toBe('claude-opus-5-high');
+    expect(claude.model).not.toHaveProperty('desc');
+    expect(body.notes).toEqual(expect.any(Array));
+  });
+
+  it('a filter that leaves only an unrated model returns 200 with an empty ranking, not a fake rank', async () => {
+    const res = await recommendGET(req('/api/recommend?provider=xai'));
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.recommendations).toEqual([]);
+    expect(body.unrated.map((u: { model: { id: string } }) => u.model.id)).toEqual(['grok']);
+  });
+
+  it('6. the API and the homepage engine agree on rated order and unrated set for five option combinations', async () => {
+    const { scoreAndRank } = await import('@/data/recommend');
+    const { getCategories } = await import('@/data');
+    const combos = [
+      '', '?task=coding', '?task=reasoning&max_cost=10', '?min_context=1000000', '?task=daily&provider=google',
+    ];
+    for (const q of combos) {
+      const p = new URLSearchParams(q.replace('?', ''));
+      const maxCost = p.get('max_cost') ? Number(p.get('max_cost')) : null;
+      const minContext = p.get('min_context') ? Number(p.get('min_context')) : null;
+      const engine = scoreAndRank(getModels(), getCategories(), {
+        task: p.get('task'), maxCost, minContext, provider: p.get('provider'),
+      });
+      const res = await recommendGET(req(`/api/recommend${q}${q ? '&' : '?'}limit=10`));
+      if (res.status === 404) {
+        expect(engine.recommendations.length + engine.unrated.length).toBe(0);
+        continue;
+      }
+      const body = await res.json();
+      expect(body.recommendations.map((r: { model: { id: string } }) => r.model.id)).toEqual(
+        engine.recommendations.map((r) => r.model.id)
+      );
+      expect(body.unrated.map((u: { model: { id: string } }) => u.model.id)).toEqual(
+        engine.unrated.map((u) => u.model.id)
+      );
+    }
+  });
+
   it('returns 404 when filters exclude every model', async () => {
     const res = await recommendGET(req('/api/recommend?max_cost=0.000001'));
     expect(res.status).toBe(404);
