@@ -122,6 +122,8 @@ Fill `elo_source` for all six frontier models from the agent's notes (`.claude/a
 
 `data/types.ts`, `data/models.json`, `data/index.ts` (if it exposes fields), `__tests__/elo-provenance.test.ts` (new) or `data.test.ts`, `app/components/ModelCard.tsx`, `app/page.tsx` (subtitle), `app/api/recommend/route.ts` + `data/api-types.ts` + `app/api/openapi.json/route.ts` (new fields), `scripts/arena.py`, `.claude/agents/leaderboard-updater.md` (+ hash), `CLAUDE.md`.
 
+**Same commit, two strings:** the `data/site.json → listing_policy` sentence "Two models currently show a predecessor's score, as noted on the leaderboard" and the Leaderboard subtitle in `app/page.tsx` ("Opus 5.5 and Grok 4.7 show their predecessors' scores") both go stale when the not-yet-rated display ships. Edit them in the same commit that adds it, so the site never contradicts itself. Also add `listing_policy` (and `affiliations`) to the list of text that `/methodology` renders, so they ship together.
+
 ## Risks and unknowns
 
 - The predecessor finding is from the agent's own notes, not from a fresh look at Arena. It may already be outdated if the boards changed since 2026-09-23. Verify before acting.
