@@ -23,13 +23,15 @@ export interface RecommendationDTO {
   breakdown: { task: number; elo: number; cost: number; context: number };
   /** How much of `score` came from curated labels (the leader / strength), i.e. breakdown.task. */
   label_effect: number;
+  /** Which curator branch applied: the category leader, a listed strength, or no label. */
+  label: 'leader' | 'strength' | 'none';
   model: RecommendModelDTO;
 }
 
 // Project a scored recommendation to its public DTO form at a given rank.
 // Centralized so /api/recommend and any future consumer serialize identically.
 export function toRecommendationDTO(
-  rec: { model: Model; score: number; reasons: string[]; breakdown?: RecommendationDTO['breakdown']; label_effect?: number },
+  rec: { model: Model; score: number; reasons: string[]; breakdown?: RecommendationDTO['breakdown']; label_effect?: number; label_kind?: RecommendationDTO['label'] },
   rank: number
 ): RecommendationDTO {
   const m = rec.model;
@@ -39,6 +41,7 @@ export function toRecommendationDTO(
     reasons: rec.reasons,
     breakdown: rec.breakdown ?? { task: 0, elo: 0, cost: 0, context: 0 },
     label_effect: rec.label_effect ?? 0,
+    label: rec.label_kind ?? 'none',
     model: {
       id: m.id,
       name: m.name,

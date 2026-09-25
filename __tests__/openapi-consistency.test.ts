@@ -49,5 +49,7 @@ describe('OpenAPI spec stays consistent with live data', () => {
       expect(json).toContain(key);
     }
     expect(json).toMatch(/ordering aid, not a quality measure/);
+    expect(json).toMatch(/input price/i); // cost is scored on the input price only
+    expect(json).toMatch(/within rounding \(about 0\.02\)/); // agents will sum the parts
   });
 });

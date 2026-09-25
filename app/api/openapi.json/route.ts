@@ -222,7 +222,7 @@ export async function GET(req: NextRequest) {
               format: 'float',
               example: 0.87,
               description:
-                'Composite score 0 to 1. Scores are comparable only between calls that share the same scoring version, data snapshot and resolved task (which selects the weights). It is an ordering aid, not a quality measure. Filters never rescale it: components are normalized against all tracked models (rated models only for Elo).',
+                'Composite score 0 to 1. Cost is scored on the input price only. Scores are comparable only between calls that share the same scoring version, data snapshot and resolved task (which selects the weights). It is an ordering aid, not a quality measure. Filters never rescale it: components are normalized against all tracked models (rated models only for Elo).',
             },
             reasons: {
               type: 'array',
@@ -231,13 +231,18 @@ export async function GET(req: NextRequest) {
             },
             breakdown: {
               type: 'object',
-              description: 'Weighted contribution of each component. The parts add up to score within rounding.',
+              description: 'Weighted contribution of each component. The parts add up to score within rounding (about 0.02), because each part is rounded separately. Cost is scored on the input price only.',
               properties: {
                 task: { type: 'number', description: "Curator's pick / curator-rated strength (hand-set labels in categories.json)" },
                 elo: { type: 'number' },
                 cost: { type: 'number' },
                 context: { type: 'number' },
               },
+            },
+            label: {
+              type: 'string',
+              enum: ['leader', 'strength', 'none'],
+              description: "Which curator label applied for the resolved task: the category leader (Curator's pick), a listed strength (Curator-rated strength), or none.",
             },
             label_effect: {
               type: 'number',

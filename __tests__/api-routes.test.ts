@@ -122,6 +122,7 @@ describe('GET /api/recommend', () => {
     for (const r of body.recommendations) {
       expect(Object.keys(r.breakdown).sort()).toEqual(['context', 'cost', 'elo', 'task']);
       expect(r.label_effect).toBe(r.breakdown.task);
+      expect(['leader', 'strength', 'none']).toContain(r.label);
     }
     const sc = body.meta.scoring;
     expect(sc.version).toBe(1);

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Nav, Hero, ModelCard, CategoryIcon, SectionHeader, ArticleCard, OpenWeightCard } from './components';
 import ModelFilter from './components/ModelFilter';
 import { getSiteConfig, getModels, getCategories, getHomepageArticles, getOpenWeightModels, formatDate, formatUsdPerMillion, formatContextWindow, formatElo, boardDateLabel } from '@/data';
-import { scoreAndRank, categoryTaskKeyword, isRated, formatWhyRank, type ScoreBreakdown } from '@/data/recommend';
+import { scoreAndRank, categoryTaskKeyword, isRated, formatWhyRank, type ScoreBreakdown, type LabelKind } from '@/data/recommend';
 
 const config = getSiteConfig();
 const models = getModels();
@@ -32,7 +32,7 @@ function ModelsSection({
     const r = scoreAndRank(models, categories, { task: task || null, maxCost });
     if (!hasFilters) {
       return {
-        ranked: models.filter(isRated).map((m) => ({ model: m, score: 0, breakdown: undefined as ScoreBreakdown | undefined })),
+        ranked: models.filter(isRated).map((m) => ({ model: m, score: 0, breakdown: undefined as ScoreBreakdown | undefined, label_kind: 'none' as LabelKind })),
         unrated: r.unrated,
         taskMatched: false,
       };
@@ -59,12 +59,12 @@ function ModelsSection({
         hasFilters={hasFilters}
       />
       <div className="models-grid">
-        {ranked.map(({ model, score, breakdown }, i) => (
+        {ranked.map(({ model, score, breakdown, label_kind }, i) => (
           <ModelCard
             key={model.id}
             model={model}
             index={i}
-            whyRank={hasFilters && breakdown ? formatWhyRank(breakdown, taskMatched) : undefined}
+            whyRank={hasFilters && breakdown ? formatWhyRank(breakdown, label_kind, taskMatched) : undefined}
             bestMatch={hasFilters && i === 0 && topScore > 0}
             dimmed={hasFilters && score === 0 && topScore > 0}
           />

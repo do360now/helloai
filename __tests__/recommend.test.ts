@@ -385,28 +385,48 @@ describe('scoring transparency — wording and task matching', () => {
 describe('formatWhyRank (the homepage "why this rank" line)', () => {
   const r = (opts: Parameters<typeof scoreAndRank>[2]) => scoreAndRank(models, categories, opts);
 
+  test('the engine says which branch it took: leader, strength or none', () => {
+    const res = r({ task: 'coding' });
+    const kinds = Object.fromEntries(res.recommendations.map((x) => [x.model.name, x.label_kind]));
+    expect(kinds[res.matchedCategory!.leader]).toBe('leader');
+    for (const x of res.recommendations) {
+      if (x.model.name === res.matchedCategory!.leader) continue;
+      expect(x.label_kind).toBe(x.model.strengths.includes(res.matchedCategory!.name) ? 'strength' : 'none');
+    }
+    for (const x of r({}).recommendations) expect(x.label_kind).toBe('none'); // no task, no label
+  });
+
   test('a category leader reads "Curator\'s pick +0.40" first, then Elo, cost, context', () => {
     const res = r({ task: 'coding' });
-    const leader = res.recommendations.find((x) => x.model.name === res.matchedCategory!.leader)!;
-    expect(formatWhyRank(leader.breakdown, true)).toMatch(/^Curator's pick \+0\.40 · Elo \+\d\.\d\d · cost \+\d\.\d\d · context \+\d\.\d\d$/);
+    const leader = res.recommendations.find((x) => x.label_kind === 'leader')!;
+    expect(formatWhyRank(leader.breakdown, leader.label_kind, true)).toMatch(/^Curator's pick \+0\.40 · Elo \+\d\.\d\d · cost \+\d\.\d\d · context \+\d\.\d\d$/);
   });
 
   test('a curator-rated strength is named as such, not as a pick', () => {
     const res = r({ task: 'coding' });
-    const strength = res.recommendations.find((x) => x.label_effect > 0 && x.model.name !== res.matchedCategory!.leader)!;
-    expect(formatWhyRank(strength.breakdown, true)).toMatch(/^Curator-rated strength \+0\.20/);
+    const strength = res.recommendations.find((x) => x.label_kind === 'strength')!;
+    expect(formatWhyRank(strength.breakdown, strength.label_kind, true)).toMatch(/^Curator-rated strength \+0\.20/);
   });
 
-  test('an unlabelled model in a task search says +0.00, so the absence of a label is visible', () => {
-    const res = r({ task: 'coding' });
-    const none = res.recommendations.find((x) => x.label_effect === 0);
-    if (none) expect(formatWhyRank(none.breakdown, true)).toMatch(/^Curator's pick \+0\.00 · /);
+  test('a matched task with NO label says so: "No curator label +0.00", never "Curator\'s pick +0.00" (d8)', () => {
+    // Real data may or may not have such a model today, so build one: strengths emptied, not the leader.
+    const ms = JSON.parse(JSON.stringify(models)) as Model[];
+    const coding = categories.find((c) => c.name === 'Coding & Engineering')!;
+    const target = ms.find((m) => m.name !== coding.leader)!;
+    target.strengths = [];
+    const res = scoreAndRank(ms, categories, { task: 'coding' });
+    const none = res.recommendations.find((x) => x.model.id === target.id)!;
+    expect(none.label_kind).toBe('none');
+    expect(none.breakdown.task).toBe(0);
+    const text = formatWhyRank(none.breakdown, none.label_kind, true);
+    expect(text).toMatch(/^No curator label \+0\.00 · /);
+    expect(text).not.toMatch(/Curator's pick|Curator-rated/);
   });
 
   test('with no task there is no curator part at all', () => {
     const top = r({}).recommendations[0];
-    const text = formatWhyRank(top.breakdown, false);
-    expect(text).not.toMatch(/Curator/);
+    const text = formatWhyRank(top.breakdown, top.label_kind, false);
+    expect(text).not.toMatch(/[Cc]urator/);
     expect(text).toMatch(/^Elo \+/);
   });
 });

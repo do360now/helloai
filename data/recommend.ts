@@ -15,7 +15,11 @@ export interface Recommendation {
   breakdown: ScoreBreakdown;
   /** How much of the score came from curated labels (leader / strength), i.e. breakdown.task. */
   label_effect: number;
+  /** Which curator branch the engine took, so nothing has to be inferred from the number. */
+  label_kind: LabelKind;
 }
+
+export type LabelKind = 'leader' | 'strength' | 'none';
 
 // Weighted-score configuration. Values are pinned here (not env-driven) so the
 // ranking is deterministic and reproducible. __tests__/recommend.test.ts locks
@@ -58,16 +62,16 @@ export interface UnratedModel {
 const fmt2 = (n: number) => `+${n.toFixed(2)}`;
 
 /**
- * The "why this rank" line: where each part of the score came from. The curator part is named for what
- * it was (a pick = the category leader, a strength = a listed strength) so a reader can see that the top
- * result may come from curation and not from Elo. Wording per docs/review/purpose.md.
+ * The "why this rank" line: where each part of the score came from. The curator part is named for the
+ * branch the engine actually took (a pick = the category leader, a strength = a listed strength, none = no
+ * label), so a reader can see that the top result may come from curation and not from Elo, and an
+ * unlabelled model is never presented as a pick. Wording per docs/review/purpose.md.
  */
-export function formatWhyRank(b: ScoreBreakdown, taskMatched: boolean): string {
+export function formatWhyRank(b: ScoreBreakdown, kind: LabelKind, taskMatched: boolean): string {
   const parts: string[] = [];
   if (taskMatched) {
-    const isPick = Math.abs(b.task - SCORING_WEIGHTS.withTask.task) < 0.005;
-    const isStrength = b.task > 0 && !isPick;
-    parts.push(`${isStrength ? 'Curator-rated strength' : "Curator's pick"} ${fmt2(b.task)}`);
+    const name = kind === 'leader' ? "Curator's pick" : kind === 'strength' ? 'Curator-rated strength' : 'No curator label';
+    parts.push(`${name} ${fmt2(b.task)}`);
   }
   parts.push(`Elo ${fmt2(b.elo)}`, `cost ${fmt2(b.cost)}`, `context ${fmt2(b.context)}`);
   return parts.join(' · ');
@@ -173,12 +177,15 @@ export function scoreAndRank(
     const reasons: string[] = [];
 
     let taskScore = 0;
+    let labelKind: LabelKind = 'none';
     if (hasTask && matchedCategory) {
       if (m.name === matchedCategory.leader) {
         taskScore = 1.0;
+        labelKind = 'leader';
         reasons.push(`Curator's pick for ${matchedCategory.name}`);
       } else if (m.strengths.includes(matchedCategory.name)) {
         taskScore = 0.5;
+        labelKind = 'strength';
         reasons.push(`Curator-rated strength in ${matchedCategory.name}`);
       }
     }
@@ -205,7 +212,7 @@ export function scoreAndRank(
     const score = round2(parts.task + parts.elo + parts.cost + parts.context);
     const breakdown = { task: round2(parts.task), elo: round2(parts.elo), cost: round2(parts.cost), context: round2(parts.context) };
 
-    return { model: m, score, reasons, breakdown, label_effect: breakdown.task };
+    return { model: m, score, reasons, breakdown, label_effect: breakdown.task, label_kind: labelKind };
   });
 
   recommendations.sort((a, b) => b.score - a.score);
