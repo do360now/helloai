@@ -124,3 +124,86 @@ def test_nakasyou_entries_carry_the_snapshot_date(monkeypatch):
     monkeypatch.setattr(arena, "MAX_SNAPSHOT_AGE_DAYS", 10**6)
     entries = arena._fetch_from_nakasyou()
     assert entries["claude-opus-5.5-max"].snapshot_date == "2099-01-01"
+
+
+# ─── pipeline gaps found in review (a3): overrides, category leaders, predecessor reachability ───
+from update_leaderboard import is_rated, update_category_leaders
+
+
+def _m(mid, name, elo, matches=True, status=None, strengths=()):
+    src = {"board": "text_overall", "arena_model": f"{mid}-slug", "matches_listed_model": matches,
+           "snapshot_date": "2026-09-13", "checked_date": "2026-09-23", "source_url": "https://arena.ai/leaderboard/text",
+           "set_by": "agent_curated", "ci_low": elo - 5, "ci_high": elo + 5, "votes": 100}
+    if status:
+        src["status"] = status
+    return {"id": mid, "name": name, "elo": elo, "strengths": list(strengths), "elo_source": src}
+
+
+def test_is_rated_mirrors_the_site_rule():
+    assert is_rated(_m("a", "A", 1500)) is True
+    assert is_rated(_m("a", "A", 1500, matches=False)) is False
+    assert is_rated(_m("a", "A", 1500, status="stale")) is False
+    assert is_rated(_m("a", "A", 1500, status="missing")) is False
+    assert is_rated({"id": "a", "name": "A", "elo": 1500}) is False  # no elo_source at all
+
+
+def test_a_borrowed_score_cannot_be_crowned_category_leader():
+    models = [_m("b", "Borrowed", 1600, matches=False, strengths=["Coding"]), _m("r", "Rated", 1500, strengths=["Coding"])]
+    cats = [{"name": "Overall Preference", "leader": "Rated", "insight": ""}, {"name": "Coding", "leader": "Rated", "insight": ""}]
+    out, changed = update_category_leaders(cats, sorted(models, key=lambda m: m["elo"], reverse=True))
+    assert [c["leader"] for c in out] == ["Rated", "Rated"] and changed is False
+
+
+def test_manual_override_updates_provenance_and_drops_the_old_interval():
+    models = [_m("gemini", "Gemini", 1487)]
+    out, changed = update_models(models, scores={}, manual_overrides={"gemini": 1510})
+    src = out[0]["elo_source"]
+    assert out[0]["elo"] == 1510 and changed is True
+    assert src["set_by"] == "override"
+    assert "ci_low" not in src and "ci_high" not in src and "votes" not in src
+    assert src["checked_date"] >= "2026-09-25"
+    assert src["matches_listed_model"] is True  # an override never changes whose score it is
+
+
+def test_override_on_a_borrowed_model_leaves_it_borrowed():
+    out, _ = update_models([_m("claude", "Claude", 1493, matches=False)], scores={}, manual_overrides={"claude": 1510})
+    assert out[0]["elo_source"]["matches_listed_model"] is False
+
+
+def test_predecessor_flag_is_reachable_through_the_default_map():
+    entries = {"claude-opus-5-high": e("claude-opus-5-high", 1493.0)}
+    hit, matches = resolve_with_identity("claude", entries, name_map=arena._NAME_MAP, allow_predecessor=True)
+    assert hit is not None and matches is False
+
+
+def test_fetch_matches_can_be_asked_for_predecessors_but_never_by_default(monkeypatch):
+    monkeypatch.setattr(arena, "_fetch_all_scores", lambda: {"claude-opus-5-high": e("claude-opus-5-high", 1493.0)})
+    assert "claude" not in arena.fetch_matches(our_model_ids=["claude"])
+    got = arena.fetch_matches(our_model_ids=["claude"], allow_predecessor=True)
+    assert got["claude"].name == "claude-opus-5-high"
+
+
+def test_config_is_derived_from_the_matched_slug_not_left_from_the_old_record():
+    # Astra's repro: the predecessor record had config 'high'; a fetched claude-opus-5.5-max must not keep it.
+    m = _m("claude", "Claude", 1493, matches=False)
+    m["elo_source"]["config"] = "high"
+    entry = _ArenaEntry(name="claude-opus-5.5-max", score=1510.0, snapshot_date="2026-10-04")
+    out, _ = update_models([m], {"claude": 1510.0}, {}, matches={"claude": entry})
+    assert out[0]["elo_source"]["config"] == "max"
+
+
+def test_config_is_cleared_when_the_slug_has_no_effort_suffix():
+    m = _m("gemini", "Gemini", 1487)
+    m["elo_source"]["config"] = "max"
+    entry = _ArenaEntry(name="gemini-3.1-pro-preview", score=1490.0, snapshot_date="2026-10-04")
+    out, _ = update_models([m], {"gemini": 1490.0}, {}, matches={"gemini": entry})
+    assert "config" not in out[0]["elo_source"]
+
+
+def test_config_from_slug_variants():
+    from arena import config_from_slug
+    assert config_from_slug("claude-fable-5.1-max") == "max"
+    assert config_from_slug("grok-4.7-xhigh") == "xhigh"
+    assert config_from_slug("muse-spark-1.3 (xHigh)") == "xhigh"
+    assert config_from_slug("claude-opus-5.5-high") == "high"
+    assert config_from_slug("gemini-3.1-pro-preview") is None

@@ -25,6 +25,14 @@ log = setup_logger("leaderboard")
 
 # ─── UPDATE LOGIC ───────────────────────────────────────────────────────────
 
+def is_rated(model: dict) -> bool:
+    """Mirror of isRated in data/recommend.ts: the stored Elo is the model's OWN, and not missing or stale."""
+    src = model.get("elo_source")
+    if not src or src.get("status") in ("missing", "stale"):
+        return False
+    return src.get("matches_listed_model") is True
+
+
 def update_models(
     models: list[dict],
     scores: dict[str, float],
@@ -45,12 +53,30 @@ def update_models(
 
         if mid in manual_overrides:
             new_elo = int(manual_overrides[mid])
+            src = model.get("elo_source")
+            if src is not None:
+                # A hand-set number is not the fetched one: its old interval and votes no longer describe it.
+                # Whose score it is (matches_listed_model) is not changed by an override.
+                for stale_key in ("ci_low", "ci_high", "votes"):
+                    src.pop(stale_key, None)
+                src["set_by"] = "override"
+                src["checked_date"] = date.today().isoformat()
         elif mid in scores:
             new_elo = int(scores[mid])
             if matches and mid in matches:
                 entry = matches[mid]
                 src = model.setdefault("elo_source", {})
-                src.update({"arena_model": entry.name, "matches_listed_model": True, "set_by": "fetched"})
+                src.update({
+                    "arena_model": entry.name,
+                    "matches_listed_model": getattr(entry, "matches_listed_model", True),
+                    "set_by": "fetched",
+                })
+                # The measured configuration belongs to the matched slug, never to the old record.
+                cfg = arena.config_from_slug(entry.name)
+                if cfg:
+                    src["config"] = cfg
+                else:
+                    src.pop("config", None)
                 # The old interval and vote count belong to the OLD number; never leave them next to a new one.
                 for stale_key in ("ci_low", "ci_high", "votes"):
                     src.pop(stale_key, None)
@@ -80,8 +106,12 @@ def update_models(
 def update_category_leaders(
     categories: list[dict], models: list[dict]
 ) -> tuple[list[dict], bool]:
-    """Update category leaders based on current model rankings."""
+    """
+    Update category leaders based on current model rankings. Only RATED models can lead: a borrowed,
+    missing or stale Elo must not crown a leader that the site then refuses to rank.
+    """
     has_changes = False
+    models = [m for m in models if is_rated(m)]
     if not models:
         return categories, has_changes
 

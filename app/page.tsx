@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { Nav, Hero, ModelCard, CategoryIcon, SectionHeader, ArticleCard, OpenWeightCard } from './components';
 import ModelFilter from './components/ModelFilter';
-import { getSiteConfig, getModels, getCategories, getHomepageArticles, getOpenWeightModels, formatDate, formatUsdPerMillion, formatContextWindow, formatElo } from '@/data';
+import { getSiteConfig, getModels, getCategories, getHomepageArticles, getOpenWeightModels, formatDate, formatUsdPerMillion, formatContextWindow, formatElo, boardDateLabel } from '@/data';
 import { scoreAndRank, categoryTaskKeyword, isRated } from '@/data/recommend';
 
 const config = getSiteConfig();
@@ -88,15 +88,15 @@ function ModelsSection({
   );
 }
 
-// The board date is read from the data, so this line cannot drift from the numbers.
-const boardDate = formatDate(
-  models.map((m) => m.elo_source?.snapshot_date ?? '').sort().slice(-1)[0] || config.lastUpdated
-);
+// The board date is read from the data, so this line cannot drift from the numbers. When rows come from
+// different snapshots it is a range, and each row shows its own date.
+const board = boardDateLabel(models);
 const ratedModels = models.filter(isRated);
 const unratedModels = models.filter((m) => !isRated(m));
 
 function LeaderboardRow({ m, rank }: { m: (typeof models)[number]; rank: number | null }) {
   const elo = formatElo(m);
+  const rowDate = board.mixed && m.elo_source ? ` (snapshot ${formatDate(m.elo_source.snapshot_date)})` : '';
   return (
     <a
       href={m.url}
@@ -114,9 +114,12 @@ function LeaderboardRow({ m, rank }: { m: (typeof models)[number]; rank: number 
             <span className="leaderboard-model-name">{m.name}</span>
             <span className="leaderboard-provider">{m.provider}</span>
           </div>
-          <span className="leaderboard-elo" style={{ color: m.color }}>{elo.score}</span>
+          <span className="leaderboard-elo" style={{ color: m.color }} title={elo.arenaModel ? `Arena model: ${elo.arenaModel}` : undefined}>
+            {elo.score}
+            {elo.config && <span className="leaderboard-elo-config"> · {elo.config}</span>}
+          </span>
         </div>
-        {elo.note && <div className="leaderboard-elo-note">{elo.note}</div>}
+        {(elo.note || rowDate) && <div className="leaderboard-elo-note">{elo.note}{rowDate}</div>}
         <div className="leaderboard-metrics">
           <span>{formatUsdPerMillion(m.cost_per_million_tokens)} in</span>
           <span>{formatUsdPerMillion(m.cost_per_million_tokens_output)} out</span>
@@ -134,7 +137,7 @@ function LeaderboardSection() {
         <SectionHeader
           label="Leaderboard"
           title="This week's ranking"
-          subtitle={`LMArena text Elo from the arena.ai board of ${boardDate}, with list price and context. Models without a score of their own are listed below the ranking, unranked.`}
+          subtitle={`LMArena text Elo from ${board.mixed ? 'arena.ai boards dated' : 'the arena.ai board of'} ${board.text}, with list price and context. Models without a score of their own are listed below the ranking, unranked.`}
         />
         <div className="leaderboard-list">
           {ratedModels.map((m, i) => (

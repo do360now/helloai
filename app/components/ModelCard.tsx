@@ -73,7 +73,8 @@ export default function ModelCard({
 
       <div className="model-footer">
         <span className="model-elo">
-          {elo.score} Elo
+          <span title={elo.arenaModel ? `Arena model: ${elo.arenaModel}` : undefined}>{elo.score} Elo</span>
+          {elo.config && <span className="model-elo-config"> · {elo.config}</span>}
           {elo.note && <span className={`model-elo-note ${unrated ? 'model-elo-note-unrated' : ''}`}>{elo.note}</span>}
         </span>
         <span className="model-cta" style={{ color: hovered ? model.color : 'rgba(255,255,255,0.3)' }}>

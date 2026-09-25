@@ -28,7 +28,7 @@ import io
 import json
 import logging
 import re
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import datetime, timezone
 
 import requests
@@ -172,6 +172,7 @@ class _ArenaEntry:
     score: float
     votes: int = 0
     snapshot_date: str | None = None  # YYYY-MM-DD of the board this score came from, when known
+    matches_listed_model: bool = True  # False for a predecessor hit (only when a caller allows one)
 
 
 def _fetch_from_nakasyou() -> dict[str, "_ArenaEntry"]:
@@ -317,6 +318,15 @@ def _fetch_all_scores() -> dict[str, "_ArenaEntry"]:
     return {}
 
 
+_EFFORT_RE = re.compile(r"[-\s(]+(max|xhigh|high|medium|low)\)?$", re.IGNORECASE)
+
+
+def config_from_slug(slug: str) -> str | None:
+    """The measured effort configuration named by an Arena slug ('...-max' -> 'max'), or None."""
+    m = _EFFORT_RE.search(slug.strip())
+    return m.group(1).lower() if m else None
+
+
 def resolve_with_identity(
     model_id: str,
     arena_entries: dict[str, "_ArenaEntry"],
@@ -337,7 +347,7 @@ def resolve_with_identity(
         if candidate.lower() in lower_map:
             return lower_map[candidate.lower()], True
 
-    if allow_predecessor and name_map is None:
+    if allow_predecessor and (name_map is None or name_map is _NAME_MAP):
         for candidate in _PREDECESSOR_MAP.get(model_id, []):
             if candidate.lower() in lower_map:
                 return lower_map[candidate.lower()], False
@@ -360,11 +370,13 @@ def _resolve_model_id(
 def fetch_matches(
     our_model_ids: list[str] | None = None,
     name_map: dict[str, list[str]] | None = None,
+    allow_predecessor: bool = False,
 ) -> "dict[str, _ArenaEntry]":
     """
     Like fetch_scores, but returns the matched arena entry (name and score) per model id, so the
     caller can record which Arena slug the number belongs to (elo_source.arena_model).
-    Only exact identities are returned; a predecessor's score is never included.
+    Only exact identities are returned unless allow_predecessor=True, in which case a predecessor's
+    entry comes back with matches_listed_model=False. The weekly pipeline never sets it.
     """
     active_map = name_map if name_map is not None else _NAME_MAP
     if our_model_ids is None:
@@ -381,9 +393,9 @@ def fetch_matches(
 
     matches: dict[str, _ArenaEntry] = {}
     for mid in our_model_ids:
-        entry = _resolve_model_id(mid, arena_entries, active_map)
+        entry, exact = resolve_with_identity(mid, arena_entries, active_map, allow_predecessor)
         if entry:
-            matches[mid] = entry
+            matches[mid] = entry if exact else replace(entry, matches_listed_model=False)
         else:
             log.info(f"  '{mid}': no exact Arena identity on the board — keeping the stored Elo")
     return matches

@@ -505,6 +505,8 @@ a.nav-brand { text-decoration: none; color: inherit; }
   color: rgba(255,255,255,0.62);
 }
 
+.model-elo-config, .leaderboard-elo-config { font-weight: 400; opacity: 0.75; }
+
 .model-elo-note-unrated { color: rgba(255,255,255,0.72); }
 
 .models-unrated { max-width: 1200px; margin: 48px auto 0; }

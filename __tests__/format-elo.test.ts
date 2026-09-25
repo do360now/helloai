@@ -1,4 +1,4 @@
-import { formatElo } from '../data';
+import { formatElo, boardDateLabel } from '../data';
 import type { Model } from '../data/types';
 import { getModels } from '../data';
 import { borrowedIds } from './helpers/roster';
@@ -8,6 +8,41 @@ const mk = (over: Partial<Model>, src: Partial<NonNullable<Model['elo_source']>>
   ...base,
   ...over,
   elo_source: { ...base.elo_source!, ...src },
+});
+
+describe('formatElo config and slug', () => {
+  test('an own score carries the measured config and the exact slug, for cards and rows to render', () => {
+    const f = formatElo(base);
+    expect(f.config).toBe('max');
+    expect(f.arenaModel).toBe('claude-fable-5.1-max');
+  });
+
+  test('a score without an effort suffix has no config', () => {
+    const m = mk({}, { config: undefined, arena_model: 'gemini-3.1-pro-preview' });
+    expect(formatElo(m).config).toBeNull();
+    expect(formatElo(m).arenaModel).toBe('gemini-3.1-pro-preview');
+  });
+});
+
+describe('boardDateLabel (mixed snapshots must not look newer than they are)', () => {
+  const all = getModels();
+  const withDates = (dates: string[]) => all.map((m, i) => ({ ...m, elo_source: { ...m.elo_source!, snapshot_date: dates[i % dates.length] } }));
+
+  test('one shared date is shown once', () => {
+    const l = boardDateLabel(withDates(['2026-09-13']));
+    expect(l.mixed).toBe(false);
+    expect(l.text).toMatch(/Sep 13, 2026/);
+  });
+
+  test('when only one row is newer, the label is a range and says so, never just the newest date', () => {
+    const models = withDates(['2026-09-13']);
+    models[0] = { ...models[0], elo_source: { ...models[0].elo_source!, snapshot_date: '2026-09-25' } };
+    const l = boardDateLabel(models);
+    expect(l.mixed).toBe(true);
+    expect(l.text).toMatch(/Sep 13, 2026/);
+    expect(l.text).toMatch(/Sep 25, 2026/);
+    expect(l.text).toMatch(/mixed|each row/i);
+  });
 });
 
 describe('formatElo', () => {

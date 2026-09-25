@@ -45,22 +45,28 @@ export interface FormattedElo {
   note: string | null;
   /** rated = the model's own score; borrowed = a predecessor's; missing/stale = no usable score. */
   state: 'rated' | 'borrowed' | 'missing' | 'stale';
+  /** The measured configuration (for example "max"), shown beside an OWN score. null otherwise. */
+  config: string | null;
+  /** The exact Arena slug the number belongs to, for a hover title so the identity is traceable. */
+  arenaModel: string | null;
 }
 
 // One place decides how an Elo is shown, so cards, rows and the methodology page agree.
 export function formatElo(m: Model): FormattedElo {
   const s = m.elo_source;
   if (!s || s.status === 'missing') {
-    return { score: String(m.elo), note: 'No current score from the source.', state: 'missing' };
+    return { score: String(m.elo), note: 'No current score from the source.', state: 'missing', config: null, arenaModel: s?.arena_model ?? null };
   }
   if (s.status === 'stale') {
-    return { score: String(m.elo), note: `Score is stale (snapshot ${s.snapshot_date}).`, state: 'stale' };
+    return { score: String(m.elo), note: `Score is stale (snapshot ${s.snapshot_date}).`, state: 'stale', config: null, arenaModel: s.arena_model };
   }
   if (!s.matches_listed_model) {
     return {
       score: String(m.elo),
       note: `Not yet rated. This is a predecessor's score (${s.arena_model}).`,
       state: 'borrowed',
+      config: null, // the predecessor's configuration is not this model's; the note names the slug
+      arenaModel: s.arena_model,
     };
   }
   if (s.ci_low !== undefined && s.ci_high !== undefined) {
@@ -68,11 +74,25 @@ export function formatElo(m: Model): FormattedElo {
     const above = s.ci_high - m.elo;
     // "±" only when the interval really is symmetric (within rounding); otherwise print the range.
     if (Math.abs(above - below) <= 1) {
-      return { score: `${m.elo} ± ${Math.round((s.ci_high - s.ci_low) / 2)}`, note: null, state: 'rated' };
+      return { score: `${m.elo} ± ${Math.round((s.ci_high - s.ci_low) / 2)}`, note: null, state: 'rated', config: s.config ?? null, arenaModel: s.arena_model };
     }
-    return { score: `${m.elo} [${s.ci_low}–${s.ci_high}]`, note: null, state: 'rated' };
+    return { score: `${m.elo} [${s.ci_low}–${s.ci_high}]`, note: null, state: 'rated', config: s.config ?? null, arenaModel: s.arena_model };
   }
-  return { score: String(m.elo), note: 'Interval not available from source.', state: 'rated' };
+  return { score: String(m.elo), note: 'Interval not available from source.', state: 'rated', config: s.config ?? null, arenaModel: s.arena_model };
+}
+
+/**
+ * The date line for the Elo table. One snapshot date is printed once; when rows come from different
+ * snapshots the label is a range and says so, so an older row never looks newer than it is.
+ */
+export function boardDateLabel(models: Model[]): { text: string; mixed: boolean } {
+  const dates = [...new Set(models.map((m) => m.elo_source?.snapshot_date).filter((d): d is string => !!d))].sort();
+  if (dates.length === 0) return { text: '', mixed: false };
+  if (dates.length === 1) return { text: formatDate(dates[0]), mixed: false };
+  return {
+    text: `${formatDate(dates[0])} to ${formatDate(dates[dates.length - 1])} (mixed snapshots; each row shows its own date)`,
+    mixed: true,
+  };
 }
 
 export function formatUsdPerMillion(n: number): string {
