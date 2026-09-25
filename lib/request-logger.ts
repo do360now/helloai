@@ -35,8 +35,8 @@ export function logRequest(entry: RequestLog): void {
 /**
  * Check if User-Agent indicates an AI/agent
  */
-export function isAIUserAgent(userAgent: string): boolean {
-  const cls = classifyUserAgent(userAgent);
+export function isAIUserAgent(userAgent: string, agentId?: string | null): boolean {
+  const cls = classifyUserAgent(userAgent, { agentId });
   return cls === 'ai_crawler' || cls === 'declared_ai_client';
 }
 

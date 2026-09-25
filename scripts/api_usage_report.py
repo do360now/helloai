@@ -46,10 +46,11 @@ def parse_lines(lines):
     for line in lines:
         rec = _payload(line, API_MARK)
         if rec is not None:
-            api.append(rec)
+            if isinstance(rec.get("ts"), (int, float)):  # skip truncated or merged records
+                api.append(rec)
             continue
         rec = _payload(line, GO_MARK)
-        if rec is not None:
+        if rec is not None and isinstance(rec.get("ts"), (int, float)):
             go.append(rec)
     return api, go
 
@@ -96,6 +97,7 @@ def render(r) -> str:
     out += ["", "By path: " + ", ".join(f"{k}={v}" for k, v in sorted(r["by_path"].items())),
             "Top param keys: " + ", ".join(f"{k}={v}" for k, v in r["top_param_keys"]),
             "redirect_requests: " + (", ".join(f"{k}={v}" for k, v in r["redirect_requests"].items()) or "none"),
+            "redirect_requests by from: " + (", ".join(f"{k}={v}" for k, v in r["redirect_requests_by_from"].items()) or "none"),
             "",
             "Notes: UA classes are labels, not proof of intent; declared_ai_client, programmatic and empty are",
             "separate columns and are never summed into \"agents\". redirect_requests counts /go/ hits, not visits",

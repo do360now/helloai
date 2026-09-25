@@ -4,7 +4,6 @@ import { classifyUserAgent } from '@/lib/ua-class';
 // Fixed allow-list. Never redirect to a URL taken from the request (open redirect).
 const DESTINATIONS: Record<string, string> = {
   app: 'https://app.helloai.com',
-  channels: 'https://app.helloai.com/channels/summarize',
 };
 
 const FROM_RE = /^[a-z0-9-]{1,32}$/;

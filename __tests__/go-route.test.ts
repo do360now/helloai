@@ -28,11 +28,15 @@ describe('GET /go/[dest]', () => {
     expect(JSON.parse(line.slice('[go-metrics] '.length)).from).toBeNull();
   });
 
+  it('drops the retired channels destination (no referrer left after the concept page was deleted)', async () => {
+    expect((await call('channels')).status).toBe(404);
+  });
+
   it('logs dest and a clean from', async () => {
-    await call('channels', '?from=concepts');
+    await call('app', '?from=concepts');
     const line = spy.mock.calls.map((c) => String(c[0])).find((l) => l.startsWith('[go-metrics] '))!;
     const json = JSON.parse(line.slice('[go-metrics] '.length));
-    expect(json.dest).toBe('channels');
+    expect(json.dest).toBe('app');
     expect(json.from).toBe('concepts');
   });
 

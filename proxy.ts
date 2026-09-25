@@ -28,10 +28,12 @@ export function proxy(request: NextRequest) {
 
   const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
   const userAgent = request.headers.get('user-agent') || '';
+  const agentId = request.headers.get('x-agent-id');
+  const params = Object.fromEntries(request.nextUrl.searchParams);
   const now = Date.now();
 
   // === AI Reconnaissance Detection ===
-  if (isAIUserAgent(userAgent)) {
+  if (isAIUserAgent(userAgent, agentId)) {
     console.warn(
       JSON.stringify({
         alert: 'AI_USER_AGENT_DETECTED',
@@ -49,7 +51,7 @@ export function proxy(request: NextRequest) {
     ip,
     userAgent,
     endpoint: request.nextUrl.pathname,
-    params: Object.fromEntries(request.nextUrl.searchParams),
+    params,
     responseStatus: 0,
   });
 
@@ -71,8 +73,8 @@ export function proxy(request: NextRequest) {
     path: request.nextUrl.pathname,
     userAgent,
     ip,
-    params: Object.fromEntries(request.nextUrl.searchParams),
-    agentId: request.headers.get('x-agent-id'),
+    params,
+    agentId,
   };
 
   // === Rate Limiting ===

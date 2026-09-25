@@ -496,7 +496,7 @@
     "docs/": "Architecture, pay-loop, specs, superpowers plans",
     "Dockerfile": "Multi-stage standalone image",
     "Makefile": "Version, build, push, Azure deploy, open-weight stacks",
-    "middleware.ts": "API rate limit + recon detection",
+    "proxy.ts": "API rate limit + recon detection",
     "next.config.mjs": "standalone output, security headers, redirects"
   },
   "relationships": [
@@ -505,7 +505,7 @@
     { "from": "lib/pay/pro_service.ts", "to": "data/recommend.ts", "type": "imports", "label": "scoreAndRank" },
     { "from": "lib/pay/pro_service.ts", "to": "lib/api.ts", "type": "imports", "label": "parseRecommendParams" },
     { "from": "app/api/*/route.ts", "to": "lib/api.ts", "type": "imports", "label": "apiHeaders" },
-    { "from": "middleware.ts", "to": "lib/request-logger.ts", "type": "imports", "label": "log + anomaly" },
+    { "from": "proxy.ts", "to": "lib/request-logger.ts", "type": "imports", "label": "log + anomaly" },
     { "from": "data/index.ts", "to": "data/*.json", "type": "imports", "label": "static JSON" },
     { "from": "article-idea-generator", "to": "article-writer", "type": "handoff", "label": "typed brief JSON" },
     { "from": "scripts/add_article.py", "to": "data/articles.json", "type": "writes", "label": "insert article" },

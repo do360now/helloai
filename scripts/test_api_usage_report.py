@@ -75,3 +75,18 @@ def test_report_footer_states_the_limits(tmp_path, capsys):
     out = capsys.readouterr().out
     assert "redirect_requests" in out
     assert "not visits" in out.lower()
+
+
+def test_record_without_ts_is_skipped_not_a_crash():
+    lines = ['[api-metrics] {"path": "/api/models", "ua": "browser"}', m(DAY1, "browser")]
+    api, go = parse_lines(lines)
+    r = build_report(api, go)
+    assert r["days"]["2026-09-25"]["requests"] == 1
+
+
+def test_from_split_is_printed(tmp_path, capsys):
+    f = tmp_path / "x.log"
+    f.write_text(LOG)
+    main([str(f)])
+    out = capsys.readouterr().out
+    assert "hero-cta" in out and "(none)" in out
