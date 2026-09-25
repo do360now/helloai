@@ -100,7 +100,7 @@ def render(r) -> str:
             "redirect_requests by from: " + (", ".join(f"{k}={v}" for k, v in r["redirect_requests_by_from"].items()) or "none"),
             "",
             "Notes: UA classes are labels, not proof of intent; declared_ai_client, programmatic and empty are",
-            "separate columns and are never summed into \"agents\". redirect_requests counts /go/ hits, not visits",
+            "separate columns and are never summed into \"agents\". Anyone sending an X-Agent-Id header is labelled declared_ai_client. redirect_requests counts /go/ hits, not visits",
             "or activations (link previews and bots trigger them). Whether a visitor did anything in the app needs",
             "app-side data, which does not exist yet. ip_hash rotates daily and hashes the first X-Forwarded-For entry (client-controlled):",
             "compare distinct counts within a day only and treat them as an upper bound. A null ip_hash means METRICS_SALT was unset."]
