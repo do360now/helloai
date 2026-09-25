@@ -35,4 +35,18 @@ describe('GET /go/[dest]', () => {
     expect(json.dest).toBe('channels');
     expect(json.from).toBe('concepts');
   });
+
+  it('is never cached, so counts are not undercounted by an intermediary', async () => {
+    const res = await call('app');
+    expect(res.headers.get('cache-control')).toMatch(/no-store/);
+  });
+
+  it('logs the UA class so bot and preview hits can be filtered later', async () => {
+    await GET(
+      new NextRequest('http://localhost/go/app', { headers: { 'user-agent': 'Mozilla/5.0 (compatible; Googlebot/2.1)' } }),
+      { params: Promise.resolve({ dest: 'app' }) }
+    );
+    const line = spy.mock.calls.map((c) => String(c[0])).find((l) => l.startsWith('[go-metrics] '))!;
+    expect(JSON.parse(line.slice('[go-metrics] '.length)).ua).toBe('search_bot');
+  });
 });

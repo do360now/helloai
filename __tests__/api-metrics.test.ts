@@ -52,6 +52,48 @@ describe('recordApiRequest', () => {
     expect(usageSnapshot().total).toBe(1);
   });
 
+  it('fails closed in production when METRICS_SALT is unset: ip_hash is null', () => {
+    const env = process.env as Record<string, string | undefined>;
+    const saved = { NODE_ENV: env.NODE_ENV, METRICS_SALT: env.METRICS_SALT };
+    const warn = jest.spyOn(console, 'warn').mockImplementation(() => {});
+    try {
+      env.NODE_ENV = 'production';
+      delete env.METRICS_SALT;
+      recordApiRequest(base);
+      recordApiRequest(base);
+      const json = JSON.parse((spy.mock.calls[0][0] as string).slice(14));
+      expect(json.ip_hash).toBeNull();
+      expect(warn).toHaveBeenCalledTimes(1); // warned once, not per request
+    } finally {
+      env.NODE_ENV = saved.NODE_ENV;
+      if (saved.METRICS_SALT !== undefined) env.METRICS_SALT = saved.METRICS_SALT;
+      warn.mockRestore();
+    }
+  });
+
+  it('hashes with the salt when METRICS_SALT is set in production', () => {
+    const env = process.env as Record<string, string | undefined>;
+    const saved = { NODE_ENV: env.NODE_ENV, METRICS_SALT: env.METRICS_SALT };
+    try {
+      env.NODE_ENV = 'production';
+      env.METRICS_SALT = 'secret';
+      recordApiRequest(base);
+      expect(JSON.parse((spy.mock.calls[0][0] as string).slice(14)).ip_hash).toMatch(/^[0-9a-f]{8}$/);
+    } finally {
+      env.NODE_ENV = saved.NODE_ENV;
+      if (saved.METRICS_SALT === undefined) delete env.METRICS_SALT; else env.METRICS_SALT = saved.METRICS_SALT;
+    }
+  });
+
+  it('only counts known endpoint paths by name; anything else is "other" (public JSON must not echo arbitrary strings)', () => {
+    recordApiRequest({ ...base, path: '/api/some-made-up-path' });
+    recordApiRequest({ ...base, path: '/api/models' });
+    const u = usageSnapshot();
+    expect(u.by_path['/api/models']).toBe(1);
+    expect(u.by_path.other).toBe(1);
+    expect(JSON.stringify(u)).not.toContain('made-up');
+  });
+
   it('counts by ua class and path, with an ISO since', () => {
     recordApiRequest(base);
     recordApiRequest({ ...base, userAgent: '', path: '/api/models' });

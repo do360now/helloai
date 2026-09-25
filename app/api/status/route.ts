@@ -30,7 +30,7 @@ export async function GET(req: NextRequest) {
       },
       usage: {
         ...usageSnapshot(),
-        note: 'Counts since this container process started. Resets on restart and covers only this instance; not a total.',
+        note: 'Counts since this container process started. Resets on restart and covers only this container process (per-worker if workers are added); not a total.',
       },
       endpoints: [
         { path: '/api/models', method: 'GET', params: ['provider'] },

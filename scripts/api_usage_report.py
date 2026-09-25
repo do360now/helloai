@@ -14,7 +14,8 @@ check_cluster_bench.py).
 Reading the numbers: UA classes are labels, not proof of intent. The
 declared_ai_client, programmatic and empty columns are reported separately and
 never summed into "agents". ip_hash rotates daily, so distinct counts are only
-comparable within a day.
+comparable within a day, and it hashes the first X-Forwarded-For entry (client-controlled), so a distinct
+count is an upper bound until client-IP handling is fixed. A null ip_hash means METRICS_SALT was unset.
 """
 
 from __future__ import annotations
@@ -64,7 +65,7 @@ def build_report(api, go):
         d = days[_day(r["ts"])]
         d["requests"] += 1
         d["by_ua"][r.get("ua", "unknown")] += 1
-        d["ips"].add(r.get("ip_hash"))
+        d["ips"].add(r.get("ip_hash"))  # null hashes collapse to one entry
         d["rate_limited"] += bool(r.get("rate_limited"))
         by_path[r.get("path", "?")] += 1
         params.update(r.get("param_keys", []))
@@ -99,7 +100,8 @@ def render(r) -> str:
             "Notes: UA classes are labels, not proof of intent; declared_ai_client, programmatic and empty are",
             "separate columns and are never summed into \"agents\". redirect_requests counts /go/ hits, not visits",
             "or activations (link previews and bots trigger them). Whether a visitor did anything in the app needs",
-            "app-side data, which does not exist yet. ip_hash rotates daily: compare distinct counts within a day only."]
+            "app-side data, which does not exist yet. ip_hash rotates daily and hashes the first X-Forwarded-For entry (client-controlled):",
+            "compare distinct counts within a day only and treat them as an upper bound. A null ip_hash means METRICS_SALT was unset."]
     return "\n".join(out)
 
 

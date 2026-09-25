@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { classifyUserAgent } from '@/lib/ua-class';
 
 // Fixed allow-list. Never redirect to a URL taken from the request (open redirect).
 const DESTINATIONS: Record<string, string> = {
@@ -16,9 +17,11 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ dest
   const rawFrom = req.nextUrl.searchParams.get('from');
   const from = rawFrom && FROM_RE.test(rawFrom) ? rawFrom : null;
   try {
-    console.log(`[go-metrics] ${JSON.stringify({ ts: Date.now(), dest, from })}`);
+    console.log(`[go-metrics] ${JSON.stringify({ ts: Date.now(), dest, from, ua: classifyUserAgent(req.headers.get('user-agent') ?? '') })}`);
   } catch {
     /* never break the redirect */
   }
-  return NextResponse.redirect(DESTINATIONS[dest], 302);
+  const res = NextResponse.redirect(DESTINATIONS[dest], 302);
+  res.headers.set('Cache-Control', 'no-store');
+  return res;
 }

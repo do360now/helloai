@@ -243,7 +243,7 @@ export async function GET(req: NextRequest) {
             categories_count: { type: 'integer' },
             usage: {
               type: 'object',
-              description: 'Request counts since this container process started. Resets on restart and covers only this instance; the durable source is the [api-metrics] log lines.',
+              description: 'Request counts since this container process started. Resets on restart and covers only this container process; the durable source is the [api-metrics] log lines.',
               properties: {
                 since: { type: 'string', format: 'date-time' },
                 total: { type: 'integer' },

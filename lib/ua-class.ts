@@ -17,7 +17,7 @@ const SEARCH_BOTS = [/googlebot/i, /bingbot/i, /duckduckbot/i, /baiduspider/i, /
 
 const AI_CRAWLERS = [
   /gptbot/i, /chatgpt-user/i, /oai-searchbot/i, /claudebot/i, /claude-user/i, /anthropic-ai/i,
-  /perplexitybot/i, /google-extended/i, /bytespider/i, /ccbot/i, /amazonbot/i,
+  /perplexitybot/i, /bytespider/i, /ccbot/i, /amazonbot/i,
 ];
 
 const DECLARED_AI_CLIENTS = [

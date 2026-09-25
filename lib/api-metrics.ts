@@ -2,7 +2,15 @@ import { createHash } from 'node:crypto';
 import { classifyUserAgent, type UaClass } from './ua-class';
 
 const PREFIX = '[api-metrics]';
-const MAX_PATH_KEYS = 50; // /api/:path* matches arbitrary paths; bound the counter map
+// /api/:path* matches arbitrary paths and usage.by_path is public JSON, so count only
+// the endpoints we serve and bucket everything else as "other".
+const KNOWN_PATHS = new Set([
+  '/api/models',
+  '/api/recommend',
+  '/api/status',
+  '/api/openapi.json',
+  '/api/pro/recommend',
+]);
 
 export interface ApiRequestInfo {
   path: string;
@@ -37,13 +45,28 @@ function freshState(): UsageState {
 function state(): UsageState {
   return (g[STATE_KEY] ??= freshState());
 }
+state(); // start the clock at module load, not at the first request
 
 function stdoutEnabled(): boolean {
   return (process.env.API_METRICS_STDOUT ?? 'true') !== 'false';
 }
 
-/** First 8 hex chars of sha256(dailySalt + ip). Salt rotates every UTC day. */
-function ipHash(ip: string): string {
+let warnedNoSalt = false;
+
+/**
+ * First 8 hex chars of sha256(dailySalt + ip). Salt rotates every UTC day.
+ * Fails closed: in production with METRICS_SALT unset the hash would be reversible
+ * over all of IPv4, so return null (and warn once) instead of logging it.
+ * Pseudonymised, not anonymous: whoever holds the salt and the logs can brute-force IPv4.
+ */
+function ipHash(ip: string): string | null {
+  if (process.env.NODE_ENV === 'production' && !process.env.METRICS_SALT) {
+    if (!warnedNoSalt) {
+      warnedNoSalt = true;
+      console.warn('[api-metrics] METRICS_SALT is not set in production; ip_hash is logged as null');
+    }
+    return null;
+  }
   const salt = `${process.env.METRICS_SALT ?? 'dev'}${new Date().toISOString().slice(0, 10)}`;
   return createHash('sha256').update(salt + ip).digest('hex').slice(0, 8);
 }
@@ -59,7 +82,7 @@ export function recordApiRequest(info: ApiRequestInfo): void {
     const st = state();
     st.total++;
     st.byUa[ua] = (st.byUa[ua] ?? 0) + 1;
-    const key = info.path in st.byPath || Object.keys(st.byPath).length < MAX_PATH_KEYS ? info.path : 'other';
+    const key = KNOWN_PATHS.has(info.path) ? info.path : 'other';
     st.byPath[key] = (st.byPath[key] ?? 0) + 1;
 
     if (stdoutEnabled()) {
