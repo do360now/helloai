@@ -1,4 +1,4 @@
-VERSION=2.14.63
+VERSION=2.14.65
 
 # ─── Rootless Docker ─────────────────────────────────────
 # Point at the rootless per-user socket. ?= preserves any DOCKER_HOST
@@ -283,5 +283,3 @@ test_azure_access:
 test_deploy: test_azure_auth test_azure_access
 	@echo "✅ All Azure credentials and access validated!"
 	@echo "   The weekly cronjob should work correctly."
-
-
