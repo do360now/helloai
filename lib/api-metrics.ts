@@ -60,7 +60,7 @@ let warnedNoSalt = false;
  * over all of IPv4, so return null (and warn once) instead of logging it.
  * Pseudonymised, not anonymous: whoever holds the salt and the logs can brute-force IPv4.
  */
-function ipHash(ip: string): string | null {
+export function ipHash(ip: string): string | null {
   if (process.env.NODE_ENV === 'production' && !process.env.METRICS_SALT) {
     if (!warnedNoSalt) {
       warnedNoSalt = true;

@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { isAIUserAgent, detectAnomalousPattern, logRequest } from '@/lib/request-logger';
-import { recordApiRequest } from '@/lib/api-metrics';
+import { recordApiRequest, ipHash } from '@/lib/api-metrics';
 
 const RATE_LIMIT = 100; // requests per minute
 const WINDOW_MS = 60 * 1000;
@@ -11,6 +11,7 @@ const WINDOW_MS = 60 * 1000;
 const rateLimitMap = new Map<string, { count: number; resetTime: number }>();
 
 // Clean up old entries periodically
+// unref(): the timer must never keep the process (or a test run) alive on its own.
 setInterval(() => {
   const now = Date.now();
   for (const [ip, record] of rateLimitMap.entries()) {
@@ -18,7 +19,7 @@ setInterval(() => {
       rateLimitMap.delete(ip);
     }
   }
-}, 60 * 1000); // cleanup every minute
+}, 60 * 1000).unref?.(); // cleanup every minute
 
 export function proxy(request: NextRequest) {
   // Only apply to API routes
@@ -29,6 +30,7 @@ export function proxy(request: NextRequest) {
   const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
   const userAgent = request.headers.get('user-agent') || '';
   const agentId = request.headers.get('x-agent-id');
+  const ipH = ipHash(ip); // alert lines carry the salted daily hash, never the raw IP
   const params = Object.fromEntries(request.nextUrl.searchParams);
   const now = Date.now();
 
@@ -37,7 +39,7 @@ export function proxy(request: NextRequest) {
     console.warn(
       JSON.stringify({
         alert: 'AI_USER_AGENT_DETECTED',
-        ip,
+        ip_hash: ipH,
         userAgent,
         endpoint: request.nextUrl.pathname,
         timestamp: new Date().toISOString(),
@@ -60,7 +62,7 @@ export function proxy(request: NextRequest) {
     console.warn(
       JSON.stringify({
         alert: 'ANOMALOUS_ACCESS_PATTERN',
-        ip,
+        ip_hash: ipH,
         reason: anomaly.reason,
         endpoint: request.nextUrl.pathname,
         timestamp: new Date().toISOString(),
@@ -95,7 +97,7 @@ export function proxy(request: NextRequest) {
     console.warn(
       JSON.stringify({
         alert: 'RATE_LIMIT_EXCEEDED',
-        ip,
+        ip_hash: ipH,
         count: record.count,
         windowMs: WINDOW_MS,
         timestamp: new Date().toISOString(),
