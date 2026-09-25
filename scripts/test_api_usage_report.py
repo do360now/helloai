@@ -90,3 +90,40 @@ def test_from_split_is_printed(tmp_path, capsys):
     main([str(f)])
     out = capsys.readouterr().out
     assert "hero-cta" in out and "(none)" in out
+
+
+def _day_report(records):
+    lines = [m(DAY1, "browser", ip=h) if h else m(DAY1, "browser", ip=None) for h in records]
+    return build_report(*parse_lines(lines))["days"]["2026-09-25"]
+
+
+def test_null_hashes_are_not_one_identity():
+    d = _day_report([None, None])
+    assert d["requests"] == 2
+    assert d["distinct_ip_hash"] == 0
+    assert d["requests_without_ip_hash"] == 2
+    assert d["distinct_ip_hash_available"] is False
+
+
+def test_mixed_null_and_real_hashes():
+    d = _day_report(["aaaaaaaa", None, None, "bbbbbbbb", "aaaaaaaa"])
+    assert d["distinct_ip_hash"] == 2
+    assert d["requests_without_ip_hash"] == 2
+    assert d["distinct_ip_hash_available"] is True
+
+
+def test_missing_ip_hash_key_counts_as_without_hash():
+    lines = ['[api-metrics] {"ts": %d, "path": "/api/models", "ua": "browser"}' % DAY1]
+    d = build_report(*parse_lines(lines))["days"]["2026-09-25"]
+    assert d["requests_without_ip_hash"] == 1
+    assert d["distinct_ip_hash"] == 0
+
+
+def test_render_labels_all_null_day_unavailable_and_avoids_upper_bound_claim(tmp_path, capsys):
+    f = tmp_path / "x.log"
+    f.write_text("\n".join([m(DAY1, "browser", ip=None), m(DAY1, "browser", ip=None)]))
+    main([str(f)])
+    out = capsys.readouterr().out
+    assert "unavailable" in out.lower()
+    assert "upper bound" not in out.lower()
+    assert "not unique callers" in out.lower()
