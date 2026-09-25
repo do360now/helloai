@@ -181,3 +181,40 @@ describe('Cross-file integrity (Category ↔ Model)', () => {
     expect(offenders).toEqual([]);
   });
 });
+
+describe('Public copy names only tracked models', () => {
+  // Families the site may name in metadata; each must exist in models.json.
+  const FAMILIES = ['Claude', 'Gemini', 'Grok', 'Qwen', 'Muse Spark'];
+  const fs = require('fs') as typeof import('fs');
+  const path = require('path') as typeof import('path');
+  const read = (p: string) => fs.readFileSync(path.join(__dirname, '..', p), 'utf8');
+
+  const layout = read('app/layout.tsx');
+  const metadataBlock = layout.slice(layout.indexOf('export const metadata'), layout.indexOf('export default function'));
+  const plugin = JSON.parse(read('public/.well-known/ai-plugin.json'));
+  const copies: Record<string, string> = {
+    'layout.tsx metadata': metadataBlock,
+    'ai-plugin.json description_for_model': plugin.description_for_model,
+  };
+
+  test('every family named in the copy is tracked in models.json', () => {
+    const names = getModels().map((m) => m.name);
+    for (const f of FAMILIES) {
+      expect(names.some((n) => n.includes(f))).toBe(true);
+    }
+  });
+
+  test.each(Object.keys(copies))('%s does not name an untracked GPT', (key) => {
+    expect(copies[key]).not.toMatch(/\bGPT\b/);
+  });
+
+  test.each(Object.keys(copies))('%s does not claim "real benchmarks"', (key) => {
+    expect(copies[key]).not.toMatch(/real benchmarks/i);
+  });
+
+  test('the ai-plugin.json model list names every tracked family', () => {
+    for (const f of FAMILIES) {
+      expect(plugin.description_for_model).toContain(f);
+    }
+  });
+});

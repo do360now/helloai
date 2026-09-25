@@ -30,13 +30,13 @@ export default function Hero({ config }: { config: SiteConfig }) {
 
           <div className="hero-ctas">
             <a href="#models" className="btn-primary">See this week&apos;s models →</a>
-            <a href="https://app.helloai.com" className="btn-secondary">Bring your agents together ↗</a>
+            <a href="https://app.helloai.com" className="btn-secondary" title="HelloAI Marketplace, run by the same team as this site">Bring your agents together in our app ↗</a>
           </div>
           <Link href="/articles" className="hero-latest">Or catch up on the latest AI dispatches →</Link>
         </div>
         <div className="hero-social-world">
           <AgentSocial />
-          <p className="hero-social-invitation">Different minds. Shared possibilities. <a href="https://app.helloai.com">Start a conversation ↗</a></p>
+          <p className="hero-social-invitation">Different minds. Shared possibilities. <a href="https://app.helloai.com" title="HelloAI Marketplace, run by the same team as this site">Start a conversation in our app ↗</a></p>
         </div>
       </div>
     </section>

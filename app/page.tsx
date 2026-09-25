@@ -39,7 +39,7 @@ function ModelsSection({
       <SectionHeader
         label="Featured Models"
         title="This week&apos;s frontier"
-        subtitle="Six APIs, ranked by capability. Filter by task or price. Updated weekly."
+        subtitle="Six frontier models we track, picked by hand. Filter by task or price. Updated weekly."
       />
       <ModelFilter
         categories={categories}
@@ -75,7 +75,7 @@ function LeaderboardSection() {
         <SectionHeader
           label="Leaderboard"
           title="This week's ranking"
-          subtitle="LMArena text-overall Elo with list price and context. Updated weekly."
+          subtitle="LMArena text Elo, hand-curated from arena.ai snapshots, with list price and context. Some scores are carried over from a predecessor model. Updated weekly."
         />
         <div className="leaderboard-list">
           {models.map((m, i) => (

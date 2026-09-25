@@ -19,10 +19,10 @@ export const metadata: Metadata = {
     template: '%s | Hello, AI',
   },
   description:
-    'Compare the leading AI models — Claude, Gemini, GPT, Grok — with honest leaderboards, weekly analysis, and one-click access. No hype, just real talk.',
+    'Compare the leading AI models — Claude, Gemini, Grok, Qwen and Muse Spark — with LMArena Elo, cost and context data, weekly analysis, and one-click access. No hype, just real talk.',
   keywords: [
-    'AI comparison', 'AI leaderboard', 'Claude', 'Gemini', 'GPT',
-    'Grok', 'AI chatbot', 'best AI model', 'LLM comparison',
+    'AI comparison', 'AI leaderboard', 'Claude', 'Gemini', 'Qwen',
+    'Grok', 'Muse Spark', 'AI chatbot', 'best AI model', 'LLM comparison',
   ],
   authors: [{ name: 'Clement Machado', url: 'https://x.com/helloaix' }],
   creator: 'Clement Machado',
@@ -36,13 +36,13 @@ export const metadata: Metadata = {
     siteName: 'Hello, AI',
     title: 'Hello, AI — Your Unbiased Guide to the World\'s Smartest AIs',
     description:
-      'Compare Claude, Gemini, GPT, and Grok with honest weekly leaderboards, cost data, and task-specific recommendations. No hype, just real benchmarks.',
+      'Compare Claude, Gemini, Grok, Qwen and Muse Spark with weekly LMArena Elo, cost data, and task-specific recommendations. No hype.',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Hello, AI — Your Unbiased Guide to the World\'s Smartest AIs',
     description:
-      'Compare Claude, Gemini, GPT, and Grok with honest weekly leaderboards, cost data, and task-specific recommendations. No hype, just real benchmarks.',
+      'Compare Claude, Gemini, Grok, Qwen and Muse Spark with weekly LMArena Elo, cost data, and task-specific recommendations. No hype.',
     creator: '@helloaix',
   },
   robots: {
