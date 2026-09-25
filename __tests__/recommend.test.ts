@@ -10,6 +10,7 @@
 import { scoreAndRank, findMatchingCategory, categoryTaskKeyword, SCORING_WEIGHTS, isRated, RATING_POLICY } from '../data/recommend';
 import { getModels, getCategories } from '../data';
 import type { Model, Category } from '../data/types';
+import { withBorrowed, borrowedIds } from './helpers/roster';
 
 const models = getModels();
 const categories = getCategories();
@@ -182,18 +183,22 @@ describe('scoreAndRank — ranking behavior', () => {
 
 // ─── Unrated models: a borrowed, missing or stale Elo must not move anyone (elo-provenance.md step 4) ───
 describe('scoreAndRank — unrated models are excluded from ranking and normalization', () => {
-  const clone = (): Model[] => JSON.parse(JSON.stringify(models));
+  // Fixture roster: claude and grok are borrowed here regardless of what the live data says today.
+  const roster = withBorrowed(models, ['claude', 'grok']);
+  const clone = (): Model[] => JSON.parse(JSON.stringify(roster));
   const withElo = (id: string, elo: number): Model[] => clone().map((m) => (m.id === id ? { ...m, elo } : m));
   const view = (r: ReturnType<typeof scoreAndRank>) => r.recommendations.map((x) => [x.model.id, x.score]);
-  const borrowed = models.filter((m) => m.elo_source && !m.elo_source.matches_listed_model).map((m) => m.id);
+  const borrowed = ['claude', 'grok'];
 
-  test('the shipped data has exactly the two known borrowed models', () => {
-    expect(borrowed.sort()).toEqual(['claude', 'grok']);
+  test('the live roster: rated and unrated together account for every model, whichever are borrowed today', () => {
+    const r = scoreAndRank(models, categories, {}); // the LIVE roster, not the fixture
+    expect(r.unrated.map((u) => u.model.id).sort()).toEqual(borrowedIds(models));
+    expect(r.recommendations.length + r.unrated.length).toBe(models.length);
   });
 
   test('1. a predecessor score cannot move anyone: order and scores are identical at Elo 1000 and 2000', () => {
     for (const id of borrowed) {
-      const base = view(scoreAndRank(models, categories, {}));
+      const base = view(scoreAndRank(roster, categories, {}));
       const low = view(scoreAndRank(withElo(id, 1000), categories, {}));
       const high = view(scoreAndRank(withElo(id, 2000), categories, {}));
       expect(low).toEqual(base);
@@ -203,7 +208,7 @@ describe('scoreAndRank — unrated models are excluded from ranking and normaliz
 
   test('1b. the same holds with a task and filters', () => {
     const opts = { task: 'coding', maxCost: 20, minContext: 500000 };
-    const base = view(scoreAndRank(models, categories, opts));
+    const base = view(scoreAndRank(roster, categories, opts));
     expect(view(scoreAndRank(withElo('claude', 2500), categories, opts))).toEqual(base);
   });
 
@@ -215,7 +220,7 @@ describe('scoreAndRank — unrated models are excluded from ranking and normaliz
   });
 
   test('3. a missing, stale or absent elo_source is unrated, reported with a reason, and excluded is unchanged', () => {
-    const baseline = scoreAndRank(models, categories, {});
+    const baseline = scoreAndRank(roster, categories, {});
     for (const [mutate, reason] of [
       [(m: Model) => { m.elo_source = { ...m.elo_source!, status: 'missing' }; }, 'missing_score'],
       [(m: Model) => { m.elo_source = { ...m.elo_source!, status: 'stale' }; }, 'stale_score'],
@@ -232,11 +237,11 @@ describe('scoreAndRank — unrated models are excluded from ranking and normaliz
   });
 
   test('borrowed models are reported with reason borrowed_score and the Arena slug', () => {
-    const r = scoreAndRank(models, categories, {});
+    const r = scoreAndRank(roster, categories, {});
     const u = r.unrated.find((x) => x.model.id === 'claude')!;
     expect(u.reason).toBe('borrowed_score');
-    expect(u.arena_model).toBe('claude-opus-5-high');
-    expect(r.recommendations.length + r.unrated.length).toBe(models.length);
+    expect(u.arena_model).toBe('claude-predecessor-slug');
+    expect(r.recommendations.length + r.unrated.length).toBe(roster.length);
   });
 
   test('4. an empty rated set gives no recommendations, everything unrated, no NaN', () => {
@@ -256,25 +261,25 @@ describe('scoreAndRank — unrated models are excluded from ranking and normaliz
   });
 
   test('a hard filter still removes an unrated model from both lists and counts it as excluded', () => {
-    const r = scoreAndRank(models, categories, { provider: 'xAI' });
+    const r = scoreAndRank(roster, categories, { provider: 'xAI' });
     expect(r.recommendations).toEqual([]);
     expect(r.unrated.map((u) => u.model.id)).toEqual(['grok']);
-    const cheap = scoreAndRank(models, categories, { maxCost: 0.01 });
+    const cheap = scoreAndRank(roster, categories, { maxCost: 0.01 });
     expect(cheap.unrated).toEqual([]);
-    expect(cheap.excluded).toBe(models.length);
+    expect(cheap.excluded).toBe(roster.length);
   });
 
   test('7. policy switch: allowing borrowed scores changes the output, so the exclusion is what protects the order', () => {
-    const before = view(scoreAndRank(models, categories, {}));
+    const before = view(scoreAndRank(roster, categories, {}));
     RATING_POLICY.includeBorrowed = true;
     try {
-      const after = view(scoreAndRank(models, categories, {}));
+      const after = view(scoreAndRank(roster, categories, {}));
       expect(after).not.toEqual(before);
       expect(after.map((x) => x[0])).toContain('claude');
-      expect(isRated(models.find((m) => m.id === 'claude')!)).toBe(true);
+      expect(isRated(roster.find((m) => m.id === 'claude')!)).toBe(true);
     } finally {
       RATING_POLICY.includeBorrowed = false;
     }
-    expect(isRated(models.find((m) => m.id === 'claude')!)).toBe(false);
+    expect(isRated(roster.find((m) => m.id === 'claude')!)).toBe(false);
   });
 });

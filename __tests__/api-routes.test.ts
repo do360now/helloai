@@ -13,6 +13,7 @@ import { GET as modelsGET, OPTIONS as modelsOPTIONS } from '@/app/api/models/rou
 import { GET as recommendGET, OPTIONS as recommendOPTIONS } from '@/app/api/recommend/route';
 import { GET as statusGET, OPTIONS as statusOPTIONS } from '@/app/api/status/route';
 import { getModels } from '@/data';
+import { borrowedIds } from './helpers/roster';
 
 const req = (url: string) => new NextRequest(`http://localhost${url}`);
 
@@ -29,9 +30,9 @@ describe('GET /api/models', () => {
   it('flags every model with rated true/false so an agent reading only `elo` is not misled', async () => {
     const body = await (await modelsGET(req('/api/models'))).json();
     const flags = Object.fromEntries(body.models.map((m: { id: string; rated: boolean }) => [m.id, m.rated]));
-    expect(flags).toEqual({ fable: true, muse: true, claude: false, gemini: true, qwen: true, grok: false });
-    const claude = body.models.find((m: { id: string }) => m.id === 'claude');
-    expect(claude.elo_source.matches_listed_model).toBe(false);
+    // Derived from elo_source, so it stays true whichever models are borrowed on a given day.
+    for (const m of getModels()) expect(flags[m.id]).toBe(m.elo_source!.matches_listed_model && m.elo_source!.status !== 'missing' && m.elo_source!.status !== 'stale');
+    for (const id of borrowedIds(getModels())) expect(flags[id]).toBe(false);
   });
 
   it('filters by provider (case-insensitive, substring match)', async () => {
@@ -79,30 +80,13 @@ describe('GET /api/recommend', () => {
     expect(body.recommendations[0].model).not.toHaveProperty('desc');
   });
 
-  it('lists unrated models separately, with a reason and the Arena slug, and never ranks them', async () => {
+  it('the live unrated set is exactly the borrowed models, and none of them is ranked', async () => {
     const body = await (await recommendGET(req('/api/recommend?limit=10'))).json();
-    expect(body.recommendations.map((r: { model: { id: string } }) => r.model.id)).not.toEqual(
-      expect.arrayContaining(['claude'])
-    );
-    const ids = body.unrated.map((u: { model: { id: string } }) => u.model.id).sort();
-    expect(ids).toEqual(['claude', 'grok']);
-    const claude = body.unrated.find((u: { model: { id: string } }) => u.model.id === 'claude');
-    expect(claude.reason).toBe('borrowed_score');
-    expect(claude.arena_model).toBe('claude-opus-5-high');
-    expect(claude.model).not.toHaveProperty('desc');
-    // A caller reading model.elo must not get a predecessor's number as this model's score.
-    expect(claude.model).not.toHaveProperty('elo');
-    expect(claude.elo_source.matches_listed_model).toBe(false);
-    expect(claude.elo_source.arena_model).toBe('claude-opus-5-high');
-    expect(body.notes).toEqual(expect.any(Array));
-  });
-
-  it('a filter that leaves only an unrated model returns 200 with an empty ranking, not a fake rank', async () => {
-    const res = await recommendGET(req('/api/recommend?provider=xai'));
-    expect(res.status).toBe(200);
-    const body = await res.json();
-    expect(body.recommendations).toEqual([]);
-    expect(body.unrated.map((u: { model: { id: string } }) => u.model.id)).toEqual(['grok']);
+    const unratedIds = body.unrated.map((u: { model: { id: string } }) => u.model.id).sort();
+    expect(unratedIds).toEqual(borrowedIds(getModels()));
+    const rankedIds = body.recommendations.map((r: { model: { id: string } }) => r.model.id);
+    for (const id of unratedIds) expect(rankedIds).not.toContain(id);
+    for (const u of body.unrated) expect(u.model).not.toHaveProperty('elo');
   });
 
   it('6. the API and the homepage engine agree on rated order and unrated set for five option combinations', async () => {

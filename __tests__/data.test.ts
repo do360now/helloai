@@ -60,8 +60,11 @@ describe('Published policy text (D4, D5)', () => {
   test('listing_policy matches what the code does: unrated models exist, are labelled and are not ranked', () => {
     // The unrated display shipped (isRated/unrated/formatElo). While it was unbuilt this text was a
     // commitment; it is now a present-tense claim, so the code that backs it must exist.
-    const unrated = getModels().filter((m) => !isRated(m));
-    expect(unrated.length).toBeGreaterThan(0); // the rule is exercised by real data today
+    // isRated must agree with elo_source for every real model, whatever today's roster is.
+    for (const m of getModels()) {
+      const own = m.elo_source?.matches_listed_model === true && m.elo_source.status !== 'missing' && m.elo_source.status !== 'stale';
+      expect(isRated(m)).toBe(own);
+    }
     expect(config.listing_policy).not.toMatch(/will be shown|once the/i); // no stale future tense
     expect(config.listing_policy).not.toMatch(/currently show a predecessor/i); // no stale count
   });

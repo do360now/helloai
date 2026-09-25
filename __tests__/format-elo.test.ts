@@ -1,6 +1,7 @@
 import { formatElo } from '../data';
 import type { Model } from '../data/types';
 import { getModels } from '../data';
+import { borrowedIds } from './helpers/roster';
 
 const base = getModels().find((m) => m.id === 'fable')!;
 const mk = (over: Partial<Model>, src: Partial<NonNullable<Model['elo_source']>> = {}): Model => ({
@@ -48,8 +49,8 @@ describe('formatElo', () => {
     expect(formatElo(mk({}, { status: 'stale' })).state).toBe('stale');
   });
 
-  test('every shipped model formats without throwing, and only the two borrowed ones are labelled', () => {
+  test('every shipped model formats without throwing, and exactly the borrowed ones are labelled', () => {
     const states = getModels().map((m) => [m.id, formatElo(m).state]);
-    expect(states.filter(([, s]) => s === 'borrowed').map(([id]) => id).sort()).toEqual(['claude', 'grok']);
+    expect(states.filter(([, s]) => s === 'borrowed').map(([id]) => id).sort()).toEqual(borrowedIds(getModels()));
   });
 });
