@@ -136,7 +136,7 @@ If hard + at least one soft pass → continue to set-size check.
 - The tracked set must stay between 4 and 6 models.
 - A new model from an **existing provider** replaces that provider's current entry (not an expansion).
 - A new model from a **new provider** expands the set by 1.
-- If the set is already at 6 and a new model qualifies, a tracked model **without an Elo of its own** (borrowed, missing or stale) is the first to make way; otherwise drop the model with the lowest Elo that has no unique positioning advantage. Flag this as requiring human confirmation.
+- If the set is already at 6 and a new model qualifies, a tracked model **without an Elo of its own** (borrowed, missing or stale) is the first to make way; otherwise drop the model with the lowest Elo that has no unique positioning advantage. Flag this as requiring human confirmation. **If more than one tracked model has no Elo of its own, do not choose between them** (you may be one of the vendors involved, and the rule does not say which goes first): list them all, state that the choice is cmc's, and stop.
 
 ### Verdict format
 
