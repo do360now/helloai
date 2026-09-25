@@ -31,13 +31,13 @@
     {
       "id": "edge",
       "name": "Edge / Middleware",
-      "path": "middleware.ts",
+      "path": "proxy.ts",
       "description": "Applies only to /api/* — rate limiting, AI user-agent detection, anomalous access logging.",
       "components": [
         {
           "id": "middleware",
           "name": "middleware",
-          "path": "middleware.ts",
+          "path": "proxy.ts",
           "role": "Rate limit 100 req/min/IP; X-RateLimit-* headers; AI UA + anomaly alerts via lib/request-logger"
         },
         {
