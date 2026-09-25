@@ -1,3 +1,5 @@
+> **Frozen 2026-09-25:** `/api/pro/recommend` now returns `410 gone`; payments go through app.helloai.com (see `docs/review/monetisation.md`, step 2). `lib/pay/*` and its tests are kept unchanged. The description below is the design as it was.
+
 # Pay Loop (v1, mock Lightning)
 
 A proof-of-concept earn→verify→fund loop on a mock Lightning backend. No mainnet,
