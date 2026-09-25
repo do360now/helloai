@@ -65,14 +65,22 @@ _FALLBACK_RELEASE_API_URL = (
 _USER_AGENT = "HelloAi-Bot/1.0 (+https://helloai.com)"
 _TIMEOUT = 20
 
-# How our model IDs map to LMArena model names.
-# Checked in order — first match wins. Keep these current when
-# LMArena adds new model versions.
+# How our model IDs map to LMArena model names — EXACT identities only.
+#
+# Every slug listed here IS the listed model (same model version, same product tier).
+# Some models list several accepted effort/config variants (for example "-max" and "-high"):
+# the first one present on the board wins, the matched slug is recorded in
+# elo_source.arena_model, and a variant that is not listed here never resolves. A newer
+# board may add a variant; add it here deliberately, with the same model version.
+#
+# An OLDER version of the model (a predecessor) must never be written under today's model id:
+# docs/review/elo-provenance.md item 5. Predecessors live in _PREDECESSOR_MAP and only resolve
+# when a caller passes allow_predecessor=True, which marks the result matches_listed_model=False.
+# Nothing here may cross product tiers (Gemini Pro never resolves to Flash).
 _NAME_MAP: dict[str, list[str]] = {
     "fable": [
         "claude-fable-5.1-max",
         "claude-fable-5.1",
-        "claude-fable-5",
     ],
     "claude": [
         "claude-opus-5.5-max",
@@ -81,6 +89,31 @@ _NAME_MAP: dict[str, list[str]] = {
         "claude-opus-5-5-max",
         "claude-opus-5-5-high",
         "claude-opus-5-5",
+    ],
+    "gemini": [
+        "gemini-3.1-pro-preview",
+    ],
+    "muse": [
+        "muse-spark-1.3-max",
+        "muse-spark-1.3",
+        "muse-spark-1.3 (xHigh)",
+    ],
+    "qwen": [
+        "qwen3.8-max-0902",
+        "qwen3.8-max",
+        "qwen3.8-max-preview",
+    ],
+    "grok": [
+        "grok-4.7-xhigh",
+        "grok-4.7-high",
+        "grok-4.7",
+    ],
+}
+
+# Older versions of the same model line and tier. NEVER used unless allow_predecessor=True.
+_PREDECESSOR_MAP: dict[str, list[str]] = {
+    "fable": ["claude-fable-5"],
+    "claude": [
         "claude-opus-5-high",
         "claude-opus-5-max",
         "claude-opus-5-thinking",
@@ -94,33 +127,9 @@ _NAME_MAP: dict[str, list[str]] = {
         "claude-opus-4-5-20251101-thinking-32k",
         "claude-opus-4-5",
     ],
-    "gemini": [
-        "gemini-3.1-pro-preview",
-        "gemini-3-pro",
-        "gemini-3-flash",
-    ],
-    "muse": [
-        "muse-spark-1.3-max",
-        "muse-spark-1.3",
-        "muse-spark-1.3 (xHigh)",
-        "muse-spark-1.2",
-        "muse-spark-1.2 (xHigh)",
-        "muse-spark-1.1",
-        "muse-spark",
-    ],
-    "qwen": [
-        "qwen3.8-max-0902",
-        "qwen3.8-max",
-        "qwen3.8-max-preview",
-    ],
-    "grok": [
-        "grok-4.7-xhigh",
-        "grok-4.7-high",
-        "grok-4.7",
-        "grok-4.6-high",
-        "grok-4.6",
-        "grok-4.5",
-    ],
+    "gemini": ["gemini-3-pro"],  # same Pro tier; gemini-3-flash is another tier and is deliberately absent
+    "muse": ["muse-spark-1.2", "muse-spark-1.2 (xHigh)", "muse-spark-1.1", "muse-spark"],
+    "grok": ["grok-4.6-high", "grok-4.6", "grok-4.5"],
 }
 
 # Open-weight models use a separate map — frontier and open-weight IDs are disjoint.
@@ -306,47 +315,54 @@ def _fetch_all_scores() -> dict[str, "_ArenaEntry"]:
     return {}
 
 
+def resolve_with_identity(
+    model_id: str,
+    arena_entries: dict[str, "_ArenaEntry"],
+    name_map: dict[str, list[str]] | None = None,
+    allow_predecessor: bool = False,
+) -> "tuple[_ArenaEntry | None, bool]":
+    """
+    Match one of our model IDs to an arena entry.
+
+    Returns (entry, matches_listed_model). An exact name-map hit is (entry, True). A predecessor
+    hit is (entry, False) and is only returned when allow_predecessor is True and only for the
+    default frontier map. No fuzzy matching, and nothing crosses product tiers.
+    """
+    active_map = name_map if name_map is not None else _NAME_MAP
+    lower_map = {k.lower(): v for k, v in arena_entries.items()}
+
+    for candidate in active_map.get(model_id, []):
+        if candidate.lower() in lower_map:
+            return lower_map[candidate.lower()], True
+
+    if allow_predecessor and name_map is None:
+        for candidate in _PREDECESSOR_MAP.get(model_id, []):
+            if candidate.lower() in lower_map:
+                return lower_map[candidate.lower()], False
+
+    return None, False
+
+
 def _resolve_model_id(
     model_id: str,
     arena_entries: dict[str, "_ArenaEntry"],
     name_map: dict[str, list[str]] | None = None,
 ) -> "_ArenaEntry | None":
-    """
-    Match one of our model IDs to an arena entry.
-    Uses exact name-map match only — no fuzzy fallback (curated Elos are authoritative).
-    Returns None if no name-map candidate is found in arena_entries.
-    """
-    active_map = name_map if name_map is not None else _NAME_MAP
-
-    # Normalize arena keys for case-insensitive lookup
-    lower_map = {k.lower(): v for k, v in arena_entries.items()}
-
-    # Exact candidates from the name map only
-    for candidate in active_map.get(model_id, []):
-        if candidate.lower() in lower_map:
-            return lower_map[candidate.lower()]
-
-    return None
+    """Exact match only (see resolve_with_identity). Returns None when no exact identity is present."""
+    entry, _matches = resolve_with_identity(model_id, arena_entries, name_map)
+    return entry
 
 
 # ─── PUBLIC INTERFACE ──────────────────────────────────────────────────────
 
-def fetch_scores(
+def fetch_matches(
     our_model_ids: list[str] | None = None,
     name_map: dict[str, list[str]] | None = None,
-) -> dict[str, float]:
+) -> "dict[str, _ArenaEntry]":
     """
-    Fetch current Elo scores for our models from LMArena.
-
-    Args:
-        our_model_ids: List of our internal model IDs (e.g. ["claude", "gemini"]).
-                       If None, resolves all IDs defined in the name map.
-        name_map: Arena alias map to use. Defaults to frontier _NAME_MAP.
-
-    Returns:
-        Dict mapping our model IDs to their Elo scores.
-        Only includes IDs that were successfully matched.
-        Example: {"claude": 1504, "gemini": 1486, "grok": 1473, "gpt": 1479}
+    Like fetch_scores, but returns the matched arena entry (name and score) per model id, so the
+    caller can record which Arena slug the number belongs to (elo_source.arena_model).
+    Only exact identities are returned; a predecessor's score is never included.
     """
     active_map = name_map if name_map is not None else _NAME_MAP
     if our_model_ids is None:
@@ -354,26 +370,34 @@ def fetch_scores(
 
     arena_entries = _fetch_all_scores()
     if not arena_entries:
-        log.warning(
-            "No arena data available. Use manual overrides (--set) instead."
-        )
+        log.warning("No arena data available. Use manual overrides (--set) instead.")
         return {}
 
-    # Log top 5 for visibility
     top = sorted(arena_entries.values(), key=lambda e: e.score, reverse=True)[:5]
     for i, entry in enumerate(top, 1):
         log.info(f"  #{i} {entry.name}: {int(entry.score)}")
 
-    # Resolve each of our model IDs
-    scores: dict[str, float] = {}
+    matches: dict[str, _ArenaEntry] = {}
     for mid in our_model_ids:
         entry = _resolve_model_id(mid, arena_entries, active_map)
         if entry:
-            scores[mid] = entry.score
+            matches[mid] = entry
         else:
-            log.info(f"  '{mid}' not on public LMArena — keeping curated Elo")
+            log.info(f"  '{mid}': no exact Arena identity on the board — keeping the stored Elo")
+    return matches
 
-    return scores
+
+def fetch_scores(
+    our_model_ids: list[str] | None = None,
+    name_map: dict[str, list[str]] | None = None,
+) -> dict[str, float]:
+    """
+    Fetch current Elo scores for our models from LMArena (exact identities only).
+
+    Returns a dict mapping our model IDs to their Elo scores, only for IDs whose exact Arena
+    identity is on the board. Example: {"claude": 1504, "gemini": 1486}
+    """
+    return {mid: entry.score for mid, entry in fetch_matches(our_model_ids, name_map).items()}
 
 
 def fetch_open_weight_scores(

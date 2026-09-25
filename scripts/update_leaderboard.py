@@ -28,9 +28,12 @@ def update_models(
     models: list[dict],
     scores: dict[str, float],
     manual_overrides: dict[str, float],
+    matches: "dict[str, arena._ArenaEntry] | None" = None,
 ) -> tuple[list[dict], bool]:
     """
     Update model Elo scores. Manual overrides take priority over fetched scores.
+    When a fetched score is applied and its arena entry is in `matches`, the exact Arena slug is
+    recorded in model["elo_source"] (arena_model, matches_listed_model=True, set_by="fetched").
     Returns (updated_models, has_changes).
     """
     has_changes = False
@@ -43,6 +46,10 @@ def update_models(
             new_elo = int(manual_overrides[mid])
         elif mid in scores:
             new_elo = int(scores[mid])
+            if matches and mid in matches:
+                src = model.setdefault("elo_source", {})
+                src.update({"arena_model": matches[mid].name, "matches_listed_model": True, "set_by": "fetched"})
+                has_changes = True
         else:
             log.info(f"  No score for '{mid}', keeping Elo={old_elo}")
             continue
@@ -223,10 +230,12 @@ def main() -> None:
 
     # Fetch scores — the arena module handles all scraping complexity
     scores: dict[str, float] = {}
+    matches: dict = {}
     open_weight_scores: dict[str, float] = {}
     if not args.skip_fetch:
         model_ids = [m["id"] for m in models]
-        scores = arena.fetch_scores(our_model_ids=model_ids)
+        matches = arena.fetch_matches(our_model_ids=model_ids)
+        scores = {mid: entry.score for mid, entry in matches.items()}
 
         open_weight_ids = [m["id"] for m in open_weight_models]
         log.info("Fetching open-weight Elos...")
@@ -235,7 +244,7 @@ def main() -> None:
         )
 
     # Update models
-    models, models_changed = update_models(models, scores, manual_overrides)
+    models, models_changed = update_models(models, scores, manual_overrides, matches=matches)
     open_weight_models, ow_changed = update_models(
         open_weight_models, open_weight_scores, open_weight_overrides
     )
