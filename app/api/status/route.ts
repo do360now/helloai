@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getModels, getCategories, getSiteConfig } from '@/data';
 import { apiHeaders } from '@/lib/api';
+import { usageSnapshot } from '@/lib/api-metrics';
 
 export async function GET(req: NextRequest) {
   const origin = req.headers.get('origin');
@@ -26,6 +27,10 @@ export async function GET(req: NextRequest) {
         description: 'This is a public API intended for fair use. Automated scraping or abuse may result in IP blocking.',
         allowed: ['Model recommendations', 'AI agent queries', 'Personal/professional projects'],
         prohibited: ['Commercial data resale', 'Competitive scraping', 'DoS/abuse'],
+      },
+      usage: {
+        ...usageSnapshot(),
+        note: 'Counts since this container process started. Resets on restart and covers only this instance; not a total.',
       },
       endpoints: [
         { path: '/api/models', method: 'GET', params: ['provider'] },

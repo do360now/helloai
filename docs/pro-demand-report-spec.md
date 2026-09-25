@@ -241,3 +241,16 @@ harness wired up — the sample-input self-check above is sufficient.
 - No writing/rotation of log files, no live polling daemon — this is a manual, on-demand report.
 - No deploy, no commit unless asked; if asked, commit only `scripts/pro_demand_report.py`
   (and the optional test).
+
+## Reading the free-API and redirect logs
+
+The free API and the `/go/` redirect log on their own prefixes, separate from `[pro-metrics]`. Do not merge them.
+
+```bash
+az webapp log tail ... > app.log          # operator: save the stream to a file
+grep '\[api-metrics\]' app.log            # one line per /api request (ua class, ip_hash, param keys)
+grep '\[go-metrics\]'  app.log            # /go/ redirect requests
+python3 scripts/api_usage_report.py app.log
+```
+
+UA classes are labels, not proof of intent, and `/go/` hits are redirect requests, not visits. See `docs/review/observability.md`.

@@ -5,6 +5,8 @@
  * Used by middleware to identify Mythos-class AI activity.
  */
 
+import { classifyUserAgent } from './ua-class';
+
 export interface RequestLog {
   timestamp: string;
   ip: string;
@@ -13,29 +15,6 @@ export interface RequestLog {
   params: Record<string, string>;
   responseStatus: number;
 }
-
-// AI-related User-Agent patterns
-const AI_PATTERNS = [
-  /anthropic/i,
-  /claude/i,
-  /openai/i,
-  /gpt/i,
-  /google/i,
-  /gemini/i,
-  /meta/i,
-  /ai21/i,
-  /cohere/i,
-  /mistral/i,
-  /xai/i,
-  /perplexity/i,
-  /embedding/i,
-  /bot/i,
-  /crawler/i,
-  /spider/i,
-  /ai-agent/i,
-  /langchain/i,
-  /llama/i,
-];
 
 // Request history for pattern detection (in-memory)
 // For production: use Redis
@@ -57,7 +36,8 @@ export function logRequest(entry: RequestLog): void {
  * Check if User-Agent indicates an AI/agent
  */
 export function isAIUserAgent(userAgent: string): boolean {
-  return AI_PATTERNS.some((pattern) => pattern.test(userAgent));
+  const cls = classifyUserAgent(userAgent);
+  return cls === 'ai_crawler' || cls === 'declared_ai_client';
 }
 
 /**

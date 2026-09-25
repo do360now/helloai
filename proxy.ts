@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { isAIUserAgent, detectAnomalousPattern, logRequest } from '@/lib/request-logger';
+import { recordApiRequest } from '@/lib/api-metrics';
 
 const RATE_LIMIT = 100; // requests per minute
 const WINDOW_MS = 60 * 1000;
@@ -65,12 +66,21 @@ export function proxy(request: NextRequest) {
     );
   }
 
+  const metricsInfo = {
+    path: request.nextUrl.pathname,
+    userAgent,
+    ip,
+    params: Object.fromEntries(request.nextUrl.searchParams),
+    agentId: request.headers.get('x-agent-id'),
+  };
+
   // === Rate Limiting ===
   const record = rateLimitMap.get(ip);
 
   if (!record || now > record.resetTime) {
     const resetTime = now + WINDOW_MS;
     rateLimitMap.set(ip, { count: 1, resetTime });
+    recordApiRequest({ ...metricsInfo, rateLimited: false });
     const response = NextResponse.next();
     response.headers.set('X-RateLimit-Limit', RATE_LIMIT.toString());
     response.headers.set('X-RateLimit-Remaining', (RATE_LIMIT - 1).toString());
@@ -89,6 +99,7 @@ export function proxy(request: NextRequest) {
       })
     );
 
+    recordApiRequest({ ...metricsInfo, rateLimited: true });
     return new NextResponse('Too Many Requests', {
       status: 429,
       headers: {
@@ -101,6 +112,7 @@ export function proxy(request: NextRequest) {
   }
 
   record.count++;
+  recordApiRequest({ ...metricsInfo, rateLimited: false });
 
   // Add rate limit headers to successful responses
   const response = NextResponse.next();

@@ -241,6 +241,17 @@ export async function GET(req: NextRequest) {
             data_last_updated: { type: 'string', format: 'date' },
             models_count: { type: 'integer' },
             categories_count: { type: 'integer' },
+            usage: {
+              type: 'object',
+              description: 'Request counts since this container process started. Resets on restart and covers only this instance; the durable source is the [api-metrics] log lines.',
+              properties: {
+                since: { type: 'string', format: 'date-time' },
+                total: { type: 'integer' },
+                by_ua: { type: 'object', additionalProperties: { type: 'integer' } },
+                by_path: { type: 'object', additionalProperties: { type: 'integer' } },
+                note: { type: 'string' },
+              },
+            },
             endpoints: { type: 'array', items: { type: 'object' } },
           },
         },

@@ -30,13 +30,17 @@ export default function Hero({ config }: { config: SiteConfig }) {
 
           <div className="hero-ctas">
             <a href="#models" className="btn-primary">See this week&apos;s models →</a>
-            <a href="https://app.helloai.com" className="btn-secondary" title="HelloAI Marketplace, run by the same team as this site">Bring your agents together in our app ↗</a>
+            {/* Plain <a>, not <Link>: /go/ is a redirect route handler and must not be prefetched (it would count as a click). */}
+            {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+            <a href="/go/app?from=hero-cta" className="btn-secondary" title="HelloAI Marketplace, run by the same team as this site">Bring your agents together in our app ↗</a>
           </div>
           <Link href="/articles" className="hero-latest">Or catch up on the latest AI dispatches →</Link>
         </div>
         <div className="hero-social-world">
           <AgentSocial />
-          <p className="hero-social-invitation">Different minds. Shared possibilities. <a href="https://app.helloai.com" title="HelloAI Marketplace, run by the same team as this site">Start a conversation in our app ↗</a></p>
+          {/* Plain <a> on purpose, see the CTA above. */}
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+          <p className="hero-social-invitation">Different minds. Shared possibilities. <a href="/go/app?from=hero-invite" title="HelloAI Marketplace, run by the same team as this site">Start a conversation in our app ↗</a></p>
         </div>
       </div>
     </section>

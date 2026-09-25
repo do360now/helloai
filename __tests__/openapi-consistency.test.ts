@@ -36,4 +36,10 @@ describe('OpenAPI spec stays consistent with live data', () => {
       expect(c.example).toBe(getModels().length);
     }
   });
+
+  it('documents the usage field on the status response', () => {
+    const status = (spec as { components: { schemas: { StatusResponse: { properties: Record<string, unknown> } } } })
+      .components.schemas.StatusResponse;
+    expect(status.properties.usage).toBeDefined();
+  });
 });

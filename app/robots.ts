@@ -5,6 +5,7 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: '*',
       allow: '/',
+      disallow: ['/go/'],
     },
     sitemap: 'https://helloai.com/sitemap.xml',
   };

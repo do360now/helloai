@@ -109,6 +109,16 @@ describe('GET /api/recommend', () => {
 });
 
 describe('GET /api/status', () => {
+  it('reports per-container usage counters with a since timestamp', async () => {
+    const res = await statusGET(req('/api/status'));
+    const body = await res.json();
+    expect(typeof body.usage.total).toBe('number');
+    expect(typeof body.usage.by_ua).toBe('object');
+    expect(typeof body.usage.by_path).toBe('object');
+    expect(new Date(body.usage.since).toString()).not.toBe('Invalid Date');
+    expect(body.usage.note).toMatch(/resets on restart/i);
+  });
+
   it('reports ok with a version field and the endpoint manifest', async () => {
     const res = await statusGET(req('/api/status'));
     expect(res.status).toBe(200);
