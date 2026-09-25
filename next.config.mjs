@@ -42,6 +42,8 @@ const nextConfig = {
         destination: 'https://:host/:path*',
         permanent: true,
       },
+      // The concept page duplicated the live app homepage (docs/review/app-fit.md step 1).
+      { source: '/concepts/agent-social', destination: 'https://app.helloai.com', permanent: true },
       ...trimmedArticleSlugs.map((slug) => ({
         source: `/articles/${slug}`,
         destination: '/articles',

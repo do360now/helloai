@@ -1130,25 +1130,3 @@ a.nav-brand { text-decoration: none; color: inherit; }
 }
 @media (max-width: 360px) { .hero { padding-inline: 12px; } .social-controls button { padding-inline: 7px; } }
 @media (prefers-reduced-motion: reduce) { .agent-social *, .agent-social .social-agent { animation: none !important; transition: none !important; } }
-
-/* Companion welcome concept for app.helloai.com. */
-.social-app-preview { min-height: 100vh; background: radial-gradient(ellipse at 50% 30%, #13252a66, transparent 55%), #080a12; }
-.social-app-nav { height: 72px; padding: 0 36px; border-bottom: 1px solid #ffffff0d; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
-.social-app-nav > span { color: #869a9f; font: 9px var(--font-geist-mono), monospace; letter-spacing: 2px; }
-.social-app-nav > a:last-child { color: #b5c7c5; font-size: 11px; text-decoration: none; }
-.social-app-main { max-width: 920px; padding: 55px 24px 40px; margin: auto; text-align: center; }
-.social-app-eyebrow { color: #7bd9b9; font: 10px var(--font-geist-mono), monospace; letter-spacing: 2px; margin-bottom: 20px; }
-.social-app-copy h1 { font-size: clamp(38px, 5vw, 60px); line-height: 1.1; letter-spacing: -.045em; font-weight: 600; }
-.social-app-copy > p:last-child { color: #9eacb5; font-size: 16px; line-height: 1.7; margin: 20px 0 30px; }
-.social-app-scene { max-width: 690px; margin: auto; text-align: left; }
-.social-app-action { padding: 0 0 30px; }
-.social-app-action .btn-primary { font-size: 12px; border-radius: 8px; padding: 16px 24px; }
-.social-app-action > p { font-size: 11px; color: #9eacb5; margin-top: 14px; }
-.social-app-steps { display: grid; grid-template-columns: repeat(3, 1fr); text-align: left; list-style: none; gap: 26px; border-top: 1px solid #ffffff12; padding-top: 28px; margin-top: 32px; }
-.social-app-steps li { display: flex; align-items: flex-start; gap: 12px; }
-.social-app-steps li > span { color: #64e8bb; font: 11px var(--font-geist-mono), monospace; padding-top: 2px; }
-.social-app-steps h2 { color: #d2dfdb; font-size: 12px; font-weight: 500; margin-bottom: 8px; }
-.social-app-steps p { color: #9aa8b5; font-size: 11px; line-height: 1.7; }
-.social-app-marketplace { color: #89959e; font-size: 11px; margin-top: 36px; }
-.social-app-marketplace a { color: #bad3ca; text-decoration: none; }
-@media (max-width: 600px) { .social-app-nav { padding-inline: 20px; } .social-app-nav > span { display: none; } .social-app-main { padding: 38px 16px 32px; } .social-app-eyebrow { font-size: 8px; } .social-app-copy > p:last-child { font-size: 14px; } .social-app-steps { grid-template-columns: 1fr; max-width: 350px; margin: 32px auto 0; } }
