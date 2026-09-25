@@ -123,8 +123,8 @@ export default async function Image({ params }: { params: Promise<{ slug: string
         </div>
 
         {/* Bottom: URL */}
-        <div style={{ color: '#4A5568', fontSize: '16px', letterSpacing: '0.5px' }}>
-          helloai.com/articles/{slug}
+        <div style={{ display: 'flex', color: '#4A5568', fontSize: '16px', letterSpacing: '0.5px' }}>
+          {`helloai.com/articles/${slug}`}
         </div>
       </div>
     ),

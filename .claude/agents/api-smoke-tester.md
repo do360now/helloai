@@ -21,6 +21,8 @@ Base URL: `https://helloai.com`
 5. `GET /api/recommend?task=reasoning&max_cost=20`
 6. `GET /api/openapi.json`
 7. `GET /.well-known/ai-plugin.json`
+8. `GET /opengraph-image`
+9. `GET /articles/<slug of the newest article>/opengraph-image` (take the slug from the first entry of the article list on `/articles`)
 
 ## What to validate per endpoint
 
@@ -64,6 +66,12 @@ Base URL: `https://helloai.com`
 - Has fields: `name_for_human`, `api`, `auth`
 - `api.url` contains `openapi.json`
 
+**`/opengraph-image` and `/articles/<slug>/opengraph-image`**
+- HTTP 200 (a 502 means Satori rejected the JSX; both routes returned 502 before the 2026-09 fix)
+- Content type `image/png`
+- Size over 10 KB (about 75 KB expected)
+- If your fetch tool cannot expose headers or byte size, report only the status you can see and note that `scripts/og_smoke.sh <base-url>` does the full check
+
 ## Output format
 
 Print a markdown report like this:
@@ -81,8 +89,10 @@ Print a markdown report like this:
 | GET /api/recommend?task=reasoning&max_cost=20 | ✅ PASS | all model costs ≤ 20 |
 | GET /api/openapi.json | ✅ PASS | OpenAPI 3.x |
 | GET /.well-known/ai-plugin.json | ✅ PASS | |
+| GET /opengraph-image | ✅ PASS | 200 image/png |
+| GET /articles/<slug>/opengraph-image | ✅ PASS | 200 image/png |
 
-**Result: 7/7 passed**
+**Result: 9/9 passed**
 ```
 
 If any test fails, add a **Failures** section below the table with the endpoint, what was expected, and what was actually returned.

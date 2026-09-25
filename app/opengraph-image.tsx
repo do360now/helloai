@@ -76,6 +76,9 @@ export default function Image() {
         {/* Headline */}
         <div
           style={{
+            display: 'flex',
+            justifyContent: 'center',
+            flexWrap: 'wrap',
             color: '#FFFFFF',
             fontSize: '56px',
             fontWeight: 800,
@@ -114,7 +117,6 @@ export default function Image() {
           {[
             { name: 'Claude', color: '#CC785C' },
             { name: 'Gemini', color: '#4285F4' },
-            { name: 'GPT', color: '#10A37F' },
             { name: 'Grok', color: '#E7E7E7' },
           ].map((model) => (
             <div
