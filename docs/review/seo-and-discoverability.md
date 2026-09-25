@@ -150,3 +150,12 @@ Files: `app/sitemap.ts`, `middleware.ts`.
 - Whether any agent or crawler has ever fetched `ai-plugin.json` or `openapi.json` (needs `observability.md`).
 - app.helloai.com's own SEO and its MCP server behaviour (my session's connector to it failed with a 405; `app-fit.md` covers the app).
 - Article page rendering beyond `<head>`; the article index page was screenshotted and looks consistent with the home design.
+
+## 7. Implementation status and follow-ups (2026-09-25)
+
+Steps 2 to 5 are implemented on branch `wave2-seo`. Not done or left to cmc:
+
+- **`mcp.json` with no server entry.** Published as a minimal file with a `_note` and the `http_api` block, because the app's MCP server is per-account and has no public discovery URL (step 3.0). Some clients may treat a file with no server list as noise; the alternative is not publishing it until there is a server to list. cmc's call. The app-side items (a public MCP discovery page, the connector 405 bug) are a handoff to `~/git/helloai-marketplace`.
+- **Logo.** `Organization.logo` and `Article.publisher.logo` use `/icon.svg` (the favicon mark). Google asks for a crawlable image of at least 112x112; whether it accepts SVG here is what the Rich Results Test will say, and it has **not been run** (no access from the implementing session). If it complains, export a 512x512 PNG of `icon.svg` and change `LOGO_URL` in `lib/structured-data.ts`. `public/helloai.png` is a JPEG with a `.png` name and is unreferenced; do not use it.
+- **Disclosures in `llms.txt`.** `llms.txt` is read by exactly the agents that take recommendations from this site, so the affiliation statement (`site.json → affiliations`) and the listing rule (`site.json → listing_policy`) matter more there than on a human page. They are **not** included yet, because they were meant to appear together with `/methodology`. Add a short "Disclosures" section, verbatim from `site.json`, when `/methodology` ships, or earlier if cmc agrees to show them first.
+- **Not verified:** the Rich Results Test on deployed pages, Search Console or Bing status, and whether any agent or crawler fetches these files (needs the observability lines and log retention).
