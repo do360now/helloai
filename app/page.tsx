@@ -4,8 +4,8 @@ import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { Nav, Hero, ModelCard, CategoryIcon, SectionHeader, ArticleCard, OpenWeightCard } from './components';
 import ModelFilter from './components/ModelFilter';
-import { getSiteConfig, getModels, getCategories, getHomepageArticles, getOpenWeightModels, formatDate, formatUsdPerMillion, formatContextWindow } from '@/data';
-import { scoreAndRank, categoryTaskKeyword } from '@/data/recommend';
+import { getSiteConfig, getModels, getCategories, getHomepageArticles, getOpenWeightModels, formatDate, formatUsdPerMillion, formatContextWindow, formatElo } from '@/data';
+import { scoreAndRank, categoryTaskKeyword, isRated } from '@/data/recommend';
 
 const config = getSiteConfig();
 const models = getModels();
@@ -26,10 +26,17 @@ function ModelsSection({
 }) {
   const hasFilters = task.trim() !== '' || maxCost !== null;
 
-  const ranked = useMemo(() => {
-    if (!hasFilters) return models.map((m) => ({ model: m, score: 0, reasons: [] as string[] }));
-    const { recommendations } = scoreAndRank(models, categories, { task: task || null, maxCost });
-    return recommendations;
+  // Rated models rank; models whose Elo is a predecessor's, missing or stale are listed
+  // separately below, never in the ranked order and never as a best match.
+  const { ranked, unrated } = useMemo(() => {
+    const r = scoreAndRank(models, categories, { task: task || null, maxCost });
+    if (!hasFilters) {
+      return {
+        ranked: models.filter(isRated).map((m) => ({ model: m, score: 0, reasons: [] as string[] })),
+        unrated: r.unrated,
+      };
+    }
+    return { ranked: r.recommendations, unrated: r.unrated };
   }, [task, maxCost, hasFilters]);
 
   const topScore = ranked[0]?.score ?? 0;
@@ -61,10 +68,62 @@ function ModelsSection({
           />
         ))}
       </div>
-      {hasFilters && ranked.length === 0 && (
+      {unrated.length > 0 && (
+        <div className="models-unrated">
+          <h3 className="models-unrated-heading">Not yet rated</h3>
+          <p className="models-unrated-note">
+            These models have no Elo of their own on the board yet. They are listed here, unranked, and never count toward a best match.
+          </p>
+          <div className="models-grid">
+            {unrated.map(({ model }, i) => (
+              <ModelCard key={model.id} model={model} index={i} unrated />
+            ))}
+          </div>
+        </div>
+      )}
+      {hasFilters && ranked.length === 0 && unrated.length === 0 && (
         <p className="models-no-results">No models match those filters. Try relaxing your constraints.</p>
       )}
     </section>
+  );
+}
+
+// The board date is read from the data, so this line cannot drift from the numbers.
+const boardDate = formatDate(
+  models.map((m) => m.elo_source?.snapshot_date ?? '').sort().slice(-1)[0] || config.lastUpdated
+);
+const ratedModels = models.filter(isRated);
+const unratedModels = models.filter((m) => !isRated(m));
+
+function LeaderboardRow({ m, rank }: { m: (typeof models)[number]; rank: number | null }) {
+  const elo = formatElo(m);
+  return (
+    <a
+      href={m.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="leaderboard-row"
+      style={{ animationDelay: `${(rank ?? 0) * 0.08}s` }}
+    >
+      {rank !== null && (
+        <span className={`leaderboard-rank ${rank === 1 ? 'leaderboard-rank-1' : 'leaderboard-rank-other'}`}>{rank}</span>
+      )}
+      <div className="leaderboard-info">
+        <div className="leaderboard-info-row">
+          <div>
+            <span className="leaderboard-model-name">{m.name}</span>
+            <span className="leaderboard-provider">{m.provider}</span>
+          </div>
+          <span className="leaderboard-elo" style={{ color: m.color }}>{elo.score}</span>
+        </div>
+        {elo.note && <div className="leaderboard-elo-note">{elo.note}</div>}
+        <div className="leaderboard-metrics">
+          <span>{formatUsdPerMillion(m.cost_per_million_tokens)} in</span>
+          <span>{formatUsdPerMillion(m.cost_per_million_tokens_output)} out</span>
+          <span>{formatContextWindow(m.context_window)}</span>
+        </div>
+      </div>
+    </a>
   );
 }
 
@@ -75,38 +134,23 @@ function LeaderboardSection() {
         <SectionHeader
           label="Leaderboard"
           title="This week's ranking"
-          subtitle="LMArena text Elo from the arena.ai board of 13 Sep 2026, with list price and context. Opus 5.5 and Grok 4.7 show their predecessors' scores."
+          subtitle={`LMArena text Elo from the arena.ai board of ${boardDate}, with list price and context. Models without a score of their own are listed below the ranking, unranked.`}
         />
         <div className="leaderboard-list">
-          {models.map((m, i) => (
-            <a
-              key={m.id}
-              href={m.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="leaderboard-row"
-              style={{ animationDelay: `${i * 0.08}s` }}
-            >
-              <span className={`leaderboard-rank ${i === 0 ? 'leaderboard-rank-1' : 'leaderboard-rank-other'}`}>
-                {i + 1}
-              </span>
-              <div className="leaderboard-info">
-                <div className="leaderboard-info-row">
-                  <div>
-                    <span className="leaderboard-model-name">{m.name}</span>
-                    <span className="leaderboard-provider">{m.provider}</span>
-                  </div>
-                  <span className="leaderboard-elo" style={{ color: m.color }}>{m.elo}</span>
-                </div>
-                <div className="leaderboard-metrics">
-                  <span>{formatUsdPerMillion(m.cost_per_million_tokens)} in</span>
-                  <span>{formatUsdPerMillion(m.cost_per_million_tokens_output)} out</span>
-                  <span>{formatContextWindow(m.context_window)}</span>
-                </div>
-              </div>
-            </a>
+          {ratedModels.map((m, i) => (
+            <LeaderboardRow key={m.id} m={m} rank={i + 1} />
           ))}
         </div>
+        {unratedModels.length > 0 && (
+          <div className="leaderboard-unrated">
+            <h3 className="leaderboard-unrated-heading">Not yet rated</h3>
+            <div className="leaderboard-list">
+              {unratedModels.map((m) => (
+                <LeaderboardRow key={m.id} m={m} rank={null} />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );

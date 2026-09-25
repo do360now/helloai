@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import type { Model } from '@/data/types';
-import { formatUsdPerMillion, formatContextWindow } from '@/data';
+import { formatUsdPerMillion, formatContextWindow, formatElo } from '@/data';
 
 function hexToRgb(hex: string): string {
   const r = parseInt(hex.slice(1, 3), 16);
@@ -16,13 +16,17 @@ export default function ModelCard({
   index,
   bestMatch,
   dimmed,
+  unrated,
 }: {
   model: Model;
   index: number;
   bestMatch?: boolean;
   dimmed?: boolean;
+  /** Shown in the "not yet rated" group: no rank number and never a best match. */
+  unrated?: boolean;
 }) {
   const [hovered, setHovered] = useState(false);
+  const elo = formatElo(model);
 
   return (
     <a
@@ -45,13 +49,13 @@ export default function ModelCard({
         transition: 'all 0.3s ease',
       }}
     >
-      {bestMatch && (
+      {bestMatch && !unrated && (
         <div className="model-best-match">
           ✦ Best match
         </div>
       )}
 
-      <div className="model-rank-bg">{index + 1}</div>
+      {!unrated && <div className="model-rank-bg">{index + 1}</div>}
 
       <span className="model-tag" style={{ color: model.color, borderColor: model.color + '30' }}>
         {model.tag}
@@ -68,7 +72,10 @@ export default function ModelCard({
       </div>
 
       <div className="model-footer">
-        <span className="model-elo">~{model.elo} Elo</span>
+        <span className="model-elo">
+          {elo.score} Elo
+          {elo.note && <span className={`model-elo-note ${unrated ? 'model-elo-note-unrated' : ''}`}>{elo.note}</span>}
+        </span>
         <span className="model-cta" style={{ color: hovered ? model.color : 'rgba(255,255,255,0.3)' }}>
           Try it →
         </span>

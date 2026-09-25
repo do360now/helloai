@@ -35,6 +35,37 @@ export const formatDate = (dateStr: string): string => {
   });
 };
 
+export interface FormattedElo {
+  /** What to print next to the number: "1498 ± 8", or just "1493". Never a tilde, never rounded. */
+  score: string;
+  /** A short honest note to show beside it, or null when the score needs none. */
+  note: string | null;
+  /** rated = the model's own score; borrowed = a predecessor's; missing/stale = no usable score. */
+  state: 'rated' | 'borrowed' | 'missing' | 'stale';
+}
+
+// One place decides how an Elo is shown, so cards, rows and the methodology page agree.
+export function formatElo(m: Model): FormattedElo {
+  const s = m.elo_source;
+  if (!s || s.status === 'missing') {
+    return { score: String(m.elo), note: 'No current score from the source.', state: 'missing' };
+  }
+  if (s.status === 'stale') {
+    return { score: String(m.elo), note: `Score is stale (snapshot ${s.snapshot_date}).`, state: 'stale' };
+  }
+  if (!s.matches_listed_model) {
+    return {
+      score: String(m.elo),
+      note: `Not yet rated. This is a predecessor's score (${s.arena_model}).`,
+      state: 'borrowed',
+    };
+  }
+  if (s.ci_low !== undefined && s.ci_high !== undefined) {
+    return { score: `${m.elo} ± ${Math.round((s.ci_high - s.ci_low) / 2)}`, note: null, state: 'rated' };
+  }
+  return { score: String(m.elo), note: 'Interval not available from source.', state: 'rated' };
+}
+
 export function formatUsdPerMillion(n: number): string {
   if (!Number.isFinite(n)) return '—';
   const rounded = Math.round(n * 100) / 100;

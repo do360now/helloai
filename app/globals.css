@@ -497,6 +497,24 @@ a.nav-brand { text-decoration: none; color: inherit; }
   color: rgba(255,255,255,0.40);
 }
 
+.model-elo-note {
+  display: block;
+  font-size: 12px;
+  line-height: 1.4;
+  margin-top: 4px;
+  color: rgba(255,255,255,0.62);
+}
+
+.model-elo-note-unrated { color: rgba(255,255,255,0.72); }
+
+.models-unrated { max-width: 1200px; margin: 48px auto 0; }
+.models-unrated-heading { font-size: 18px; font-weight: 700; color: rgba(255,255,255,0.85); margin: 0 0 6px; }
+.models-unrated-note { font-size: 14px; color: rgba(255,255,255,0.62); margin: 0 0 20px; max-width: 640px; }
+
+.leaderboard-elo-note { font-size: 12px; line-height: 1.4; color: rgba(255,255,255,0.62); margin-top: 4px; }
+.leaderboard-unrated { margin-top: 36px; }
+.leaderboard-unrated-heading { font-size: 16px; font-weight: 700; color: rgba(255,255,255,0.85); margin: 0 0 12px; }
+
 .model-cta {
   font-family: var(--font-geist-mono), ui-monospace, monospace;
   font-size: 13px;

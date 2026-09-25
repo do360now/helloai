@@ -9,6 +9,7 @@
 
 import fs from 'fs';
 import path from 'path';
+import { isRated } from '../data/recommend';
 import { getSiteConfig, getModels, getCategories, getArticles, getArticleBySlug, getHomepageArticles, HOMEPAGE_ARTICLE_COUNT } from '../data';
 
 describe('Site Config', () => {
@@ -40,17 +41,20 @@ describe('Published policy text (D4, D5)', () => {
     expect(config.affiliations).toMatch(/app\.helloai\.com/);
   });
 
-  test('listing_policy states the cap, the admission bar and the unrated commitment', () => {
+  test('listing_policy states the cap, the admission bar and the unrated rule', () => {
     expect(config.listing_policy).toMatch(/capped at six/i);
     expect(config.listing_policy).toMatch(/25 points/);
     expect(config.listing_policy).toMatch(/two weeks/);
-    expect(config.listing_policy).toMatch(/not yet rated|unrated/i);
-    expect(config.listing_policy).toMatch(/will be shown as unrated/i); // a commitment, not a claim about today
+    expect(config.listing_policy).toMatch(/not yet rated/i);
   });
 
-  test('listing_policy does not claim the unrated display exists yet', () => {
-    // No isRated/unrated state is built (elo-provenance.md); today two models show a predecessor's score.
-    expect(config.listing_policy).not.toMatch(/is shown as .not yet rated/i);
+  test('listing_policy matches what the code does: unrated models exist, are labelled and are not ranked', () => {
+    // The unrated display shipped (isRated/unrated/formatElo). While it was unbuilt this text was a
+    // commitment; it is now a present-tense claim, so the code that backs it must exist.
+    const unrated = getModels().filter((m) => !isRated(m));
+    expect(unrated.length).toBeGreaterThan(0); // the rule is exercised by real data today
+    expect(config.listing_policy).not.toMatch(/will be shown|once the/i); // no stale future tense
+    expect(config.listing_policy).not.toMatch(/currently show a predecessor/i); // no stale count
   });
 
   test('policy text uses one voice (first person) and no platform-fee claim', () => {
