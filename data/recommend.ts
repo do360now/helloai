@@ -1,9 +1,20 @@
 import type { Model, Category } from './types';
 
+export interface ScoreBreakdown {
+  task: number;
+  elo: number;
+  cost: number;
+  context: number;
+}
+
 export interface Recommendation {
   model: Model;
   score: number;
   reasons: string[];
+  /** Weighted contribution of each component; the parts add up to `score` (within rounding). */
+  breakdown: ScoreBreakdown;
+  /** How much of the score came from curated labels (leader / strength), i.e. breakdown.task. */
+  label_effect: number;
 }
 
 // Weighted-score configuration. Values are pinned here (not env-driven) so the
@@ -44,6 +55,24 @@ export interface UnratedModel {
   arena_model?: string;
 }
 
+const fmt2 = (n: number) => `+${n.toFixed(2)}`;
+
+/**
+ * The "why this rank" line: where each part of the score came from. The curator part is named for what
+ * it was (a pick = the category leader, a strength = a listed strength) so a reader can see that the top
+ * result may come from curation and not from Elo. Wording per docs/review/purpose.md.
+ */
+export function formatWhyRank(b: ScoreBreakdown, taskMatched: boolean): string {
+  const parts: string[] = [];
+  if (taskMatched) {
+    const isPick = Math.abs(b.task - SCORING_WEIGHTS.withTask.task) < 0.005;
+    const isStrength = b.task > 0 && !isPick;
+    parts.push(`${isStrength ? 'Curator-rated strength' : "Curator's pick"} ${fmt2(b.task)}`);
+  }
+  parts.push(`Elo ${fmt2(b.elo)}`, `cost ${fmt2(b.cost)}`, `context ${fmt2(b.context)}`);
+  return parts.join(' · ');
+}
+
 export function categoryTaskKeyword(cat: Category): string {
   return cat.name.split(' ')[0].toLowerCase();
 }
@@ -60,8 +89,10 @@ export function categoryTaskKeyword(cat: Category): string {
 export function findMatchingCategory(task: string, categories: Category[]): Category | null {
   const t = task.toLowerCase().trim();
   if (!t) return null;
+  // A one- or two-letter fragment ("a", "re") would substring-match some category and look like a
+  // confident task match, so clause 1 needs at least 3 characters.
   return (
-    categories.find((c) => c.name.toLowerCase().includes(t)) ??
+    (t.length >= 3 ? categories.find((c) => c.name.toLowerCase().includes(t)) : undefined) ??
     categories.find((c) => {
       const firstWord = c.name.toLowerCase().split(' ')[0];
       return firstWord.length > 0 && t.includes(firstWord);
@@ -127,12 +158,15 @@ export function scoreAndRank(
 
   // Elo extrema come from RATED candidates only. Cost and context are the model's own
   // fields, so they keep using every filtered-in model.
-  const elos = rated.map((m) => m.elo);
-  const costs = candidates.map((m) => m.cost_per_million_tokens);
-  const contexts = candidates.map((m) => m.context_window);
+  // Normalization basis: ALL tracked models, not the filtered candidates. Filters only remove rows, so a
+  // model's component scores never depend on which other models pass (scoring-transparency.md, decision 1).
+  // Elo extrema still come from RATED models only, so a borrowed score cannot set the floor or ceiling.
+  const elos = models.filter(isRated).map((m) => m.elo);
+  const costs = models.map((m) => m.cost_per_million_tokens);
+  const contexts = models.map((m) => m.context_window);
 
   const minElo = Math.min(...elos), maxElo = Math.max(...elos);
-  const minCost = Math.min(...costs), maxCost2 = Math.max(...costs);
+  const minCost = Math.min(...costs), maxCostAll = Math.max(...costs);
   const minCtx = Math.min(...contexts), maxCtx = Math.max(...contexts);
 
   const recommendations: Recommendation[] = rated.map((m) => {
@@ -142,10 +176,10 @@ export function scoreAndRank(
     if (hasTask && matchedCategory) {
       if (m.name === matchedCategory.leader) {
         taskScore = 1.0;
-        reasons.push(`Category leader for ${matchedCategory.name}`);
+        reasons.push(`Curator's pick for ${matchedCategory.name}`);
       } else if (m.strengths.includes(matchedCategory.name)) {
         taskScore = 0.5;
-        reasons.push(`Strong in ${matchedCategory.name}`);
+        reasons.push(`Curator-rated strength in ${matchedCategory.name}`);
       }
     }
 
@@ -155,17 +189,23 @@ export function scoreAndRank(
     if (m.elo === maxElo) reasons.push(`Highest Elo (${m.elo})`);
     else reasons.push(`Elo ${m.elo}`);
 
-    const costScore = maxCost2 === minCost ? 1 : (maxCost2 - m.cost_per_million_tokens) / (maxCost2 - minCost);
+    const costScore = maxCostAll === minCost ? 1 : (maxCostAll - m.cost_per_million_tokens) / (maxCostAll - minCost);
     if (m.cost_per_million_tokens === minCost) reasons.push(`Most cost-efficient ($${m.cost_per_million_tokens}/M)`);
 
     const ctxScore = maxCtx === minCtx ? 1 : (m.context_window - minCtx) / (maxCtx - minCtx);
     if (m.context_window === maxCtx) reasons.push(`Largest context (${(m.context_window / 1000).toFixed(0)}k tokens)`);
 
-    const score = Math.round(
-      (weights.task * taskScore + weights.elo * eloScore + weights.cost * costScore + weights.context * ctxScore) * 100
-    ) / 100;
+    const parts = {
+      task: weights.task * taskScore,
+      elo: weights.elo * eloScore,
+      cost: weights.cost * costScore,
+      context: weights.context * ctxScore,
+    };
+    const round2 = (n: number) => Math.round(n * 100) / 100;
+    const score = round2(parts.task + parts.elo + parts.cost + parts.context);
+    const breakdown = { task: round2(parts.task), elo: round2(parts.elo), cost: round2(parts.cost), context: round2(parts.context) };
 
-    return { model: m, score, reasons };
+    return { model: m, score, reasons, breakdown, label_effect: breakdown.task };
   });
 
   recommendations.sort((a, b) => b.score - a.score);

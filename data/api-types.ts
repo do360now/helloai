@@ -19,13 +19,17 @@ export interface RecommendationDTO {
   rank: number;
   score: number;
   reasons: string[];
+  /** Weighted contribution of each component; the parts add up to `score` within rounding. */
+  breakdown: { task: number; elo: number; cost: number; context: number };
+  /** How much of `score` came from curated labels (the leader / strength), i.e. breakdown.task. */
+  label_effect: number;
   model: RecommendModelDTO;
 }
 
 // Project a scored recommendation to its public DTO form at a given rank.
 // Centralized so /api/recommend and any future consumer serialize identically.
 export function toRecommendationDTO(
-  rec: { model: Model; score: number; reasons: string[] },
+  rec: { model: Model; score: number; reasons: string[]; breakdown?: RecommendationDTO['breakdown']; label_effect?: number },
   rank: number
 ): RecommendationDTO {
   const m = rec.model;
@@ -33,6 +37,8 @@ export function toRecommendationDTO(
     rank,
     score: rec.score,
     reasons: rec.reasons,
+    breakdown: rec.breakdown ?? { task: 0, elo: 0, cost: 0, context: 0 },
+    label_effect: rec.label_effect ?? 0,
     model: {
       id: m.id,
       name: m.name,
@@ -85,6 +91,18 @@ export interface RecommendResponseBody {
   unrated: UnratedDTO[];
   /** Plain-language explanations, e.g. an unrated category leader. */
   notes: string[];
+  meta: {
+    scoring: {
+      version: number;
+      /** The weight set actually used for this call (it depends on whether a task resolved). */
+      weights: { task: number; elo: number; cost: number; context: number };
+      normalization: 'all_tracked_models';
+      /** Fingerprint of models.json + categories.json + the data date. */
+      snapshot: string;
+      data_last_updated: string;
+      matched_category: string | null;
+    };
+  };
   filters_applied: string[];
   models_considered: number;
   models_excluded: number;

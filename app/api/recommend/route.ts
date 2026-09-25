@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getModels, getCategories, getSiteConfig } from '@/data';
-import { scoreAndRank } from '@/data/recommend';
+import { scoreAndRank, SCORING_WEIGHTS } from '@/data/recommend';
+import { snapshotHash, SCORING_VERSION, normalizationBasis } from '@/lib/scoring-snapshot';
 import { toRecommendationDTO, toUnratedDTO, type RecommendResponseBody } from '@/data/api-types';
 import { apiHeaders, parseRecommendParams, publicUnlessParameterized } from '@/lib/api';
 
@@ -10,6 +11,9 @@ import { apiHeaders, parseRecommendParams, publicUnlessParameterized } from '@/l
 // marked Cache-Control: private, no-store so a poisoned URL can never be
 // cached and served to another user; the unparameterized endpoint (common
 // case) stays cacheable for 5 min.
+
+// Computed once at module load, so it changes exactly when the data does.
+const SNAPSHOT = snapshotHash(getModels(), getCategories(), getSiteConfig().lastUpdated);
 
 export async function GET(req: NextRequest) {
   const origin = req.headers.get('origin');
@@ -61,6 +65,16 @@ export async function GET(req: NextRequest) {
     recommendations: output,
     unrated: unrated.map(toUnratedDTO),
     notes,
+    meta: {
+      scoring: {
+        version: SCORING_VERSION,
+        weights: { ...(matchedCategory ? SCORING_WEIGHTS.withTask : SCORING_WEIGHTS.withoutTask) },
+        normalization: normalizationBasis,
+        snapshot: SNAPSHOT,
+        data_last_updated: config.lastUpdated,
+        matched_category: matchedCategory?.name ?? null,
+      },
+    },
     filters_applied: filtersApplied,
     models_considered: models.length,
     models_excluded: excluded,

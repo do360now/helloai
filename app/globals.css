@@ -509,6 +509,8 @@ a.nav-brand { text-decoration: none; color: inherit; }
 
 .model-elo-note-unrated { color: rgba(255,255,255,0.72); }
 
+.model-why-rank { font-size: 12px; line-height: 1.5; color: rgba(255,255,255,0.62); margin: 10px 0 0; }
+
 .models-unrated { max-width: 1200px; margin: 48px auto 0; }
 .models-unrated-heading { font-size: 18px; font-weight: 700; color: rgba(255,255,255,0.85); margin: 0 0 6px; }
 .models-unrated-note { font-size: 14px; color: rgba(255,255,255,0.62); margin: 0 0 20px; max-width: 640px; }

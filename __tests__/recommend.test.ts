@@ -7,7 +7,7 @@
  * existing contract.
  */
 
-import { scoreAndRank, findMatchingCategory, categoryTaskKeyword, SCORING_WEIGHTS, isRated, RATING_POLICY } from '../data/recommend';
+import { scoreAndRank, findMatchingCategory, categoryTaskKeyword, SCORING_WEIGHTS, isRated, RATING_POLICY, formatWhyRank } from '../data/recommend';
 import { getModels, getCategories } from '../data';
 import type { Model, Category } from '../data/types';
 import { withBorrowed, borrowedIds } from './helpers/roster';
@@ -162,7 +162,7 @@ describe('scoreAndRank — ranking behavior', () => {
     expect(r.matchedCategory?.name).toBe('Coding & Engineering');
     expect(r.recommendations[0].model.name).toBe(coding.leader);
     // Leader reason is surfaced.
-    expect(r.recommendations[0].reasons.join(' ')).toMatch(/Category leader/);
+    expect(r.recommendations[0].reasons.join(' ')).toMatch(/Curator's pick/);
   });
 
   test('without a task, recommendations are sorted by score descending', () => {
@@ -256,7 +256,7 @@ describe('scoreAndRank — unrated models are excluded from ranking and normaliz
     const ms = clone().map((m) => (m.id === 'fable' ? { ...m, elo_source: { ...m.elo_source!, status: 'missing' as const } } : m));
     const r = scoreAndRank(ms, categories, { task: 'coding' });
     expect(r.matchedCategory?.leader).toBe('Claude Fable 5.1');
-    expect(r.recommendations.some((x) => x.reasons.join(' ').includes('Category leader'))).toBe(false);
+    expect(r.recommendations.some((x) => x.reasons.join(' ').includes("Curator's pick"))).toBe(false);
     expect(r.notes.join(' ')).toMatch(/leader .*not yet rated|unrated/i);
   });
 
@@ -281,5 +281,132 @@ describe('scoreAndRank — unrated models are excluded from ranking and normaliz
       RATING_POLICY.includeBorrowed = false;
     }
     expect(isRated(roster.find((m) => m.id === 'claude')!)).toBe(false);
+  });
+});
+
+
+// ─── Scoring transparency (docs/review/scoring-transparency.md) ───────────────────────────────────
+describe('scoring transparency — a score does not depend on the filters', () => {
+  const orderOf = (opts: Parameters<typeof scoreAndRank>[2]) =>
+    scoreAndRank(models, categories, opts).recommendations.map((r) => r.model.name);
+  const scoreOf = (opts: Parameters<typeof scoreAndRank>[2], name: string) =>
+    scoreAndRank(models, categories, opts).recommendations.find((r) => r.model.name === name)?.score;
+
+  test('1. filter stability: any two models that both pass a filter keep their relative order', () => {
+    for (const opts of [{ maxCost: 4 }, { maxCost: 2 }, { minContext: 1_000_000 }, { task: 'coding', maxCost: 4 }, { provider: 'Anthropic' }]) {
+      const unfiltered = orderOf({ task: opts.task ?? null });
+      const filtered = orderOf(opts);
+      const swapped: string[] = [];
+      for (let i = 0; i < filtered.length; i++) {
+        for (let j = i + 1; j < filtered.length; j++) {
+          if (unfiltered.indexOf(filtered[i]) > unfiltered.indexOf(filtered[j])) swapped.push(`${filtered[i]} vs ${filtered[j]} under ${JSON.stringify(opts)}`);
+        }
+      }
+      expect(swapped).toEqual([]);
+    }
+  });
+
+  test('2. score comparability: a model has the same score with and without a filter it passes', () => {
+    const gemini = models.find((m) => m.name === 'Gemini 3.1 Pro')!;
+    expect(scoreOf({ maxCost: 4 }, gemini.name)).toBe(scoreOf({}, gemini.name));
+    expect(scoreOf({ minContext: 1_000_000 }, gemini.name)).toBe(scoreOf({}, gemini.name));
+  });
+
+  test('the lowest-Elo survivor is no longer forced to 0 and the top survivor to 1', () => {
+    const r = scoreAndRank(models, categories, { maxCost: 2 });
+    const scores = r.recommendations.map((x) => x.score);
+    expect(new Set(scores).size).toBeGreaterThan(0);
+    // With full-set normalization a filter never rescales: Gemini keeps its unfiltered score.
+    expect(scoreOf({ maxCost: 2 }, 'Gemini 3.1 Pro')).toBe(scoreOf({}, 'Gemini 3.1 Pro'));
+  });
+
+  test('a borrowed Elo still cannot set the ceiling or floor of the full-set normalization', () => {
+    const roster = withBorrowed(models, ['claude', 'grok']).map((m) => (m.id === 'claude' ? { ...m, elo: 2500 } : m));
+    const base = scoreAndRank(withBorrowed(models, ['claude', 'grok']), categories, {}).recommendations.map((r) => [r.model.id, r.score]);
+    const high = scoreAndRank(roster, categories, {}).recommendations.map((r) => [r.model.id, r.score]);
+    expect(high).toEqual(base);
+  });
+});
+
+describe('scoring transparency — breakdown and label effect', () => {
+  test('3. label effect: the category leader gets the full task weight, an unlabelled model none', () => {
+    const r = scoreAndRank(models, categories, { task: 'coding' });
+    const coding = categories.find((c) => c.name === 'Coding & Engineering')!;
+    const leader = r.recommendations.find((x) => x.model.name === coding.leader)!;
+    expect(leader.label_effect).toBeCloseTo(SCORING_WEIGHTS.withTask.task, 5);
+    const unlabelled = r.recommendations.find((x) => x.model.name !== coding.leader && !x.model.strengths.includes(coding.name));
+    if (unlabelled) expect(unlabelled.label_effect).toBe(0);
+    // A strength (not the leader) earns half the task weight.
+    const strength = r.recommendations.find((x) => x.model.name !== coding.leader && x.model.strengths.includes(coding.name));
+    if (strength) expect(strength.label_effect).toBeCloseTo(SCORING_WEIGHTS.withTask.task * 0.5, 5);
+  });
+
+  test('without a task the label effect is 0 for everyone', () => {
+    for (const r of scoreAndRank(models, categories, {}).recommendations) expect(r.label_effect).toBe(0);
+  });
+
+  test('4. breakdown parts add up to the score (within rounding) for several option sets', () => {
+    for (const opts of [{}, { task: 'coding' }, { task: 'reasoning', maxCost: 10 }, { minContext: 1_000_000 }]) {
+      for (const r of scoreAndRank(models, categories, opts).recommendations) {
+        const sum = r.breakdown.task + r.breakdown.elo + r.breakdown.cost + r.breakdown.context;
+        expect(Math.abs(sum - r.score)).toBeLessThanOrEqual(0.02);
+        expect(r.label_effect).toBe(r.breakdown.task);
+      }
+    }
+  });
+
+  test('the breakdown uses the weights of the path taken', () => {
+    const noTask = scoreAndRank(models, categories, {}).recommendations[0];
+    expect(noTask.breakdown.task).toBe(0);
+    for (const r of scoreAndRank(models, categories, { task: 'coding' }).recommendations) {
+      expect(r.breakdown.elo).toBeLessThanOrEqual(SCORING_WEIGHTS.withTask.elo + 1e-9);
+    }
+  });
+});
+
+describe('scoring transparency — wording and task matching', () => {
+  test('the leader reason is "Curator\'s pick" and a strength is "Curator-rated strength"', () => {
+    const r = scoreAndRank(models, categories, { task: 'coding' });
+    const text = r.recommendations.flatMap((x) => x.reasons).join(' | ');
+    expect(text).toMatch(/Curator's pick for Coding & Engineering/);
+    expect(text).toMatch(/Curator-rated strength in Coding & Engineering/);
+    expect(text).not.toMatch(/Category leader|Strong in/);
+  });
+
+  test('5. a very short task does not match a category by substring', () => {
+    expect(findMatchingCategory('a', categories)).toBeNull();
+    expect(findMatchingCategory('re', categories)).toBeNull();
+    expect(scoreAndRank(models, categories, { task: 'a' }).matchedCategory).toBeNull();
+    expect(findMatchingCategory('cod', categories)?.name).toBe('Coding & Engineering'); // 3 characters still matches
+  });
+});
+
+
+describe('formatWhyRank (the homepage "why this rank" line)', () => {
+  const r = (opts: Parameters<typeof scoreAndRank>[2]) => scoreAndRank(models, categories, opts);
+
+  test('a category leader reads "Curator\'s pick +0.40" first, then Elo, cost, context', () => {
+    const res = r({ task: 'coding' });
+    const leader = res.recommendations.find((x) => x.model.name === res.matchedCategory!.leader)!;
+    expect(formatWhyRank(leader.breakdown, true)).toMatch(/^Curator's pick \+0\.40 · Elo \+\d\.\d\d · cost \+\d\.\d\d · context \+\d\.\d\d$/);
+  });
+
+  test('a curator-rated strength is named as such, not as a pick', () => {
+    const res = r({ task: 'coding' });
+    const strength = res.recommendations.find((x) => x.label_effect > 0 && x.model.name !== res.matchedCategory!.leader)!;
+    expect(formatWhyRank(strength.breakdown, true)).toMatch(/^Curator-rated strength \+0\.20/);
+  });
+
+  test('an unlabelled model in a task search says +0.00, so the absence of a label is visible', () => {
+    const res = r({ task: 'coding' });
+    const none = res.recommendations.find((x) => x.label_effect === 0);
+    if (none) expect(formatWhyRank(none.breakdown, true)).toMatch(/^Curator's pick \+0\.00 · /);
+  });
+
+  test('with no task there is no curator part at all', () => {
+    const top = r({}).recommendations[0];
+    const text = formatWhyRank(top.breakdown, false);
+    expect(text).not.toMatch(/Curator/);
+    expect(text).toMatch(/^Elo \+/);
   });
 });

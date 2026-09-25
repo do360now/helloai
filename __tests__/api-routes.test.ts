@@ -117,6 +117,34 @@ describe('GET /api/recommend', () => {
     }
   });
 
+  it('each recommendation carries its breakdown and label_effect, and the response says how scoring works', async () => {
+    const body = await (await recommendGET(req('/api/recommend?task=coding&limit=10'))).json();
+    for (const r of body.recommendations) {
+      expect(Object.keys(r.breakdown).sort()).toEqual(['context', 'cost', 'elo', 'task']);
+      expect(r.label_effect).toBe(r.breakdown.task);
+    }
+    const sc = body.meta.scoring;
+    expect(sc.version).toBe(1);
+    expect(sc.normalization).toBe('all_tracked_models');
+    expect(sc.weights).toEqual({ task: 0.4, elo: 0.35, cost: 0.15, context: 0.1 });
+    expect(sc.matched_category).toBe('Coding & Engineering');
+    expect(sc.snapshot).toMatch(/^sha256:[0-9a-f]{12}$/);
+    expect(sc.data_last_updated).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  });
+
+  it('with no task the meta shows the no-task weights and a null category', async () => {
+    const sc = (await (await recommendGET(req('/api/recommend'))).json()).meta.scoring;
+    expect(sc.weights).toEqual({ task: 0, elo: 0.55, cost: 0.25, context: 0.2 });
+    expect(sc.matched_category).toBeNull();
+  });
+
+  it('the same model has the same score with and without a filter it passes', async () => {
+    const all = await (await recommendGET(req('/api/recommend?limit=10'))).json();
+    const cheap = await (await recommendGET(req('/api/recommend?max_cost=4&limit=10'))).json();
+    const score = (b: { recommendations: Array<{ score: number; model: { id: string } }> }, id: string) => b.recommendations.find((r) => r.model.id === id)?.score;
+    expect(score(cheap, 'gemini')).toBe(score(all, 'gemini'));
+  });
+
   it('returns 404 when filters exclude every model', async () => {
     const res = await recommendGET(req('/api/recommend?max_cost=0.000001'));
     expect(res.status).toBe(404);

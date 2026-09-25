@@ -17,6 +17,7 @@ export default function ModelCard({
   bestMatch,
   dimmed,
   unrated,
+  whyRank,
 }: {
   model: Model;
   index: number;
@@ -24,6 +25,8 @@ export default function ModelCard({
   dimmed?: boolean;
   /** Shown in the "not yet rated" group: no rank number and never a best match. */
   unrated?: boolean;
+  /** Where the rank comes from, e.g. "Curator's pick +0.40 · Elo +0.35 · …". Shown only while filters are active. */
+  whyRank?: string;
 }) {
   const [hovered, setHovered] = useState(false);
   const elo = formatElo(model);
@@ -64,6 +67,8 @@ export default function ModelCard({
       <div className="model-provider">{model.provider}</div>
       <h3 className="model-name">{model.name}</h3>
       <p className="model-desc">{model.desc}</p>
+
+      {whyRank && !unrated && <p className="model-why-rank">Why this rank: {whyRank}</p>}
 
       <div className="model-specs">
         <span className="model-spec">{formatUsdPerMillion(model.cost_per_million_tokens)} in</span>

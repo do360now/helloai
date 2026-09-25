@@ -42,4 +42,12 @@ describe('OpenAPI spec stays consistent with live data', () => {
       .components.schemas.StatusResponse;
     expect(status.properties.usage).toBeDefined();
   });
+
+  it('documents the score breakdown, label effect and scoring meta, and says what score means', () => {
+    const json = JSON.stringify(spec);
+    for (const key of ['breakdown', 'label_effect', 'scoring', 'normalization', 'snapshot', 'all_tracked_models']) {
+      expect(json).toContain(key);
+    }
+    expect(json).toMatch(/ordering aid, not a quality measure/);
+  });
 });

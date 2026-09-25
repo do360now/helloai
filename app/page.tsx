@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { Nav, Hero, ModelCard, CategoryIcon, SectionHeader, ArticleCard, OpenWeightCard } from './components';
 import ModelFilter from './components/ModelFilter';
 import { getSiteConfig, getModels, getCategories, getHomepageArticles, getOpenWeightModels, formatDate, formatUsdPerMillion, formatContextWindow, formatElo, boardDateLabel } from '@/data';
-import { scoreAndRank, categoryTaskKeyword, isRated } from '@/data/recommend';
+import { scoreAndRank, categoryTaskKeyword, isRated, formatWhyRank, type ScoreBreakdown } from '@/data/recommend';
 
 const config = getSiteConfig();
 const models = getModels();
@@ -28,15 +28,16 @@ function ModelsSection({
 
   // Rated models rank; models whose Elo is a predecessor's, missing or stale are listed
   // separately below, never in the ranked order and never as a best match.
-  const { ranked, unrated } = useMemo(() => {
+  const { ranked, unrated, taskMatched } = useMemo(() => {
     const r = scoreAndRank(models, categories, { task: task || null, maxCost });
     if (!hasFilters) {
       return {
-        ranked: models.filter(isRated).map((m) => ({ model: m, score: 0, reasons: [] as string[] })),
+        ranked: models.filter(isRated).map((m) => ({ model: m, score: 0, breakdown: undefined as ScoreBreakdown | undefined })),
         unrated: r.unrated,
+        taskMatched: false,
       };
     }
-    return { ranked: r.recommendations, unrated: r.unrated };
+    return { ranked: r.recommendations, unrated: r.unrated, taskMatched: r.matchedCategory !== null };
   }, [task, maxCost, hasFilters]);
 
   const topScore = ranked[0]?.score ?? 0;
@@ -58,11 +59,12 @@ function ModelsSection({
         hasFilters={hasFilters}
       />
       <div className="models-grid">
-        {ranked.map(({ model, score }, i) => (
+        {ranked.map(({ model, score, breakdown }, i) => (
           <ModelCard
             key={model.id}
             model={model}
             index={i}
+            whyRank={hasFilters && breakdown ? formatWhyRank(breakdown, taskMatched) : undefined}
             bestMatch={hasFilters && i === 0 && topScore > 0}
             dimmed={hasFilters && score === 0 && topScore > 0}
           />

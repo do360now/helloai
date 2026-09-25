@@ -11,6 +11,10 @@ on 2026-07-04. Still-open items are tracked privately.
 SOL-00x" = SECURITY_P0_REMEDIATION.md (2026-06-30 red-team runbook). They
 are different sets.
 
+## 2026-09-25 — recommendation scoring version 1 (not a security change)
+
+`/api/recommend` scores changed once: components are now normalized against **all tracked models** (Elo: rated models only), so a filter never rescales a score or swaps two models that both pass it. Callers that stored earlier `score` values will see them change. Responses gain `breakdown`, `label_effect` and `meta.scoring` (`version`, `weights`, `normalization`, `snapshot`, `data_last_updated`, `matched_category`). The reason strings are now "Curator's pick for …" and "Curator-rated strength in …". A `task` shorter than 3 characters no longer substring-matches a category. See `docs/review/scoring-transparency.md`.
+
 ## 2026-07-04 — validation parity + CORS/cache hardening
 
 - Strict shared query validation `parseRecommendParams()` in `lib/api.ts`,

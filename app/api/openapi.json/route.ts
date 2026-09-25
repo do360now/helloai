@@ -217,11 +217,31 @@ export async function GET(req: NextRequest) {
           type: 'object',
           properties: {
             rank: { type: 'integer', example: 1 },
-            score: { type: 'number', format: 'float', example: 0.87, description: 'Composite score 0–1' },
+            score: {
+              type: 'number',
+              format: 'float',
+              example: 0.87,
+              description:
+                'Composite score 0 to 1. Scores are comparable only between calls that share the same scoring version, data snapshot and resolved task (which selects the weights). It is an ordering aid, not a quality measure. Filters never rescale it: components are normalized against all tracked models (rated models only for Elo).',
+            },
             reasons: {
               type: 'array',
               items: { type: 'string' },
-              example: ['Category leader for Coding & Engineering', 'Highest Elo (1508)'],
+              example: ["Curator's pick for Coding & Engineering", 'Highest Elo (1508)'],
+            },
+            breakdown: {
+              type: 'object',
+              description: 'Weighted contribution of each component. The parts add up to score within rounding.',
+              properties: {
+                task: { type: 'number', description: "Curator's pick / curator-rated strength (hand-set labels in categories.json)" },
+                elo: { type: 'number' },
+                cost: { type: 'number' },
+                context: { type: 'number' },
+              },
+            },
+            label_effect: {
+              type: 'number',
+              description: 'How much of score came from curated labels (the leader or strength). Equals breakdown.task; 0 when no task matched.',
             },
             model: { $ref: '#/components/schemas/RecommendModel' },
           },
@@ -264,6 +284,27 @@ export async function GET(req: NextRequest) {
               },
             },
             notes: { type: 'array', items: { type: 'string' }, description: 'Plain-language explanations, for example an unrated category leader.' },
+            meta: {
+              type: 'object',
+              properties: {
+                scoring: {
+                  type: 'object',
+                  description: 'How this response was scored. Two responses are comparable only if version, snapshot and matched_category agree.',
+                  properties: {
+                    version: { type: 'integer', example: 1, description: 'Bumped when the weights or the normalization basis change.' },
+                    weights: {
+                      type: 'object',
+                      description: 'The weight set actually used for this call.',
+                      properties: { task: { type: 'number' }, elo: { type: 'number' }, cost: { type: 'number' }, context: { type: 'number' } },
+                    },
+                    normalization: { type: 'string', enum: ['all_tracked_models'] },
+                    snapshot: { type: 'string', example: 'sha256:0123456789ab', description: 'Fingerprint of models.json, categories.json and the data date.' },
+                    data_last_updated: { type: 'string', format: 'date' },
+                    matched_category: { type: 'string', nullable: true, description: 'What task resolved to, or null.' },
+                  },
+                },
+              },
+            },
             filters_applied: { type: 'array', items: { type: 'string' } },
             models_considered: { type: 'integer' },
             models_excluded: { type: 'integer' },
