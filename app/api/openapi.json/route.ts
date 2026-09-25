@@ -228,6 +228,7 @@ export async function GET(req: NextRequest) {
               type: 'array',
               items: { type: 'string' },
               example: ["Curator's pick for Coding & Engineering", 'Highest Elo (1508)'],
+              description: 'Superlatives such as "Highest Elo" and "Most cost-efficient" are scoped to ALL tracked models (rated models for Elo), not to the filtered rows. Under a filter that removes the top model, no result carries "Highest Elo".',
             },
             breakdown: {
               type: 'object',
@@ -303,7 +304,7 @@ export async function GET(req: NextRequest) {
                       properties: { task: { type: 'number' }, elo: { type: 'number' }, cost: { type: 'number' }, context: { type: 'number' } },
                     },
                     normalization: { type: 'string', enum: ['all_tracked_models'] },
-                    snapshot: { type: 'string', example: 'sha256:0123456789ab', description: 'Fingerprint of models.json, categories.json and the data date.' },
+                    snapshot: { type: 'string', example: 'sha256:0123456789ab', description: 'Fingerprint of the scoring inputs only (per model: Elo when rated, rated status, input price, context window, strengths; per category: name and leader; and the scoring version). Prose, dates and provenance metadata are excluded, so it changes only when a score could change.' },
                     data_last_updated: { type: 'string', format: 'date' },
                     matched_category: { type: 'string', nullable: true, description: 'What task resolved to, or null.' },
                   },

@@ -13,7 +13,7 @@ import { apiHeaders, parseRecommendParams, publicUnlessParameterized } from '@/l
 // case) stays cacheable for 5 min.
 
 // Computed once at module load, so it changes exactly when the data does.
-const SNAPSHOT = snapshotHash(getModels(), getCategories(), getSiteConfig().lastUpdated);
+const SNAPSHOT = snapshotHash(getModels(), getCategories());
 
 export async function GET(req: NextRequest) {
   const origin = req.headers.get('origin');

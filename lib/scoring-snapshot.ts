@@ -1,8 +1,9 @@
 import { createHash } from 'node:crypto';
 import type { Model, Category } from '@/data/types';
+import { SCORING_VERSION as VERSION, isRated } from '@/data/recommend';
 
-/** Bump when the weights or the normalization basis change (scoring-transparency.md). */
-export const SCORING_VERSION = 1;
+/** Re-exported so callers import the version and the snapshot from one place; it lives next to the weights. */
+export const SCORING_VERSION = VERSION;
 export const normalizationBasis = 'all_tracked_models';
 
 // Canonical JSON: object keys sorted recursively, so reordering keys never changes the hash.
@@ -16,10 +17,24 @@ function canonical(value: unknown): string {
 }
 
 /**
- * A short fingerprint of the data a score was computed from (models, categories and the data date),
- * so two responses can be compared: same snapshot + same version + same resolved task = comparable scores.
+ * A short fingerprint of the SCORING INPUTS only: per model its id, rated status, Elo (only when rated, since
+ * an unrated Elo cannot move anyone), input price, context window and strengths; per category its name and
+ * leader; and the scoring version. Prose (desc, tag, insight), colours, provenance dates and the data date are
+ * deliberately excluded, so the weekly update does not change the snapshot unless a score could change. Two
+ * responses with the same snapshot, version and resolved task are comparable.
  */
-export function snapshotHash(models: Model[], categories: Category[], dataLastUpdated: string): string {
-  const digest = createHash('sha256').update(canonical({ models, categories, dataLastUpdated })).digest('hex');
-  return `sha256:${digest.slice(0, 12)}`;
+export function snapshotHash(models: Model[], categories: Category[]): string {
+  const inputs = {
+    version: VERSION,
+    models: models.map((m) => ({
+      id: m.id,
+      rated: isRated(m),
+      elo: isRated(m) ? m.elo : null,
+      cost: m.cost_per_million_tokens,
+      context: m.context_window,
+      strengths: [...m.strengths].sort(),
+    })),
+    categories: categories.map((c) => ({ name: c.name, leader: c.leader })),
+  };
+  return `sha256:${createHash('sha256').update(canonical(inputs)).digest('hex').slice(0, 12)}`;
 }

@@ -29,6 +29,10 @@ export type LabelKind = 'leader' | 'strength' | 'none';
 // With a matched task, the task match dominates (40%) followed by Elo (35%),
 // then cost efficiency (15%) and context size (10%).
 // With no task, the task weight redistributes to Elo (55%), cost (25%), context (20%).
+// Bump this whenever the weights or the normalization basis change. It ships in /api/recommend as
+// meta.scoring.version, and __tests__/recommend.test.ts pins it together with the weights below.
+export const SCORING_VERSION = 1;
+
 export const SCORING_WEIGHTS = {
   withTask: { task: 0.40, elo: 0.35, cost: 0.15, context: 0.10 },
   withoutTask: { task: 0.00, elo: 0.55, cost: 0.25, context: 0.20 },
@@ -95,8 +99,12 @@ export function findMatchingCategory(task: string, categories: Category[]): Cate
   if (!t) return null;
   // A one- or two-letter fragment ("a", "re") would substring-match some category and look like a
   // confident task match, so clause 1 needs at least 3 characters.
+  // Match at the START of a word in the category name ("cod" or "coding" -> Coding & Engineering), never a
+  // fragment from the middle ("ing", "nce", "ove"), which would otherwise switch to task weights and hand
+  // a leader +0.40 on a meaningless input.
+  const wordStart = new RegExp(`(^|[^a-z0-9])${t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}`);
   return (
-    (t.length >= 3 ? categories.find((c) => c.name.toLowerCase().includes(t)) : undefined) ??
+    (t.length >= 3 ? categories.find((c) => wordStart.test(c.name.toLowerCase())) : undefined) ??
     categories.find((c) => {
       const firstWord = c.name.toLowerCase().split(' ')[0];
       return firstWord.length > 0 && t.includes(firstWord);
@@ -160,8 +168,6 @@ export function scoreAndRank(
   const hasTask = matchedCategory !== null;
   const weights = hasTask ? SCORING_WEIGHTS.withTask : SCORING_WEIGHTS.withoutTask;
 
-  // Elo extrema come from RATED candidates only. Cost and context are the model's own
-  // fields, so they keep using every filtered-in model.
   // Normalization basis: ALL tracked models, not the filtered candidates. Filters only remove rows, so a
   // model's component scores never depend on which other models pass (scoring-transparency.md, decision 1).
   // Elo extrema still come from RATED models only, so a borrowed score cannot set the floor or ceiling.
@@ -190,9 +196,11 @@ export function scoreAndRank(
       }
     }
 
-    // When all candidates share a value, min === max and the division would
+    // When all tracked models share a value, min === max and the division would
     // be 0/0 → NaN; the explicit equality check returns a uniform 1.0 instead.
     const eloScore = maxElo === minElo ? 1 : (m.elo - minElo) / (maxElo - minElo);
+    // Superlatives are scoped to ALL tracked models (rated, for Elo), not to the filtered rows, so under a
+    // filter that removes the top model no result carries "Highest Elo" (or "Most cost-efficient", etc.).
     if (m.elo === maxElo) reasons.push(`Highest Elo (${m.elo})`);
     else reasons.push(`Elo ${m.elo}`);
 

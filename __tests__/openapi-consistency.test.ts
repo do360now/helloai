@@ -50,6 +50,8 @@ describe('OpenAPI spec stays consistent with live data', () => {
     }
     expect(json).toMatch(/ordering aid, not a quality measure/);
     expect(json).toMatch(/input price/i); // cost is scored on the input price only
+    expect(json).toMatch(/superlative|among all tracked models/i); // 'Highest Elo' etc. are scoped to the full set, so they can be absent under a filter
+    expect(json).toMatch(/leader.*strength.*none|\"leader\",\"strength\",\"none\"/); // the label enum
     expect(json).toMatch(/within rounding \(about 0\.02\)/); // agents will sum the parts
   });
 });

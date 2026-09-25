@@ -7,7 +7,7 @@
  * existing contract.
  */
 
-import { scoreAndRank, findMatchingCategory, categoryTaskKeyword, SCORING_WEIGHTS, isRated, RATING_POLICY, formatWhyRank } from '../data/recommend';
+import { scoreAndRank, findMatchingCategory, categoryTaskKeyword, SCORING_WEIGHTS, SCORING_VERSION, isRated, RATING_POLICY, formatWhyRank } from '../data/recommend';
 import { getModels, getCategories } from '../data';
 import type { Model, Category } from '../data/types';
 import { withBorrowed, borrowedIds } from './helpers/roster';
@@ -16,6 +16,15 @@ const models = getModels();
 const categories = getCategories();
 
 describe('SCORING_WEIGHTS', () => {
+  // Bump SCORING_VERSION (data/recommend.ts) whenever the weights or the normalization basis change, and update
+  // BOTH numbers here in the same commit. This test pins them together so a weight edit cannot ship silently.
+  test('the weights and the scoring version are pinned together', () => {
+    expect({ version: SCORING_VERSION, weights: SCORING_WEIGHTS }).toEqual({
+      version: 1,
+      weights: { withTask: { task: 0.4, elo: 0.35, cost: 0.15, context: 0.1 }, withoutTask: { task: 0, elo: 0.55, cost: 0.25, context: 0.2 } },
+    });
+  });
+
   test('with-task weights are 40/35/15/10', () => {
     expect(SCORING_WEIGHTS.withTask).toEqual({
       task: 0.40,
@@ -371,6 +380,25 @@ describe('scoring transparency — wording and task matching', () => {
     expect(text).toMatch(/Curator's pick for Coding & Engineering/);
     expect(text).toMatch(/Curator-rated strength in Coding & Engineering/);
     expect(text).not.toMatch(/Category leader|Strong in/);
+  });
+
+  test('5b. a fragment from the MIDDLE of a word does not match a category (a3: ing, nce)', () => {
+    // 'ove' is deliberately NOT here: it is a genuine 3-letter prefix of "Overall", accepted like 'cod' for Coding.
+    for (const fragment of ['ing', 'nce', 'eer', 'tion', 'ence', 'ral']) {
+      expect(findMatchingCategory(fragment, categories)).toBeNull();
+      expect(scoreAndRank(models, categories, { task: fragment }).matchedCategory).toBeNull();
+    }
+  });
+
+  test('5c. a word or the start of a word in the category name still matches', () => {
+    expect(findMatchingCategory('coding', categories)?.name).toBe('Coding & Engineering');
+    expect(findMatchingCategory('cod', categories)?.name).toBe('Coding & Engineering');
+    expect(findMatchingCategory('reasoning', categories)?.name).toBe('Hard Reasoning & Science');
+    expect(findMatchingCategory('sci', categories)?.name).toBe('Hard Reasoning & Science');
+    expect(findMatchingCategory('daily', categories)?.name).toBe('Honest Daily Use');
+    expect(findMatchingCategory('overall', categories)?.name).toBe('Overall Preference');
+    expect(findMatchingCategory('ove', categories)?.name).toBe('Overall Preference'); // a prefix of a real word
+    expect(findMatchingCategory('hard reasoning', categories)?.name).toBe('Hard Reasoning & Science'); // multi-word still works
   });
 
   test('5. a very short task does not match a category by substring', () => {
