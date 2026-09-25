@@ -113,6 +113,8 @@ export interface Claim {
   as_of: string | null;
   /** YYYY-MM-DD a person actually opened the source and confirmed it. null while unverified. */
   checked_at: string | null;
+  /** True for claims that can change (rankings, prices, Arena numbers): only these expire. Launch-dated figures do not. */
+  perishable?: boolean;
   /** YYYY-MM-DD a candidate source was found (search), not yet confirmed. */
   found_at?: string;
   note?: string;

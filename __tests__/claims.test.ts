@@ -9,15 +9,20 @@
 import { getModels, getCategories, getClaims } from '../data';
 import type { Claim } from '../data/types';
 
-const CLAIM_LIKE = /\b\d+(\.\d+)?\s?%|ARC-AGI|GPQA|SWE-bench|Terminal-Bench|MMLU|\bHLE\b|AIME/g;
+// Percentages, multipliers ("2.5x", "double"), named benchmarks, and Elo-range numbers (1400-1999),
+// which are the most change-prone figures in the prose.
+const CLAIM_LIKE = /\b\d+(\.\d+)?\s?%|\b\d+(\.\d+)?x\b|\bdouble\b|\btriple\b|\bhalf\b|\b1[4-9]\d{2}\b|ARC-AGI|GPQA|SWE-bench|Terminal-Bench|MMLU|\bHLE\b|AIME/g;
 const DAY_MS = 24 * 60 * 60 * 1000;
 const MAX_AGE_DAYS = { 'vendor-reported': 30, independent: 60, 'first-party': 60 } as const;
 // Ratchet: lower this as claims get confirmed. Raising it needs a reason in the commit message.
-const MAX_UNVERIFIED = 6;
+// 15 = the first registration after the scan also started covering `tag`, multipliers and Elo-range numbers.
+const MAX_UNVERIFIED = 15;
 
 const claims = getClaims();
 const prose: Array<{ where: string; subject: string; text: string }> = [
   ...getModels().map((m) => ({ where: `models.json (${m.name}) desc`, subject: m.name, text: m.desc })),
+  // The tag is shown on the card and is the most visible form of a claim ("40% Cheaper").
+  ...getModels().map((m) => ({ where: `models.json (${m.name}) tag`, subject: m.name, text: m.tag })),
   ...getCategories().map((c) => ({ where: `categories.json (${c.name}) insight`, subject: c.name, text: c.insight })),
 ];
 
@@ -33,13 +38,17 @@ describe('claims registry', () => {
     expect(new Set(claims.map((c) => c.id)).size).toBe(claims.length);
   });
 
-  test('a confirmed claim has an https source, an as_of date and a recent checked_at', () => {
+  test('a confirmed claim has an https source, an as_of date and a checked_at; only perishable ones expire', () => {
     const bad: string[] = [];
     for (const c of claims.filter((x) => x.verification === 'confirmed')) {
       if (!c.source_url?.startsWith('https://') || !c.as_of || !c.checked_at) {
         bad.push(`${c.id}: confirmed needs source_url (https), as_of and checked_at`);
         continue;
       }
+      // A launch-dated figure ("77.1% on ARC-AGI-2 as of 2026-02-19") does not change, so as_of already
+      // makes it honest and re-checking it only invites bumping checked_at by hand. Only claims that can
+      // change ("leads on...", ranks, prices, Arena numbers) are marked perishable and expire.
+      if (!c.perishable) continue;
       const age = (Date.now() - new Date(`${c.checked_at}T00:00:00Z`).getTime()) / DAY_MS;
       if (age > MAX_AGE_DAYS[c.kind]) bad.push(`${c.id}: checked ${Math.floor(age)} days ago (limit ${MAX_AGE_DAYS[c.kind]})`);
     }
@@ -63,6 +72,22 @@ describe('claims registry', () => {
 });
 
 describe('claims in prose', () => {
+  test('multipliers and Elo-range numbers are detected (self-test)', () => {
+    expect('double its predecessor, 2.5x, at 1793'.match(CLAIM_LIKE)).toEqual(['double', '2.5x', '1793']);
+    expect('$10/$50 with 1M context'.match(CLAIM_LIKE)).toBeNull();
+  });
+
+  test('a price written in a desc still matches the model\'s cost fields (input and output)', () => {
+    const drift: string[] = [];
+    for (const m of getModels()) {
+      const pairs = [...m.desc.matchAll(/\$(\d+(?:\.\d+)?)\/\$?(\d+(?:\.\d+)?)/g)].map((x) => [Number(x[1]), Number(x[2])]);
+      if (pairs.length === 0) continue;
+      const own = pairs.some(([a, b]) => a === m.cost_per_million_tokens && b === m.cost_per_million_tokens_output);
+      if (!own) drift.push(`${m.name}: desc prices ${JSON.stringify(pairs)} vs fields ${m.cost_per_million_tokens}/${m.cost_per_million_tokens_output}`);
+    }
+    expect(drift).toEqual([]);
+  });
+
   test('every percentage and named benchmark in desc/insight is registered for that subject', () => {
     const unregistered: string[] = [];
     for (const p of prose) {

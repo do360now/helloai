@@ -49,7 +49,7 @@ def test_dead_registry_entry_is_reported(tmp_path):
 
 def test_stale_confirmed_claim_is_reported(tmp_path):
     old = (date.today() - timedelta(days=45)).isoformat()
-    write(tmp_path, MODELS, [], [claim(verification="confirmed", source_url="https://x.example", as_of="2026-02-19", checked_at=old)])
+    write(tmp_path, MODELS, [], [claim(verification="confirmed", source_url="https://x.example", as_of="2026-02-19", checked_at=old, perishable=True)])
     assert analyse(tmp_path)["stale"] == ["c1"]
 
 
@@ -62,3 +62,20 @@ def test_exit_code_is_one_on_drift_and_zero_with_ok(tmp_path):
     write(tmp_path, MODELS, [], [])
     assert main([str(tmp_path)]) == 1
     assert main([str(tmp_path), "--ok"]) == 0
+
+
+def test_tag_multipliers_and_elo_numbers_are_scanned(tmp_path):
+    models = [{"name": "Gem", "tag": "40% Cheaper", "desc": "double its predecessor, at 1793."}]
+    write(tmp_path, models, [], [])
+    u = " ".join(analyse(tmp_path)["unregistered"])
+    assert "tag" in u and "40%" in u
+    assert '"double"' in u and '"1793"' in u
+
+
+def test_only_perishable_confirmed_claims_expire(tmp_path):
+    old = (date.today() - timedelta(days=90)).isoformat()
+    base = dict(verification="confirmed", source_url="https://x.example", as_of="2026-02-19", checked_at=old)
+    write(tmp_path, MODELS, [], [claim(**base)])
+    assert analyse(tmp_path)["stale"] == []  # a launch-dated figure does not expire
+    write(tmp_path, MODELS, [], [claim(perishable=True, **base)])
+    assert analyse(tmp_path)["stale"] == ["c1"]

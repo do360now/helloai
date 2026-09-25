@@ -22,7 +22,11 @@ import sys
 from datetime import date, datetime
 from pathlib import Path
 
-CLAIM_LIKE = re.compile(r"\b\d+(?:\.\d+)?\s?%|ARC-AGI|GPQA|SWE-bench|Terminal-Bench|MMLU|\bHLE\b|AIME")
+# Percentages, multipliers, Elo-range numbers (1400-1999) and named benchmarks. Keep in sync with __tests__/claims.test.ts.
+CLAIM_LIKE = re.compile(
+    r"\b\d+(?:\.\d+)?\s?%|\b\d+(?:\.\d+)?x\b|\bdouble\b|\btriple\b|\bhalf\b|\b1[4-9]\d{2}\b"
+    r"|ARC-AGI|GPQA|SWE-bench|Terminal-Bench|MMLU|\bHLE\b|AIME"
+)
 MAX_AGE_DAYS = {"vendor-reported": 30, "independent": 60, "first-party": 60}
 DEFAULT_DIR = Path(__file__).resolve().parent.parent / "data"
 
@@ -37,6 +41,7 @@ def analyse(data_dir: Path) -> dict:
     claims = _load(data_dir / "claims.json")
 
     prose = [(f"models.json ({m['name']}) desc", m["name"], m.get("desc", "")) for m in models]
+    prose += [(f"models.json ({m['name']}) tag", m["name"], m.get("tag", "")) for m in models]
     prose += [(f"categories.json ({c['name']}) insight", c["name"], c.get("insight", "")) for c in categories]
 
     unregistered: list[str] = []
@@ -51,7 +56,9 @@ def analyse(data_dir: Path) -> dict:
     stale: list[str] = []
     today = date.today()
     for c in claims:
-        if c.get("verification") == "confirmed" and c.get("checked_at"):
+        # Only perishable claims expire: a launch-dated figure is honest via as_of and must not invite
+        # bumping checked_at by hand.
+        if c.get("verification") == "confirmed" and c.get("perishable") and c.get("checked_at"):
             age = (today - datetime.strptime(c["checked_at"], "%Y-%m-%d").date()).days
             if age > MAX_AGE_DAYS.get(c.get("kind", "vendor-reported"), 60):
                 stale.append(c["id"])
