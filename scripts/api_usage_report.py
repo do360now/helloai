@@ -17,7 +17,7 @@ never summed into "agents". ip_hash rotates daily, so distinct counts are only
 comparable within a day. A distinct ip_hash count is the number of hashes observed, NOT unique callers,
 and the error runs both ways: shared/NAT IPs, requests with no X-Forwarded-For (they share one input) and
 truncated-hash collisions undercount; a spoofed X-Forwarded-For (the first entry is client-controlled)
-overcounts. Records with a null or missing ip_hash (METRICS_SALT unset) are excluded from the distinct set and
+overcounts. Records with a null or missing ip_hash (for example METRICS_SALT unset, or older records) are excluded from the distinct set and
 counted separately as requests_without_ip_hash. CORS preflights (method OPTIONS) are counted as requests.
 """
 
@@ -119,7 +119,7 @@ def render(r) -> str:
             "or activations (link previews and bots trigger them). Whether a visitor did anything in the app needs",
             "app-side data, which does not exist yet. ip_hash rotates daily: compare distinct counts within a day only.",
             "Distinct ip_hash is hashes observed, not unique callers; shared/NAT IPs and hash collisions undercount, a",
-            "spoofed X-Forwarded-For overcounts. Requests without an ip_hash (METRICS_SALT unset) are excluded and counted separately."]
+            "spoofed X-Forwarded-For overcounts. Requests with a null or missing ip_hash (for example METRICS_SALT unset, or records from before this field existed) are excluded and counted separately."]
     return "\n".join(out)
 
 
