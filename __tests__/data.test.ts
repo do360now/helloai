@@ -44,8 +44,17 @@ describe('Published policy text (D4, D5)', () => {
   test('listing_policy states the cap, the admission bar and the unrated rule', () => {
     expect(config.listing_policy).toMatch(/capped at six/i);
     expect(config.listing_policy).toMatch(/25 points/);
-    expect(config.listing_policy).toMatch(/two weeks/);
     expect(config.listing_policy).toMatch(/not yet rated/i);
+  });
+
+  test('listing_policy settles the floor, who makes way, and what "held" means (cmc, 2026-09-25)', () => {
+    // The floor is the lowest model that has an Elo of its own, so a borrowed score cannot set it.
+    expect(config.listing_policy).toMatch(/lowest model that has an Elo of its own/i);
+    // A model without its own rating is first to make way.
+    expect(config.listing_policy).toMatch(/without an Elo of its own is the first to make way/i);
+    // "Held" is counted in published snapshots, not calendar days, so a stalled board proves nothing.
+    expect(config.listing_policy).toMatch(/two consecutive published snapshots/i);
+    expect(config.listing_policy).not.toMatch(/two weeks/i);
   });
 
   test('listing_policy matches what the code does: unrated models exist, are labelled and are not ranked', () => {

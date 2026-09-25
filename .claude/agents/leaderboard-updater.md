@@ -115,7 +115,7 @@ Use this to evaluate any candidate model you find. Output a verdict of **ADMIT**
 
 ### Hard requirements — all must be true to proceed
 
-1. **Elo threshold**: LMArena Elo within 25 points of the current lowest tracked model, sustained for 2+ weeks (not a fresh debut with few votes).
+1. **Elo threshold**: LMArena text-overall Elo within 25 points of the lowest tracked model **that has an Elo of its own** (a borrowed predecessor score never sets the floor), held across **two consecutive published snapshots** (cmc, 2026-09-25). One snapshot plus elapsed calendar time does not count, and a stalled board proves nothing. Not a fresh debut with few votes.
 2. **Public API + pricing**: Has a public API with transparent, published pricing (not chat-only or invite-only).
 3. **Proven provider**: The provider has shipped at least one prior model generation. No debut providers.
 4. **Context window**: At least 200K tokens.
@@ -136,7 +136,7 @@ If hard + at least one soft pass → continue to set-size check.
 - The tracked set must stay between 4 and 6 models.
 - A new model from an **existing provider** replaces that provider's current entry (not an expansion).
 - A new model from a **new provider** expands the set by 1.
-- If the set is already at 6 and a new model qualifies, drop the model with the lowest Elo that has no unique positioning advantage. Flag this as requiring human confirmation.
+- If the set is already at 6 and a new model qualifies, a tracked model **without an Elo of its own** (borrowed, missing or stale) is the first to make way; otherwise drop the model with the lowest Elo that has no unique positioning advantage. Flag this as requiring human confirmation.
 
 ### Verdict format
 
