@@ -27,6 +27,12 @@ export async function GET(req: NextRequest) {
         description: 'This is a public API intended for fair use. Automated scraping or abuse may result in IP blocking.',
         allowed: ['Model recommendations', 'AI agent queries', 'Personal/professional projects'],
         prohibited: ['Commercial data resale', 'Competitive scraping', 'DoS/abuse'],
+        privacy:
+          'What we log: for each API request we record the time, the path, the names (not the values) of the query parameters, the kind of client (worked out from its User-Agent), ' +
+          'and a pseudonymous identifier: a shortened hash of your IP address combined with a secret salt that changes every day, so it cannot be linked from one day to the next. ' +
+          'Alerts about unusual traffic also record the User-Agent string. Raw IP addresses are held in memory only, for rate limiting and abuse detection, and are never written to our logs. ' +
+          'We set no cookies and use no third-party analytics. Links from this site to app.helloai.com pass through helloai.com/go/, which counts the click and records no visitor identifier. ' +
+          'The site runs on Microsoft Azure, which may keep its own logs, including IP addresses, under its own terms; these terms describe what the application itself logs.',
       },
       usage: {
         ...usageSnapshot(),

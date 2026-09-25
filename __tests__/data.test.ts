@@ -24,6 +24,29 @@ describe('Site Config', () => {
   });
 });
 
+describe('Published policy text (D4, D5)', () => {
+  const config = getSiteConfig();
+
+  test('affiliations and listing_policy are present and are not drafts', () => {
+    for (const text of [config.affiliations, config.listing_policy]) {
+      expect(typeof text).toBe('string');
+      expect((text as string).length).toBeGreaterThan(40);
+      expect(text).not.toMatch(/\[confirm|TODO|TBD|\[N days/i);
+    }
+  });
+
+  test('affiliations states the no-vendor-relationship position and the operator’s own app', () => {
+    expect(config.affiliations).toMatch(/no financial or employment relationship/i);
+    expect(config.affiliations).toMatch(/app\.helloai\.com/);
+  });
+
+  test('listing_policy states the admission bar and the unrated rule', () => {
+    expect(config.listing_policy).toMatch(/25 points/);
+    expect(config.listing_policy).toMatch(/two weeks/);
+    expect(config.listing_policy).toMatch(/not yet rated/i);
+  });
+});
+
 describe('Models', () => {
   const models = getModels();
 

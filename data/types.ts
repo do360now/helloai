@@ -6,6 +6,10 @@ export interface SiteConfig {
   githubUrl: string;
   cmcUrl: string;
   lastUpdated: string;
+  /** D4: who is behind the site and any vendor relationships. Written by the operator. */
+  affiliations?: string;
+  /** D5: which models get a slot and how unrated models are shown. Written by the operator. */
+  listing_policy?: string;
 }
 
 export interface Model {

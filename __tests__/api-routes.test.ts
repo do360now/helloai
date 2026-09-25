@@ -109,6 +109,16 @@ describe('GET /api/recommend', () => {
 });
 
 describe('GET /api/status', () => {
+  it('publishes the privacy terms without placeholders or unverified claims', async () => {
+    const body = await (await statusGET(req('/api/status'))).json();
+    const privacy: string = body.terms_of_use.privacy;
+    expect(privacy).toMatch(/pseudonymous/i);
+    expect(privacy).toMatch(/never written to our logs/i);
+    expect(privacy).toMatch(/no cookies/i);
+    expect(privacy).not.toMatch(/\[confirm|\[N days|TODO|TBD/i);
+    expect(privacy).not.toMatch(/anonymous/i);
+  });
+
   it('reports per-container usage counters with a since timestamp', async () => {
     const res = await statusGET(req('/api/status'));
     const body = await res.json();
