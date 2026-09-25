@@ -67,6 +67,7 @@ export function proxy(request: NextRequest) {
   }
 
   const metricsInfo = {
+    method: request.method,
     path: request.nextUrl.pathname,
     userAgent,
     ip,

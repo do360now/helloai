@@ -13,6 +13,7 @@ const KNOWN_PATHS = new Set([
 ]);
 
 export interface ApiRequestInfo {
+  method: string;
   path: string;
   userAgent: string;
   ip: string;
@@ -89,6 +90,7 @@ export function recordApiRequest(info: ApiRequestInfo): void {
       console.log(
         `${PREFIX} ${JSON.stringify({
           ts: Date.now(),
+          method: info.method,
           path: info.path,
           ua,
           ip_hash: ipHash(info.ip),

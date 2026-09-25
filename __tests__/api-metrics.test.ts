@@ -1,7 +1,7 @@
 import { recordApiRequest, usageSnapshot, resetUsageForTests } from '@/lib/api-metrics';
 
 const IP = '198.51.100.77';
-const base = { path: '/api/recommend', userAgent: 'curl/8.5.0', ip: IP, params: { task: 'coding', max_cost: '10' }, rateLimited: false };
+const base = { method: 'GET', path: '/api/recommend', userAgent: 'curl/8.5.0', ip: IP, params: { task: 'coding', max_cost: '10' }, rateLimited: false };
 
 describe('recordApiRequest', () => {
   let spy: jest.SpyInstance;
@@ -21,6 +21,7 @@ describe('recordApiRequest', () => {
     expect(json.path).toBe('/api/recommend');
     expect(json.ua).toBe('tool');
     expect(json.rate_limited).toBe(false);
+    expect(json.method).toBe('GET');
     expect(json.param_keys).toEqual(['task', 'max_cost']);
     expect(json.ip_hash).toMatch(/^[0-9a-f]{8}$/);
   });

@@ -15,7 +15,7 @@ Reading the numbers: UA classes are labels, not proof of intent. The
 declared_ai_client, programmatic and empty columns are reported separately and
 never summed into "agents". ip_hash rotates daily, so distinct counts are only
 comparable within a day, and it hashes the first X-Forwarded-For entry (client-controlled), so a distinct
-count is an upper bound until client-IP handling is fixed. A null ip_hash means METRICS_SALT was unset.
+count is an upper bound until client-IP handling is fixed. A null ip_hash means METRICS_SALT was unset. Requests with no X-Forwarded-For share one ip_hash (not one caller). CORS preflights (method OPTIONS) are counted as requests.
 """
 
 from __future__ import annotations
