@@ -21,8 +21,8 @@ setInterval(() => {
   }
 }, 60 * 1000).unref?.(); // cleanup every minute
 
-// Search engines should not index the JSON documents. Agents are unaffected: robots.txt still allows everything,
-// and X-Robots-Tag only tells indexers to skip the response.
+// Search engines should not index the JSON documents. Agents are unaffected: robots.txt does not block the API,
+// and X-Robots-Tag only tells indexers to skip the response (robots.txt disallows only /go/, the redirect route).
 function noindex<T extends NextResponse>(res: T): T {
   res.headers.set('X-Robots-Tag', 'noindex');
   return res;

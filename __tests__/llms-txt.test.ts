@@ -1,4 +1,5 @@
 import { buildLlmsTxt, buildLlmsFullTxt } from '../lib/llms-txt';
+import type { Model } from '../data/types';
 import { getModels, getArticles, getSiteConfig, formatElo, formatUsdPerMillion, formatContextWindow } from '../data';
 import { isRated } from '../data/recommend';
 import { GET as llmsGET } from '../app/llms.txt/route';
@@ -55,7 +56,9 @@ describe('llms.txt', () => {
   test('says what score means and where Elo comes from, without claiming benchmarks it does not have', () => {
     expect(txt).toMatch(/ordering aid, not a quality measure/i);
     expect(txt).toMatch(/LMArena/);
-    expect(txt).not.toMatch(/real benchmarks|\bGPT\b/);
+    // Scoped to the header and notes: article titles may legitimately name other vendors' models (e.g. "GPT-6 Astra").
+    const header = txt.split('## Models tracked')[0];
+    expect(header).not.toMatch(/real benchmarks|\bGPT\b/);
   });
 
   test('points to the app as the operator\'s own product and does not advertise an MCP URL', () => {
@@ -66,7 +69,31 @@ describe('llms.txt', () => {
   });
 
   test('has no placeholder or draft text', () => {
-    expect(txt).not.toMatch(/TODO|TBD|\[confirm|<[^>]+>/);
+    const header = txt.split('## Articles')[0]; // article titles are free text
+    expect(header).not.toMatch(/TODO|TBD|\[confirm|<[^>]+>/);
+  });
+});
+
+describe('llms.txt states other than "borrowed"', () => {
+  const base = getModels().find((m) => m.id === 'fable')!;
+  const withSource = (src: Partial<NonNullable<Model['elo_source']>>): Model => ({ ...base, elo_source: { ...base.elo_source!, ...src } });
+
+  test('a stale or missing score is described as stale or missing, never as a predecessor\'s score', () => {
+    const stale = buildLlmsTxt([withSource({ status: 'stale' })]);
+    const line = stale.split('\n').find((l) => l.includes(base.name))!;
+    expect(line).toMatch(/stale/i);
+    expect(line).not.toMatch(/predecessor/i);
+    const missing = buildLlmsTxt([withSource({ status: 'missing' })]);
+    expect(missing.split('\n').find((l) => l.includes(base.name))!).not.toMatch(/predecessor/i);
+  });
+
+  test('a borrowed score is still labelled as a predecessor\'s', () => {
+    const borrowed = buildLlmsTxt([withSource({ matches_listed_model: false, arena_model: 'x-predecessor' })]);
+    expect(borrowed.split('\n').find((l) => l.includes(base.name))!).toMatch(/not yet rated.*predecessor/i);
+  });
+
+  test('the notes line does not claim every unrated model is a new one', () => {
+    expect(txt).not.toMatch(/have no Elo of their own yet/);
   });
 });
 

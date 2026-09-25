@@ -1,3 +1,4 @@
+import type { Model } from '@/data/types';
 import { getModels, getArticles, getSiteConfig, formatElo, formatUsdPerMillion, formatContextWindow } from '@/data';
 
 const BASE = 'https://helloai.com';
@@ -6,16 +7,16 @@ const BASE = 'https://helloai.com';
  * Rendered from the data on every call, never a static file, so it cannot drift from the site
  * (docs/review/seo-and-discoverability.md, step 2). A model without an Elo of its own is labelled.
  */
-export function buildLlmsTxt(): string {
+export function buildLlmsTxt(models: Model[] = getModels()): string {
   const cfg = getSiteConfig();
-  const models = getModels();
   const articles = getArticles();
 
   const modelLines = models.map((m) => {
     const e = formatElo(m);
+    // The note comes from formatElo, so each state says what is true for it (borrowed, missing or stale).
     const elo = e.state === 'rated'
       ? `Elo ${e.score}${e.config ? ` (${e.config})` : ''}`
-      : `not yet rated (${e.score} is a predecessor's score, not this model's own)`;
+      : `${e.note ?? ''} Stored number ${e.score}`.trim();
     return `- ${m.name} (${m.provider}): ${elo}; ${formatUsdPerMillion(m.cost_per_million_tokens)} in, ${formatUsdPerMillion(m.cost_per_million_tokens_output)} out; ${formatContextWindow(m.context_window)}; ${m.url}`;
   });
 
@@ -32,7 +33,7 @@ export function buildLlmsTxt(): string {
     `- [Recommend](${BASE}/api/recommend?task=coding): params task, max_cost, min_context, provider, limit. \`score\` is an ordering aid, not a quality measure: compare scores only between calls that share the same \`meta.scoring\` version, snapshot and resolved task.`,
     '',
     '## Notes',
-    '- Elo is the LMArena (arena.ai) text-overall board, recorded per model in `elo_source`. Models marked "not yet rated" have no Elo of their own yet and are not ranked.',
+    '- Elo is the LMArena (arena.ai) text-overall board, recorded per model in `elo_source`. A model described as not yet rated, missing or stale has no usable Elo of its own and is not ranked.',
     '',
     '## Models tracked',
     ...modelLines,

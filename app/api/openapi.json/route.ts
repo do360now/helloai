@@ -331,6 +331,18 @@ export async function GET(req: NextRequest) {
             data_last_updated: { type: 'string', format: 'date' },
             models_count: { type: 'integer' },
             categories_count: { type: 'integer' },
+            related: {
+              type: 'array',
+              description: 'Where to look next: llms.txt, the OpenAPI spec, and the operator\'s own product (the HelloAI Marketplace).',
+              items: {
+                type: 'object',
+                properties: {
+                  name: { type: 'string', example: 'llms_txt' },
+                  url: { type: 'string', format: 'uri', example: 'https://helloai.com/llms.txt' },
+                  note: { type: 'string', description: 'Optional context, for example that the marketplace is the operator\'s own product.' },
+                },
+              },
+            },
             usage: {
               type: 'object',
               description: 'Request counts since this container process started. Resets on restart and covers only this container process; the durable source is the [api-metrics] log lines.',
