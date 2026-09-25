@@ -1,0 +1,29 @@
+diff --git a/app/articles/[slug]/opengraph-image.tsx b/app/articles/[slug]/opengraph-image.tsx
+index 132a8e4..8f45a52 100644
+--- a/app/articles/[slug]/opengraph-image.tsx
++++ b/app/articles/[slug]/opengraph-image.tsx
+@@ -123,8 +123,8 @@ export default async function Image({ params }: { params: Promise<{ slug: string
+         </div>
+ 
+         {/* Bottom: URL */}
+-        <div style={{ color: '#4A5568', fontSize: '16px', letterSpacing: '0.5px' }}>
+-          helloai.com/articles/{slug}
++        <div style={{ display: 'flex', color: '#4A5568', fontSize: '16px', letterSpacing: '0.5px' }}>
++          {`helloai.com/articles/${slug}`}
+         </div>
+       </div>
+     ),
+diff --git a/app/opengraph-image.tsx b/app/opengraph-image.tsx
+index 2d2f7fd..f1550da 100644
+--- a/app/opengraph-image.tsx
++++ b/app/opengraph-image.tsx
+@@ -76,6 +76,9 @@ export default function Image() {
+         {/* Headline */}
+         <div
+           style={{
++            display: 'flex',
++            justifyContent: 'center',
++            flexWrap: 'wrap',
+             color: '#FFFFFF',
+             fontSize: '56px',
+             fontWeight: 800,
