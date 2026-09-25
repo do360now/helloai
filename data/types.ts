@@ -94,3 +94,26 @@ export interface OpenWeightModel {
     date: string;           // YYYY-MM-DD the tokens_per_sec was measured
   };
 }
+
+/**
+ * A hand-written claim in prose (a percentage or a named benchmark), registered so it can be
+ * checked. `unverified` means someone found a candidate source but nobody has opened and confirmed
+ * it yet. See docs/review/claims-guard.md and __tests__/claims.test.ts.
+ */
+export interface Claim {
+  id: string;
+  /** Exact text as it appears in the prose (models.json desc or categories.json insight). */
+  text: string;
+  /** Model name or category name whose prose contains the text. */
+  subject: string;
+  kind: 'vendor-reported' | 'independent' | 'first-party';
+  verification: 'unverified' | 'confirmed';
+  source_url: string | null;
+  /** YYYY-MM-DD the claim was made or published. */
+  as_of: string | null;
+  /** YYYY-MM-DD a person actually opened the source and confirmed it. null while unverified. */
+  checked_at: string | null;
+  /** YYYY-MM-DD a candidate source was found (search), not yet confirmed. */
+  found_at?: string;
+  note?: string;
+}

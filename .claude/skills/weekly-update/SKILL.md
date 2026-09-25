@@ -35,6 +35,14 @@ Also run the local cluster-bench guard:
 
 Non-zero exit means the local gpu-cluster benchmarks (`/home/cmc/git/gpu-cluster/benchmarks/results.md`) diverge from `data/open_weight_models.json` — propose the JSON diffs through the normal change report + audit log before proceeding. `[new bench candidate]` lines feed the open-weight admission decision tree. When the source file is unavailable (remote runs), the guard logs the last integrated bench date and exits 0.
 
+Also run the claims drift guard:
+
+```bash
+python3 scripts/check_claims.py
+```
+
+Non-zero exit means a percentage or named benchmark in `models.json` `desc` / `categories.json` `insight` is not registered in `data/claims.json`, a registry entry no longer appears in the prose, or a confirmed claim is past its freshness limit (30 days vendor-reported, 60 otherwise). Register or remove the claim in the same change. The report also lists **unverified** claims: a person must open each source and flip it to `confirmed` (setting `checked_at` to the day they opened it); do not set `checked_at` yourself. `__tests__/claims.test.ts` enforces the same rules and caps how many unverified claims may exist.
+
 **1b. Judgment pass — Default (Grok):** Ask Grok to run the `leaderboard-updater` role, following the specification in `.claude/agents/leaderboard-updater.md` (plus any refinements documented in recent Grok scoring runs and updated memory).
 
 Grok will:

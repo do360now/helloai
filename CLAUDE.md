@@ -129,7 +129,7 @@ Only **rated** models rank (`isRated`): a model whose stored Elo is a predecesso
 
 `models.json` has **no benchmark fields** — the schema is the 12 keys listed above plus `elo_source` (provenance of `elo`, not a second signal). (`open_weight_models.json` separately carries `bench_source` for first-party throughput numbers; unrelated to any external leaderboard.)
 
-**ARC Prize (`https://arcprize.org/leaderboard`) is NOT ingested anywhere.** ARC-AGI appears in exactly three places, all hand-written editorial prose that no script verifies or refreshes:
+**ARC Prize (`https://arcprize.org/leaderboard`) is NOT ingested anywhere.** Its mentions are now registered as claims in `data/claims.json` (guarded by `__tests__/claims.test.ts` and `scripts/check_claims.py`, still `unverified` until a person confirms each source), so they no longer drift silently. ARC-AGI appears in exactly three places, all hand-written editorial prose that no script verifies or refreshes:
 - `data/models.json` — Gemini `desc` ("77% on ARC-AGI-2")
 - `data/models.json` — Opus 5 `desc` ("3x the next-best model on ARC-AGI-3")
 - `data/categories.json` — "Hard Reasoning & Science" `insight` (namechecks GPQA + ARC-AGI subsets)

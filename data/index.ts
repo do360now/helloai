@@ -1,15 +1,18 @@
-import type { SiteConfig, Model, Category, Article, OpenWeightModel } from './types';
+import type { SiteConfig, Model, Category, Article, OpenWeightModel, Claim } from './types';
 
 import siteData from './site.json';
 import modelsData from './models.json';
 import categoriesData from './categories.json';
 import articlesData from './articles.json';
 import openWeightModelsData from './open_weight_models.json';
+import claimsData from './claims.json';
 
 export const getSiteConfig = (): SiteConfig => siteData;
 // JSON imports widen the elo_source string unions (board, set_by) to `string`, so cast; the
 // allowed values are enforced by __tests__/elo-provenance.test.ts.
 export const getModels = (): Model[] => modelsData as Model[];
+// JSON imports widen the string unions; __tests__/claims.test.ts enforces the allowed values.
+export const getClaims = (): Claim[] => claimsData as Claim[];
 export const getCategories = (): Category[] => categoriesData;
 export const getArticles = (): Article[] => articlesData;
 
