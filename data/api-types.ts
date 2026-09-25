@@ -1,8 +1,8 @@
 import type { Model } from './types';
 
 // DTO for the model subset serialized in /api/recommend responses. Kept narrow
-// (no desc/color/strengths) so the public recommend payload stays lean. The Pro
-// endpoint returns the full Model instead — see app/api/pro/recommend.
+// (no desc/color/strengths) so the public recommend payload stays lean. The (now
+// frozen, 410) Pro endpoint used to return the full Model — see app/api/pro/recommend.
 export interface RecommendModelDTO {
   id: string;
   name: string;

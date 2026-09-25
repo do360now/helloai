@@ -162,7 +162,7 @@
           "file": "app/api/pro/recommend/route.ts",
           "params": ["task?", "max_cost?", "min_context?", "provider?", "limit?"],
           "headers": ["X-Preimage", "X-Agent-Id"],
-          "description": "Lightning-paid Pro recommend — full result set, payment receipt header"
+          "description": "FROZEN 2026-09-25: always returns 410 gone (see https://app.helloai.com). lib/pay/* is kept but no longer called by this route"
         },
         {
           "method": "GET",
@@ -441,7 +441,7 @@
     },
     {
       "id": "pro-recommend",
-      "name": "Pro /api/pro/recommend",
+      "name": "Pro /api/pro/recommend (frozen 2026-09-25: now 410; steps below are the historical design)",
       "steps": [
         "Validate params (same parser as public — before payment)",
         "If no X-Preimage → 402 + Lightning invoice",
@@ -457,7 +457,7 @@
       "steps": [
         "Fetch /.well-known/ai-plugin.json",
         "Read /api/openapi.json",
-        "Call /api/recommend or /api/pro/recommend autonomously"
+        "Call /api/recommend autonomously"
       ]
     },
     {
@@ -502,7 +502,6 @@
   "relationships": [
     { "from": "app/page.tsx", "to": "data/recommend.ts", "type": "imports", "label": "scoreAndRank" },
     { "from": "app/api/recommend/route.ts", "to": "data/recommend.ts", "type": "imports", "label": "scoreAndRank" },
-    { "from": "app/api/pro/recommend/route.ts", "to": "lib/pay/pro_service.ts", "type": "imports", "label": "serveProRecommend" },
     { "from": "lib/pay/pro_service.ts", "to": "data/recommend.ts", "type": "imports", "label": "scoreAndRank" },
     { "from": "lib/pay/pro_service.ts", "to": "lib/api.ts", "type": "imports", "label": "parseRecommendParams" },
     { "from": "app/api/*/route.ts", "to": "lib/api.ts", "type": "imports", "label": "apiHeaders" },
