@@ -14,7 +14,19 @@
     "strengths": [
       "Coding & Engineering",
       "Overall Preference"
-    ]
+    ],
+    "elo_source": {
+      "board": "text_overall",
+      "arena_model": "claude-fable-5.1-max",
+      "matches_listed_model": true,
+      "config": "max",
+      "ci_low": 1490,
+      "ci_high": 1506,
+      "votes": 5783,
+      "snapshot_date": "2026-09-13",
+      "source_url": "https://arena.ai/leaderboard/text",
+      "set_by": "agent_curated"
+    }
   },
   {
     "id": "muse",
@@ -31,7 +43,19 @@
     "strengths": [
       "Coding & Engineering",
       "Honest Daily Use"
-    ]
+    ],
+    "elo_source": {
+      "board": "text_overall",
+      "arena_model": "muse-spark-1.3-max",
+      "matches_listed_model": true,
+      "config": "max",
+      "ci_low": 1484,
+      "ci_high": 1502,
+      "votes": 4723,
+      "snapshot_date": "2026-09-13",
+      "source_url": "https://arena.ai/leaderboard/text",
+      "set_by": "agent_curated"
+    }
   },
   {
     "id": "claude",
@@ -48,7 +72,16 @@
     "strengths": [
       "Coding & Engineering",
       "Overall Preference"
-    ]
+    ],
+    "elo_source": {
+      "board": "text_overall",
+      "arena_model": "claude-opus-5-high",
+      "matches_listed_model": false,
+      "config": "high",
+      "snapshot_date": "2026-09-13",
+      "source_url": "https://arena.ai/leaderboard/text",
+      "set_by": "agent_curated"
+    }
   },
   {
     "id": "gemini",
@@ -64,7 +97,18 @@
     "context_window": 1000000,
     "strengths": [
       "Hard Reasoning & Science"
-    ]
+    ],
+    "elo_source": {
+      "board": "text_overall",
+      "arena_model": "gemini-3.1-pro-preview",
+      "matches_listed_model": true,
+      "ci_low": 1484,
+      "ci_high": 1490,
+      "votes": 106951,
+      "snapshot_date": "2026-09-13",
+      "source_url": "https://arena.ai/leaderboard/text",
+      "set_by": "agent_curated"
+    }
   },
   {
     "id": "qwen",
@@ -80,7 +124,18 @@
     "context_window": 1000000,
     "strengths": [
       "Coding & Engineering"
-    ]
+    ],
+    "elo_source": {
+      "board": "text_overall",
+      "arena_model": "qwen3.8-max",
+      "matches_listed_model": true,
+      "ci_low": 1475,
+      "ci_high": 1487,
+      "votes": 16670,
+      "snapshot_date": "2026-09-13",
+      "source_url": "https://arena.ai/leaderboard/text",
+      "set_by": "agent_curated"
+    }
   },
   {
     "id": "grok",
@@ -96,6 +151,15 @@
     "context_window": 500000,
     "strengths": [
       "Coding & Engineering"
-    ]
+    ],
+    "elo_source": {
+      "board": "text_overall",
+      "arena_model": "grok-4.6-high",
+      "matches_listed_model": false,
+      "config": "high",
+      "snapshot_date": "2026-09-13",
+      "source_url": "https://arena.ai/leaderboard/text",
+      "set_by": "agent_curated"
+    }
   }
 ]
