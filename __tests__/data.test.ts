@@ -40,10 +40,25 @@ describe('Published policy text (D4, D5)', () => {
     expect(config.affiliations).toMatch(/app\.helloai\.com/);
   });
 
-  test('listing_policy states the admission bar and the unrated rule', () => {
+  test('listing_policy states the cap, the admission bar and the unrated commitment', () => {
+    expect(config.listing_policy).toMatch(/capped at six/i);
     expect(config.listing_policy).toMatch(/25 points/);
     expect(config.listing_policy).toMatch(/two weeks/);
-    expect(config.listing_policy).toMatch(/not yet rated/i);
+    expect(config.listing_policy).toMatch(/not yet rated|unrated/i);
+    expect(config.listing_policy).toMatch(/will be shown as unrated/i); // a commitment, not a claim about today
+  });
+
+  test('listing_policy does not claim the unrated display exists yet', () => {
+    // No isRated/unrated state is built (elo-provenance.md); today two models show a predecessor's score.
+    expect(config.listing_policy).not.toMatch(/is shown as .not yet rated/i);
+  });
+
+  test('policy text uses one voice (first person) and no platform-fee claim', () => {
+    for (const text of [config.affiliations, config.listing_policy]) {
+      expect(text).not.toMatch(/\bwe\b/i);
+    }
+    expect(config.affiliations).not.toMatch(/platform fee/i);
+    expect(config.affiliations).toMatch(/no payments from them/i);
   });
 });
 

@@ -113,8 +113,12 @@ describe('GET /api/status', () => {
     const body = await (await statusGET(req('/api/status'))).json();
     const privacy: string = body.terms_of_use.privacy;
     expect(privacy).toMatch(/pseudonymous/i);
-    expect(privacy).toMatch(/never written to our logs/i);
-    expect(privacy).toMatch(/no cookies/i);
+    expect(privacy).toMatch(/never written to my logs/i);
+    expect(privacy).toMatch(/I set no cookies/i);
+    expect(privacy).toMatch(/whether the request was rate-limited/i);
+    expect(privacy).toMatch(/HTTP method/i);
+    expect(privacy).not.toMatch(/cannot be linked/i); // true for outsiders only, not for whoever holds the salt
+    expect(privacy).not.toMatch(/\bwe\b/i);
     expect(privacy).not.toMatch(/\[confirm|\[N days|TODO|TBD/i);
     expect(privacy).not.toMatch(/anonymous/i);
   });

@@ -92,6 +92,8 @@ Every row above is adopted as recommended, as the recommendation stands in the o
 
 Execution follows the suggested order above. Wave 0 needs nothing further from cmc.
 
+**D4/D5 text, cmc, 2026-09-25:** cmc answered the D4 facts (no relationship with any listed vendor, no credits, payments or early access) and chose the D5 shape (a hand-picked set with an admission bar). Sonnet then drafted the text for cmc to approve, which differs from the rule above that no reviewer drafts either; cmc's approval is what makes it cmc's text. Reviewers (d8, Fable) then required changes: the listing rule was reworded from a claim into a commitment because two models are still ranked on a predecessor's score, the platform-fee mention was removed, and the voice is first person. The published strings live in `data/site.json` (`affiliations`, `listing_policy`) and `/api/status` (`terms_of_use.privacy`).
+
 **Scope clarification, cmc, 2026-09-25 (same session):** "For this repo let's just focus on helloai.com related changes, and leave any work for app.helloai.com for `~/git/helloai-marketplace`." app.helloai.com is a reference for decisions about helloai.com, not a work target of this review. Plans with app-side steps (`app-fit.md`, `collaboration.md` Phase B, `monetisation.md`, `seo-and-discoverability.md` step 3.0) keep only their helloai.com side here; app-side steps are listed as a handoff for the marketplace repo, not planned or executed from this repo.
 
 ## Cross-plan items (agreed in the room)
