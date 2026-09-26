@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
+import { websiteGraph } from '@/lib/structured-data';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -70,18 +71,7 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'WebSite',
-              name: 'Hello, AI',
-              url: 'https://helloai.com',
-              description: 'Your unbiased guide to the world\'s smartest AIs',
-              author: {
-                '@type': 'Person',
-                name: 'Clement Machado',
-                url: 'https://x.com/helloaix',
-              },
-            }),
+            __html: JSON.stringify(websiteGraph()),
           }}
         />
       </head>

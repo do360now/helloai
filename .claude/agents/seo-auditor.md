@@ -30,6 +30,9 @@ Also fetch one article page to verify dynamic metadata works:
 
 ## Checks to run
 
+**Discoverability (added 2026-09-25):** fetch `https://helloai.com/llms.txt` (expect 200, `text/plain`, a `## Disclosures` section, every tracked model, and `app.helloai.com`; note `/.well-known/mcp.json` is intentionally absent until the app publishes a public MCP URL), `https://helloai.com/opengraph-image` (expect 200 `image/png`), and one `/api/models` response (expect an `X-Robots-Tag: noindex` header; pages must NOT have one). If your fetch tool cannot expose response headers, report only what you can see and point at `curl -sI https://helloai.com/api/models | grep -i x-robots-tag` (present) and `curl -sI https://helloai.com/ | grep -i x-robots-tag` (absent). Report each ✅/❌ in the table.
+
+
 ### Title tags
 - Present on every page: ✅/❌
 - Length: ideal 40–60 characters, acceptable 30–70 characters

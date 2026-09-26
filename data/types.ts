@@ -64,6 +64,8 @@ export interface Category {
 
 export interface Article {
   slug: string;
+  /** Optional YYYY-MM-DD of the last substantive edit, used for JSON-LD dateModified. Falls back to `date`. */
+  updated?: string;
   title: string;
   excerpt: string;
   date: string;

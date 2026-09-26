@@ -150,3 +150,12 @@ Files: `app/sitemap.ts`, `middleware.ts`.
 - Whether any agent or crawler has ever fetched `ai-plugin.json` or `openapi.json` (needs `observability.md`).
 - app.helloai.com's own SEO and its MCP server behaviour (my session's connector to it failed with a 405; `app-fit.md` covers the app).
 - Article page rendering beyond `<head>`; the article index page was screenshotted and looks consistent with the home design.
+
+## 7. Implementation status and follow-ups (2026-09-25)
+
+Steps 2 to 5 are implemented on branch `wave2-seo`. Not done or left to cmc:
+
+- **`mcp.json`: held back (cmc, 2026-09-26).** Not published, and a test asserts it does not exist. The app's MCP server is per-account and has no public discovery URL (step 3.0), so a file listing no server adds nothing. Publish it, with a `servers` entry and tests, when the app exposes a public URL. The app-side items (a public MCP discovery page, the connector 405 bug) are a handoff to `~/git/helloai-marketplace`.
+- **Logo.** `Organization.logo` and `Article.publisher.logo` use `/icon.svg` (the favicon mark). Google asks for a crawlable image of at least 112x112; whether it accepts SVG here is what the Rich Results Test will say, and it has **not been run** (no access from the implementing session). If it complains, export a 512x512 PNG of `icon.svg` and change `LOGO_URL` in `lib/structured-data.ts`. `public/helloai.png` is a JPEG with a `.png` name and is unreferenced; do not use it.
+- **Disclosures in `llms.txt`: added (cmc, 2026-09-26).** A `## Disclosures` section carries `site.json → affiliations` verbatim, read from the data so it cannot drift. The listing policy (`site.json → listing_policy`) is **not** included, because only the affiliation text was requested. Note that the affiliation text says "check my work against the published method", which points at a `/methodology` page that does not exist yet.
+- **Not verified:** the Rich Results Test on deployed pages, Search Console or Bing status, and whether any agent or crawler fetches these files (needs the observability lines and log retention).

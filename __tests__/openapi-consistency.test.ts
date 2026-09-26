@@ -54,4 +54,12 @@ describe('OpenAPI spec stays consistent with live data', () => {
     expect(json).toMatch(/leader.*strength.*none|\"leader\",\"strength\",\"none\"/); // the label enum
     expect(json).toMatch(/within rounding \(about 0\.02\)/); // agents will sum the parts
   });
+
+  it('documents /api/status related so a client generated from the spec can find llms.txt', () => {
+    const status = (spec as { components: { schemas: { StatusResponse: { properties: Record<string, { type?: string; items?: { properties?: Record<string, unknown> } }> } } } })
+      .components.schemas.StatusResponse.properties;
+    expect(status.related).toBeDefined();
+    expect(status.related.type).toBe('array');
+    expect(Object.keys(status.related.items?.properties ?? {}).sort()).toEqual(['name', 'note', 'url']);
+  });
 });

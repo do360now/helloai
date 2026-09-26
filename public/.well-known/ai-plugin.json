@@ -13,5 +13,6 @@
   },
   "logo_url": "https://helloai.com/favicon.ico",
   "contact_email": "cm@helloai.com",
-  "legal_info_url": "https://helloai.com"
+  "legal_info_url": "https://helloai.com",
+  "llms_txt_url": "https://helloai.com/llms.txt"
 }
