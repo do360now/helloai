@@ -1152,3 +1152,28 @@ a.nav-brand { text-decoration: none; color: inherit; }
 }
 @media (max-width: 360px) { .hero { padding-inline: 12px; } .social-controls button { padding-inline: 7px; } }
 @media (prefers-reduced-motion: reduce) { .agent-social *, .agent-social .social-agent { animation: none !important; transition: none !important; } }
+
+/* ─── LIVE COUNTER ──────────────────────────────────────── */
+.live-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-family: var(--font-geist-mono), ui-monospace, monospace;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  color: rgba(255,255,255,0.4);
+  white-space: nowrap;
+}
+.live-counter b { color: #00E5A0; font-weight: 700; }
+.live-counter-site { min-width: 190px; justify-content: flex-end; }
+.live-counter-inline { min-width: 0; }
+.live-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #00E5A0;
+  animation: live-pulse 2s ease-in-out infinite;
+}
+@keyframes live-pulse { 50% { opacity: 0.3; } }
+@media (prefers-reduced-motion: reduce) { .live-dot { animation: none; } }
+@media (max-width: 900px) { .live-counter-site { display: none; } }

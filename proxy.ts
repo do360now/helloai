@@ -34,6 +34,13 @@ export function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
+  // Site-internal counter pings from browsers (lib/views-store.ts). They are not agent recon, so they
+  // skip the request log (raw IPs), the anomaly alert, the 100/min API budget and usage.by_path;
+  // the routes cap per-client streams themselves.
+  if (request.nextUrl.pathname === '/api/views' || request.nextUrl.pathname === '/api/views/stream') {
+    return noindex(NextResponse.next());
+  }
+
   const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 'unknown';
   const userAgent = request.headers.get('user-agent') || '';
   const agentId = request.headers.get('x-agent-id');

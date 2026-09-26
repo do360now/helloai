@@ -57,3 +57,9 @@ describe('isAIUserAgent (alert)', () => {
     expect(isAIUserAgent('langchain/0.2')).toBe(true);
   });
 });
+
+describe('headless browsers', () => {
+  it('are not counted as browsers', () => {
+    expect(classifyUserAgent('Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 HeadlessChrome/126.0 Safari/537.36')).toBe('other_bot');
+  });
+});

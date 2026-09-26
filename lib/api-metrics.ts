@@ -55,21 +55,26 @@ function stdoutEnabled(): boolean {
 let warnedNoSalt = false;
 
 /**
- * First 8 hex chars of sha256(dailySalt + ip). Salt rotates every UTC day.
+ * Full sha256(dailySalt + ip), hex. Salt rotates every UTC day.
  * Fails closed: in production with METRICS_SALT unset the hash would be reversible
- * over all of IPv4, so return null (and warn once) instead of logging it.
- * Pseudonymised, not anonymous: whoever holds the salt and the logs can brute-force IPv4.
+ * over all of IPv4, so return null (and warn once) instead of exposing it.
+ * Pseudonymised, not anonymous: whoever holds the salt and the digests can brute-force IPv4.
  */
-export function ipHash(ip: string): string | null {
+export function dailyIpDigest(ip: string): string | null {
   if (process.env.NODE_ENV === 'production' && !process.env.METRICS_SALT) {
     if (!warnedNoSalt) {
       warnedNoSalt = true;
-      console.warn('[api-metrics] METRICS_SALT is not set in production; ip_hash is logged as null');
+      console.warn('[api-metrics] METRICS_SALT is not set in production; ip hashes are null');
     }
     return null;
   }
   const salt = `${process.env.METRICS_SALT ?? 'dev'}${new Date().toISOString().slice(0, 10)}`;
-  return createHash('sha256').update(salt + ip).digest('hex').slice(0, 8);
+  return createHash('sha256').update(salt + ip).digest('hex');
+}
+
+/** First 8 hex chars of dailyIpDigest, for log lines. */
+export function ipHash(ip: string): string | null {
+  return dailyIpDigest(ip)?.slice(0, 8) ?? null;
 }
 
 /**

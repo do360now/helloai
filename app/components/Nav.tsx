@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import LiveCounter from './LiveCounter';
 
 const NAV_LINKS = ['models', 'leaderboard', 'local', 'insights', 'articles'] as const;
 
@@ -30,6 +31,8 @@ export default function Nav({ activeSection = '' }: { activeSection?: string }) 
           </a>
         ))}
       </div>
+
+      <LiveCounter slug="home" variant="site" />
 
       <button
         className="nav-hamburger"

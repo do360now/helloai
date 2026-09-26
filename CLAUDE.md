@@ -92,6 +92,10 @@ All endpoints are public, no auth. Browser CORS restricted to helloai.com origin
 | `GET /api/openapi.json` | — | Full OpenAPI 3.0 spec |
 | `GET /.well-known/ai-plugin.json` | — | Agent discovery manifest |
 
+Site-internal, not part of the agent API: `POST/GET /api/views` and `GET /api/views/stream` back the live viewing/views counters (`lib/views-store.ts`). They are in-process (single instance; counts reset on every deploy or restart, so they are never "all-time"), count one view per salted IP digest per UTC day (browser UAs only), and bypass the `/api` request log, rate limit and `usage.by_path` in `proxy.ts`.
+
+**Post-deploy check for the counters** (`TRUSTED_PROXY_HOPS`, default 1, is unverified on App Service; a wrong value returns the wrong IP, not `unknown`): with a browser User-Agent, (1) `POST /api/views {"slug":"home"}` from machine A: `views` +1; (2) again from A: no change; (3) from a second network (e.g. phone on cellular): +1; (4) from A with a spoofed `X-Forwarded-For: 1.2.3.4`: no change. A single-machine test passes even when the hops are wrong. Fix `TRUSTED_PROXY_HOPS` before announcing the feature; see `docs/review/client-ip-and-rate-limit.md` step 0.
+
 ### /api/recommend examples
 ```
 /api/recommend?task=coding
