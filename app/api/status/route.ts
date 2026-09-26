@@ -34,7 +34,7 @@ export async function GET(req: NextRequest) {
           'and are never written to my logs. I set no cookies and use no third-party analytics. Links from this site to app.helloai.com pass through helloai.com/go/, which counts the click and records no visitor identifier. ' +
           'The site runs on Microsoft Azure, which may keep its own logs, including IP addresses, under its own terms; these terms describe what the application itself logs.',
       },
-      // Where an agent should look next. Same strings as /.well-known/mcp.json and ai-plugin.json.
+      // Where an agent should look next. Same strings as ai-plugin.json and the OpenAPI externalDocs.
       related: [
         { name: 'llms_txt', url: 'https://helloai.com/llms.txt' },
         { name: 'openapi', url: 'https://helloai.com/api/openapi.json' },
