@@ -8,29 +8,30 @@ import { getSiteConfig, getArticles } from '../data';
 import { websiteGraph, articleJsonLd } from '../lib/structured-data';
 
 const read = (p: string) => JSON.parse(fs.readFileSync(path.join(__dirname, '..', p), 'utf8'));
-const mcp = read('public/.well-known/mcp.json');
 const plugin = read('public/.well-known/ai-plugin.json');
 const req = (u: string) => new NextRequest(`http://localhost${u}`);
 
-describe('mcp.json', () => {
-  test('is honest: no server entry while the app has no public MCP discovery URL, and says so', () => {
-    expect(mcp.servers).toBeUndefined();
-    expect(mcp._note).toMatch(/no ratified|tenant|token/i);
+describe('mcp.json is held back (cmc, 2026-09-26)', () => {
+  test('is not published while there is no MCP server to list', () => {
+    // The app's MCP server is per-account behind a token and has no public discovery URL. A file that says
+    // "nothing here" adds nothing, so it stays out until there is a server. Add it, with tests, when there is one.
+    expect(fs.existsSync(path.join(__dirname, '..', 'public/.well-known/mcp.json'))).toBe(false);
   });
 
-  test('points at the HTTP API and llms.txt', () => {
-    expect(mcp.http_api.openapi).toBe('https://helloai.com/api/openapi.json');
-    expect(mcp.http_api.llms_txt).toBe('https://helloai.com/llms.txt');
+  test('nothing points at it', () => {
+    const files = ['public/.well-known/ai-plugin.json', 'app/api/status/route.ts', 'app/api/openapi.json/route.ts', 'lib/llms-txt.ts'];
+    for (const f of files) expect(fs.readFileSync(path.join(__dirname, '..', f), 'utf8')).not.toMatch(/\.well-known\/mcp\.json/);
   });
 });
 
 describe('the same links everywhere', () => {
-  test('/api/status.related, mcp.json and ai-plugin.json agree on the URLs', async () => {
+  test('/api/status.related, the OpenAPI spec and ai-plugin.json agree on the URLs', async () => {
     const status = await (await statusGET(req('/api/status'))).json();
     const byName = Object.fromEntries(status.related.map((r: { name: string; url: string }) => [r.name, r.url]));
-    expect(byName.llms_txt).toBe(mcp.http_api.llms_txt);
-    expect(byName.openapi).toBe(mcp.http_api.openapi);
-    expect(plugin.llms_txt_url).toBe(mcp.http_api.llms_txt);
+    expect(byName.llms_txt).toBe('https://helloai.com/llms.txt');
+    expect(byName.openapi).toBe('https://helloai.com/api/openapi.json');
+    expect(plugin.api.url).toBe(byName.openapi);
+    expect(plugin.llms_txt_url).toBe(byName.llms_txt);
     expect(byName.marketplace).toBe('https://app.helloai.com');
     const marketplace = status.related.find((r: { name: string }) => r.name === 'marketplace');
     expect(marketplace.note).toMatch(/operator's own product|same team/i);

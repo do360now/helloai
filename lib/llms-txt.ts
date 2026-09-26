@@ -7,7 +7,7 @@ const BASE = 'https://helloai.com';
  * Rendered from the data on every call, never a static file, so it cannot drift from the site
  * (docs/review/seo-and-discoverability.md, step 2). A model without an Elo of its own is labelled.
  */
-export function buildLlmsTxt(models: Model[] = getModels()): string {
+export function buildLlmsTxt(models: Model[] = getModels(), affiliations: string | undefined = getSiteConfig().affiliations): string {
   const cfg = getSiteConfig();
   const articles = getArticles();
 
@@ -35,6 +35,7 @@ export function buildLlmsTxt(models: Model[] = getModels()): string {
     '## Notes',
     '- Elo is the LMArena (arena.ai) text-overall board, recorded per model in `elo_source`. A model described as not yet rated, missing or stale has no usable Elo of its own and is not ranked.',
     '',
+    ...(affiliations ? ['## Disclosures', affiliations, ''] : []),
     '## Models tracked',
     ...modelLines,
     '',

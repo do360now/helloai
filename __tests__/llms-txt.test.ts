@@ -74,6 +74,26 @@ describe('llms.txt', () => {
   });
 });
 
+describe('llms.txt disclosures (cmc, 2026-09-26)', () => {
+  test('carries the affiliation statement verbatim from site.json, in a Disclosures section', () => {
+    const affiliations = getSiteConfig().affiliations!;
+    expect(affiliations.length).toBeGreaterThan(40);
+    expect(txt).toContain('## Disclosures');
+    expect(txt).toContain(affiliations);
+    // The section sits before the models and articles, where an agent reads it first.
+    expect(txt.indexOf('## Disclosures')).toBeLessThan(txt.indexOf('## Models tracked'));
+    expect(full).toContain(affiliations);
+  });
+
+  test('is read from the data, so an edit to site.json shows up without touching the code', () => {
+    expect(buildLlmsTxt(undefined, 'A different statement of affiliations.')).toContain('A different statement of affiliations.');
+  });
+
+  test('does not include the listing policy (only the affiliation text was requested)', () => {
+    expect(txt).not.toContain(getSiteConfig().listing_policy!);
+  });
+});
+
 describe('llms.txt states other than "borrowed"', () => {
   const base = getModels().find((m) => m.id === 'fable')!;
   const withSource = (src: Partial<NonNullable<Model['elo_source']>>): Model => ({ ...base, elo_source: { ...base.elo_source!, ...src } });
