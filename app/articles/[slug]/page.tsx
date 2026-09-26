@@ -4,6 +4,7 @@ import { getArticleBySlug, getArticles, formatDate } from '@/data';
 import type { Metadata } from 'next';
 import { articleJsonLd } from '@/lib/structured-data';
 import Nav from '../../components/Nav';
+import LiveCounter from '../../components/LiveCounter';
 
 // Generate static paths for all articles
 export function generateStaticParams() {
@@ -75,6 +76,7 @@ export default async function ArticlePage({
         <span className="article-category">{article.category}</span>
         <span className="article-readtime">{article.readTime}</span>
         <span className="article-date">{formatDate(article.date)}</span>
+        <LiveCounter slug={`article/${slug}`} variant="page" />
       </div>
 
       <h1 className="article-page-title">{article.title}</h1>

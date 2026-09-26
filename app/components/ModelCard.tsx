@@ -3,12 +3,22 @@
 import { useState } from 'react';
 import type { Model } from '@/data/types';
 import { formatUsdPerMillion, formatContextWindow, formatElo } from '@/data';
+import LiveCounter from './LiveCounter';
 
 function hexToRgb(hex: string): string {
   const r = parseInt(hex.slice(1, 3), 16);
   const g = parseInt(hex.slice(3, 5), 16);
   const b = parseInt(hex.slice(5, 7), 16);
   return `${r},${g},${b}`;
+}
+
+// Cards link off-site, so a model's count is its click-throughs, recorded once per IP per day server-side.
+function recordClick(id: string) {
+  try {
+    navigator.sendBeacon('/api/views', new Blob([JSON.stringify({ slug: `model/${id}` })], { type: 'application/json' }));
+  } catch {
+    /* counting must never block the link */
+  }
 }
 
 export default function ModelCard({
@@ -38,6 +48,7 @@ export default function ModelCard({
       rel="noopener noreferrer"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onClick={() => recordClick(model.id)}
       className="model-card"
       style={{
         background: hovered
@@ -82,6 +93,7 @@ export default function ModelCard({
           {elo.config && <span className="model-elo-config"> · {elo.config}</span>}
           {elo.note && <span className={`model-elo-note ${unrated ? 'model-elo-note-unrated' : ''}`}>{elo.note}</span>}
         </span>
+        <LiveCounter slug={`model/${model.id}`} variant="views" noun="clicks" />
         <span className="model-cta" style={{ color: hovered ? model.color : 'rgba(255,255,255,0.3)' }}>
           Try it →
         </span>

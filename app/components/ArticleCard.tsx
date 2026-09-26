@@ -4,6 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import type { Article } from '@/data/types';
 import { formatDate } from '@/data';
+import LiveCounter from './LiveCounter';
 
 export default function ArticleCard({ article, index }: { article: Article; index: number }) {
   const [hovered, setHovered] = useState(false);
@@ -28,7 +29,9 @@ export default function ArticleCard({ article, index }: { article: Article; inde
 
       <h3 className="article-title">{article.title}</h3>
       <p className="article-excerpt">{article.excerpt}</p>
-      <div className="article-date">{formatDate(article.date)}</div>
+      <div className="article-date">
+        {formatDate(article.date)} <LiveCounter slug={`article/${article.slug}`} variant="views" lead="· " />
+      </div>
     </Link>
   );
 }

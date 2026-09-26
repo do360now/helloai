@@ -24,7 +24,7 @@ const AI_CRAWLERS = [
 
 // Link previews and other self-declared bots that are neither search nor AI crawlers.
 // Kept separate so /go/ redirect requests from previews can be filtered out.
-const OTHER_BOTS = [/bot\b/i, /crawler/i, /spider/i, /externalhit/i, /preview/i];
+const OTHER_BOTS = [/headless/i, /bot\b/i, /crawler/i, /spider/i, /externalhit/i, /preview/i];
 
 const DECLARED_AI_CLIENTS = [
   /^(anthropic|openai)\/(js|node|python|go|java|ruby)/i, /langchain/i, /llama-?index/i, /openai[-/ ]?python/i, /anthropic[-/ ]?(sdk|python)/i, /\bmcp\b/i, /ai-agent/i,
