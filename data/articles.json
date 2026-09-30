@@ -1,5 +1,20 @@
 [
   {
+    "slug": "opus-5-5-own-score-takes-the-lead",
+    "title": "Opus 5.5's Own Text Score Takes the Lead",
+    "excerpt": "The September 30 Arena board scores Opus 5.5 as itself, at 1504, and helloai's lead moves with it. Grok 4.7's own score lands lower than the predecessor it replaced.",
+    "date": "2026-09-30",
+    "category": "Analysis",
+    "readTime": "2 min",
+    "content": [
+      "The September 30, 2026 Arena text board is the first snapshot that scores Claude Opus 5.5 as itself. claude-opus-5.5-high is 1504, with an interval of 10 points either side, on 3,932 votes, rank 4. helloai had been printing 1493 on that card. That figure was claude-opus-5-high on the September 13 snapshot, which is Opus 5, not 5.5. The borrowed number is retired. Opus 5.5 is now the highest Elo in the tracked set, still at $4 per million input tokens and $20 per million output.",
+      "Claude Fable 5.1-max sits one step behind at 1501, interval 7, on 11,241 votes. Those intervals overlap, so the three-point gap is not a settled ranking by itself. Muse Spark 1.3-max moved from 1493 to 1495. Gemini 3.1 Pro Preview is still 1487, now on 121,225 votes, and Qwen3.8-Max is still 1481. The large move is Grok. grok-4.7-xhigh is 1442, interval 8, on 5,675 votes. The card had been showing 1456 from grok-4.6-high. On this same board that predecessor is 1453 on 23,012 votes, still above 4.7. A replacement can score lower than the model it replaced, and the directory now shows the newer measurement.",
+      "Code Arena WebDev, also dated September 30, moves the coding lead with the text board. claude-opus-5.5-max is 1818 on 1,976 votes, rank 1. gpt-6-astra-max is 1789 on 5,918 votes. claude-fable-5.1-max is 1751 on 6,137 votes, so Fable no longer leads the models this site tracks there. grok-4.7-xhigh is 1636 on 3,062 votes. Overall Preference and Coding & Engineering both name Opus 5.5, because those labels follow the highest rated model that claims the category.",
+      "Two untracked models clear the text gate and still stay off the six. gpt-6-astra-max is 1476, interval 7, on 8,565 votes. The September 13 snapshot this site recorded had it at 1480, interval 12, on 2,693 votes, so September 30 is a second published point, and both sit inside 25 points of the floor. glm-5.3-max is 1479, interval 6, on 17,268 votes. The set is already full. The written rule would drop Grok 4.7, the lowest model with an Elo of its own, and that drop is the owner's confirmation, not an automatic edit. GLM was held on August 30 rather than pull Grok days after it was admitted.",
+      "Gemini 4 Argon is rank 1 on the same text board, at 1525, interval 9, marked Preliminary, on 4,942 votes, and it does not replace Gemini 3.1 Pro. Google's September 30 post says Argon is rolling out through the Fairwind program to trusted cyber defenders, with a developer API still ahead, at an introductory $2 and $10 per million tokens. One preliminary snapshot and no public API fails admission. GPT-6.1 Sol is on the API at the same $2 and $10 and is third on WebDev at 1759 on 1,264 votes, but the text board does not list it. The next change to the set is a second Argon snapshot developers can call, a text row for Sol, or an explicit decision to drop Grok."
+    ]
+  },
+  {
     "slug": "opus-5-5-cuts-price-grok-4-7-same-rate",
     "title": "Opus 5.5 Cuts the Price. Grok 4.7 Keeps Its Rate",
     "excerpt": "Claude Opus 5.5 drops to $4/$20 while Grok 4.7 keeps $2/$6. Text Arena is still the September 13 snapshot, so both cards keep the prior Elo.",
@@ -132,21 +147,6 @@
       "Arena is the part that keeps 4.6 off helloai's board this week. The text-overall listing for grok-4.6-high sits at 1464 Elo with a plus-or-minus 12 interval and 2,448 votes, marked Preliminary. That is four points below the 1468 we last recorded for Grok 4.5, and it is a fresh debut. Admission requires Elo within 25 points of the tracked floor sustained for two weeks, not a launch-day sample. DeepSeek V4 Pro, which took the slot on August 7, is still the cheapest tracked API at $0.435/$0.87 with 1M context.",
       "helloai is not saying 4.6 is weak. Same-provider upgrades usually replace the prior xAI row automatically; there is no xAI row to replace, because last week's six-model cut went to DeepSeek's price leadership. Re-admitting Grok now would mean dropping someone else — DeepSeek, Gemini 3.1 Pro, or Qwen3.8-Max — without two weeks of arena evidence that 4.6 holds a unique niche at $2/$6. Muse Spark 1.2 still undercuts that rate at $1.25/$4.25.",
       "The first-week 2x included usage in Cursor and Grok Build is the right place to test the agent claims before any directory has to decide. If votes mature and 4.6 stays inside the Elo band while keeping a coding-agent story DeepSeek does not own, the next weekly pass can reopen the human-review question. Until then, /api/recommend keeps DeepSeek as Honest Daily Use and leaves Grok 4.6 as a same-price successor that has not yet earned its row back."
-    ]
-  },
-  {
-    "slug": "qwen-deepseek-gptoss-rebalance-frontier-set",
-    "title": "Qwen3.8-Max and DeepSeek Join; Grok and Kimi Exit",
-    "excerpt": "helloai admits Qwen3.8-Max and DeepSeek V4 Pro, drops Grok 4.5 and Kimi K3, and adds gpt-oss-20b to the open-weight shelf under the six-model caps.",
-    "date": "2026-08-07",
-    "category": "Discovery",
-    "readTime": "2 min",
-    "content": [
-      "helloai just re-cut its six-model frontier board and its open-weight shelf in the same pass. Qwen3.8-Max and DeepSeek V4 Pro enter the tracked API set; Grok 4.5 and Kimi K3 leave to hold the six-model cap. On the open-weight side, OpenAI's gpt-oss-20b replaces Qwen3 8B as the local OpenAI pick after first-party cluster benches and arena votes cleared the admission bar.",
-      "Qwen3.8-Max is Alibaba's 2.4-trillion-parameter MoE flagship, live on QwenCloud at $2 per million input tokens and $6 per million output with a 1M-token context window. Arena text overall lists qwen3.8-max near 1497 Elo — third in the refreshed set behind Claude Fable 5 and Muse Spark 1.2. That re-admits Alibaba after July's Muse swap dropped Qwen3.7-Max; the open-weight Qwen3 dense and MoE cards stay on the local track.",
-      "DeepSeek V4 Pro is the price shock. Official DeepSeek API pricing puts cache-miss input at $0.435 and output at $0.87 per million tokens, with the same 1M context as the rest of the frontier table. Arena deepseek-v4-pro sits around 1457 Elo — low enough that prior weeks rejected it when the set floor was higher, but within the 25-point threshold of today's floor. It becomes helloai's Honest Daily Use leader: the default when token volume dominates and Mythos-class quality is not required.",
-      "The drops are pure set-size math under the six-model rule. Grok 4.5 was the lowest Elo entry at 1468 with Honest Daily Use leadership that DeepSeek now owns on cost; Kimi K3 at 1485 loses the Moonshot slot to free room for Alibaba's higher arena score. Neither lab vanished from the market — only from the curated recommend table. Teams still routing to Grok or Kimi can keep those APIs; /api/recommend will no longer surface them.",
-      "Open-weight admission is separate. gpt-oss-20b is Apache 2.0, ~21B total / ~3.6B active MoE, native MXFP4 around 16 GB, and 1317 Elo on Arena. On our budget two-GPU cluster it measured 53.73 tok/s — the fastest open-weight throughput we track — which is why it replaces Qwen3 8B rather than expanding past six local cards. The result is a frontier set that spans Anthropic, Meta, Alibaba, Google, and DeepSeek, plus an open-weight shelf that finally includes OpenAI weights without pretending a 2.8T Kimi dump fits a single GPU."
     ]
   }
 ]

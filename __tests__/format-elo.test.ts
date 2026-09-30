@@ -48,7 +48,7 @@ describe('boardDateLabel (mixed snapshots must not look newer than they are)', (
 describe('formatElo', () => {
   test('an interval shows as "score ± half-width", never with a tilde or rounding', () => {
     const f = formatElo(base);
-    expect(f.score).toBe('1498 ± 8');
+    expect(f.score).toBe('1501 ± 7');
     expect(f.score).not.toMatch(/~/);
     expect(f.note).toBeNull();
     expect(f.state).toBe('rated');

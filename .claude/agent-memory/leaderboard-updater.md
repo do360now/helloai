@@ -1,6 +1,51 @@
 # leaderboard-updater agent memory
 
-## Last run: 2026-09-23 weekly (Grok) — Opus 5.5 price cut; Grok 4.7 same-rate replace
+## Last run: 2026-09-30 weekly (Grok) — Sep 30 text board; Opus 5.5 and Grok 4.7 get their own Elo
+
+### Applied
+- **Text board moved** from Sep 13 to **Sep 30** (8,602,501 votes, 410 models). Scrapers still skipped (`--skip-fetch`); numbers are hand-set from the arena.ai page with full `elo_source`.
+- **claude**: card Elo 1493 (borrowed `claude-opus-5-high`) → **1504** (`claude-opus-5.5-high` 1504±10 / 3932). `matches_listed_model` true. Now the tracked Elo lead and the Coding / Overall leader.
+- **fable**: 1498±8 / 5783 → **1501±7 / 11241** (`claude-fable-5.1-max`). WebDev 1755 → **1751**, behind Astra **1789** and Opus 5.5-max **1818**.
+- **muse**: 1493±9 / 4723 → **1495±6 / 11698**.
+- **gemini**: Elo stays **1487±3**. Votes 106951 → **121225**. Snapshot date refreshed.
+- **qwen**: Elo stays **1481**. Interval ±6 → **±5**, votes 16670 → **22809**. `qwen3.8-max-0902` is not on this text board.
+- **grok**: card Elo 1456 (borrowed `grok-4.6-high`) → **1442** (`grok-4.7-xhigh` 1442±8 / 5675, rank 88). Predecessor on the same board is **1453±5 / 23012**. WebDev 1632/1425 → **1636/3062**.
+- **Open-weight** (`--set-ow`): gemma 1451→**1453**, qwen27b 1437→**1439**, mistral 1357→**1356**, gptoss20b 1317→**1318**. qwen30ba3b 1327 and qwen14b 1300 unchanged (qwen3-14b still absent).
+- **Catalog** exit 0. **Cluster** exit 0, no drift vs the **2026-07-15** table. **Claims** exit 0; still 15 unverified (ratchet). Did not set `checked_at`.
+
+### Verified model states
+**Frontier (Elo desc, text overall Sep 30, all own scores):**
+- **claude**: Claude Opus 5.5 — $4/$20, 1M, **1504** (claude-opus-5.5-high 1504±10 / 3932). WebDev Sep 30: claude-opus-5.5-max **1818** / 1976, rank 1.
+- **fable**: Claude Fable 5.1 — $10/$50, 1M, **1501** (claude-fable-5.1-max 1501±7 / 11241). WebDev **1751** / 6137, rank 4.
+- **muse**: Muse Spark 1.3 — $1.25/$4.25, 1M, **1495** (muse-spark-1.3-max 1495±6 / 11698).
+- **gemini**: Gemini 3.1 Pro — $2/$12 ≤200k, 1M, **1487** (gemini-3.1-pro-preview 1487±3 / 121225).
+- **qwen**: Qwen3.8-Max — $2/$6, 1M, **1481** (qwen3.8-max 1481±5 / 22809).
+- **grok**: Grok 4.7 — $2/$6, 500K, **1442** (grok-4.7-xhigh 1442±8 / 5675). WebDev **1636** / 3062, rank 15.
+
+**Open-weight:** gemma 1453, qwen27b 1439, mistral 1356, qwen30ba3b 1327, gptoss20b 1318, qwen14b 1300 (unmatched).
+
+### Not admitted
+- **gpt-6-astra**: Sep 30 text **1476±7 / 8565** (rank 30). Prior published snapshot this site recorded: Sep 13 **1480±12 / 2693**. Two consecutive board dates, both inside 25 of the floor. Public API $10/$50, 1.05M. WebDev rank 2 at **1789** / 5918. **NEEDS HUMAN REVIEW.** Cap-6 drop would be grok (lowest own Elo, 1442).
+- **glm-5.3-max**: Sep 30 text **1479±6 / 17268**. Also above the floor. Aug 30 human hold has aged out. Same drop. Do not choose between Astra and GLM.
+- **gemini-4-argon**: announced Sep 30. Text rank 1 **1525±9 Preliminary / 4942**. Fairwind testers only; no public developer API. Introductory price named as $2/$10, then $4/$20. **REJECT** (one snapshot + no public API). Top watch for a same-provider replace of 3.1 Pro.
+- **gpt-6.1-sol**: API today, `gpt-6.1-sol`, $2/$10, cache $0.10. WebDev rank 3 **1759±19 / 1264**. **Not on the text board. REJECT.**
+- Cluster leftovers (Qwen3-8B, Gemma-3-4B, Phi-4-mini, Gemma-4-E4B, Gemma-4-12b) not on the text fetch. llama-3.1-8b-instruct is **1211**, outside 40 of qwen14b 1300. Rejected again. Aug 30 window had closed.
+
+### Needs human review / pending
+- **gpt-6-astra** and **glm-5.3-max**: both clear the text gate. Owner decides whether to drop Grok 4.7, and for which one. Do not auto-drop.
+- **gemini-4-argon**: revisit when a second text snapshot exists AND a public API with a price is live.
+- **gpt-6.1-sol**: revisit when a text slug exists across two snapshots.
+- **qwen3-30b-a3b-instruct-2507** scores **1383** vs the mapped `qwen3-30b-a3b` at **1327**. Not retargeted; identity of the card vs the July 2025 instruct slug is unverified.
+- Arena price column still disagrees with catalogs in places (Gemini 3.1 Pro shown as $1/$6). Catalog guard exit 0; card prices were not taken from that column.
+- Cluster guard still bound to 2026-07-15. Last-integrated bench date remains **2026-07-15**.
+
+### Notes
+- No frontier model is on a borrowed score after this run. The "do not choose among unrated models" clause did not trigger. The cap-6 drop still requires human confirmation because Grok is the lowest own Elo.
+- Opus 5.5 and Fable 5.1 are 3 points apart (1504 vs 1501). Intervals overlap (±10 and ±7).
+- Grok 4.7 long-context surcharge is still $4/$12 at ≥200k. Card uses standard $2/$6.
+- Dated Qwen 0902 snapshot still does not rename the card.
+
+## Previous run: 2026-09-23 weekly (Grok) — Opus 5.5 price cut; Grok 4.7 same-rate replace
 
 ### Applied
 - **claude**: Claude Opus 5 → **Claude Opus 5.5**. $5/$25 → **$4/$20**. Cache reads $0.50 → $0.20. 1M unchanged. API id `claude-opus-5-5`. Tag Coding King → **40% Cheaper**. Arena aliases prepend `claude-opus-5.5-*` and `claude-opus-5-5-*`; Opus 5 slugs stay as fallback. Card Elo stays **1493** (claude-opus-5-high). Text board has no 5.5 slug.

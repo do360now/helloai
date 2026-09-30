@@ -224,7 +224,7 @@ describe('scoreAndRank — unrated models are excluded from ranking and normaliz
   test('2. normalization: with a borrowed model as the highest Elo, the top rated model is still "Highest Elo"', () => {
     const r = scoreAndRank(withElo('claude', 2500), categories, {});
     const fable = r.recommendations.find((x) => x.model.id === 'fable')!;
-    expect(fable.reasons.join(' ')).toMatch(/Highest Elo \(1498\)/);
+    expect(fable.reasons.join(' ')).toMatch(/Highest Elo \(1501\)/);
     expect(r.recommendations.map((x) => x.model.id)).not.toContain('claude');
   });
 
@@ -264,7 +264,7 @@ describe('scoreAndRank — unrated models are excluded from ranking and normaliz
   test('5. an unrated category leader earns nobody the leader bonus, and the response says why', () => {
     const ms = clone().map((m) => (m.id === 'fable' ? { ...m, elo_source: { ...m.elo_source!, status: 'missing' as const } } : m));
     const r = scoreAndRank(ms, categories, { task: 'coding' });
-    expect(r.matchedCategory?.leader).toBe('Claude Fable 5.1');
+    expect(r.matchedCategory?.leader).toBe('Claude Opus 5.5');
     expect(r.recommendations.some((x) => x.reasons.join(' ').includes("Curator's pick"))).toBe(false);
     expect(r.notes.join(' ')).toMatch(/leader .*not yet rated|unrated/i);
   });

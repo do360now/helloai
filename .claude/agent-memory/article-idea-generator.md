@@ -1,9 +1,27 @@
 # Article Idea Generator — Cross-Session Memory
 
 ## Last Run
-- Date: 2026-09-23 (weekly update — rank-1 brief written this cycle)
+- Date: 2026-09-30 (weekly update — rank-1 brief written this cycle)
 
-## News landscape this week (2026-09-23)
+## News landscape this week (2026-09-30)
+- Arena text board is **Sep 30**. Opus 5.5 has its own score: claude-opus-5.5-high **1504±10 / 3932**. It is the tracked Elo lead. Fable 5.1-max is **1501±7 / 11241**. WebDev: opus-5.5-max **1818** rank 1, Astra **1789**, Fable **1751**.
+- Grok 4.7 has its own text score: grok-4.7-xhigh **1442±8 / 5675**, below grok-4.6-high **1453** on the same board. WebDev **1636 / 3062**.
+- Rank-1 article written: `opus-5-5-own-score-takes-the-lead`. Do not rewrite the "borrowed score retired" piece next week.
+- Astra Sep 30 text **1476±7 / 8565**, second snapshot after Sep 13 **1480**. Clears the gate. Not admitted: cap-6 drop would be Grok, and that is a human call. GLM-5.3-max **1479±6 / 17268** is the other candidate for the same slot.
+- Gemini 4 Argon announced Sep 30, text rank 1 **1525±9 Preliminary / 4942**, Fairwind only, no public API. GPT-6.1 Sol API $2/$10, WebDev **1759 / 1264**, not on the text board.
+
+## Brief Queue (reconciled 2026-09-30) — rank 1 written
+1. **opus-5-5-own-score-takes-the-lead** (Analysis) — WRITTEN this cycle.
+2. **gpt-6-astra-second-snapshot-human-drop** — held. Same decision as GLM. Do not write an admit piece until the owner drops someone.
+3. **gemini-4-argon-fairwind-not-api** — write when a public API and a second text snapshot exist.
+4. **gpt-6-1-sol-no-text-row** — write when a text slug exists. WebDev-only is not the gate.
+5. **grok-4-7-own-score-below-predecessor** — folded into #1. Do not split it out.
+
+**CARRY-FORWARD / STILL HELD:**
+- **gemini-3.5-pro** — still not the catalog flagship. Argon is the new Google watch, and it is not GA.
+- **best-model-for-reasoning-right-now** — HOLD. Gemini 3.1 Pro remains the reasoning row.
+
+## Previous landscape (2026-09-23)
 - **Claude Opus 5.5** shipped Sep 22 at **$4/$20**, cache reads **$0.20**, 1M context. API id `claude-opus-5-5`. Anthropic: Fable 5.1-level on most work, ~40% less to run than Opus 5, output >30% faster. Not on the Sep 13 text board or the Sep 22 WebDev board. Rank-1 article written: same-row replace, card Elo stays the Opus 5 slug.
 - **Grok 4.7** shipped Sep 21. Docs recommend it for chat and code. Same **$2/$6** and 500K window ($4/$12 at ≥200k). WebDev Sep 22: grok-4.7-xhigh **1632** +17/-17 / **1425** votes, rank 10. Text board has no 4.7 slug. Card Elo stays grok-4.6-high **1456**.
 - Text overall is still **Sep 13**. Astra still **1480±12 / 2693**. Calendar age is day 20; no second text point, so the two-week sustainment bar is still unmet. WebDev Sep 22: Astra **1793** / 4230 rank 1; Fable 5.1-max **1755** / 4887.
