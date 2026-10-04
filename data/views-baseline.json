@@ -6,11 +6,14 @@
     "article/gpt-6-astra-text-elo-lands-two-week-clock": 6,
     "article/grok-4-6-ships-after-helloai-drop": 5,
     "article/grok-bot-cloud-teammate-local-cli": 6,
+    "article/head-to-head-agent-cup-peer-tests-beat-fixed-suites": 3,
     "article/opus-5-5-cuts-price-grok-4-7-same-rate": 4,
     "articles": 21,
     "home": 190,
+    "model/claude": 1,
     "model/fable": 6,
     "model/gemini": 2,
+    "model/grok": 1,
     "model/muse": 4
   }
 }
