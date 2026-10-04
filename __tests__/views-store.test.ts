@@ -1,4 +1,8 @@
-import { getStats, isKnownSlug, recordView, resetViewsForTests, subscribe, broadcast, MAX_PER_OWNER } from '@/lib/views-store';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'fs';
+import { tmpdir } from 'os';
+import { join } from 'path';
+import { flushViewsForTests, getStats, isKnownSlug, recordView, reloadViewsForTests, resetViewsForTests, subscribe, broadcast, viewsCarried, viewsSince, MAX_PER_OWNER } from '@/lib/views-store';
+import { viewsSinceTitle } from '@/lib/views-since';
 import { getArticles, getModels } from '@/data';
 
 const BROWSER = 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 Chrome/126 Safari/537.36';
@@ -52,6 +56,75 @@ describe('slugs', () => {
     expect(isKnownSlug(`model/${getModels()[0].id}`)).toBe(true);
     expect(isKnownSlug('article/does-not-exist')).toBe(false);
     expect(isKnownSlug('__proto__')).toBe(false);
+  });
+});
+
+describe('carry forward', () => {
+  const env = process.env as Record<string, string | undefined>;
+  let dir = '';
+  const baseline = () => join(dir, 'baseline.json');
+  const state = () => join(dir, 'state.json');
+
+  beforeEach(() => {
+    dir = mkdtempSync(join(tmpdir(), 'helloai-views-'));
+    env.VIEWS_BASELINE_FILE = baseline();
+    env.VIEWS_STATE_PATH = state();
+    delete env.VIEWS_BASELINE;
+  });
+  afterEach(() => {
+    delete env.VIEWS_BASELINE_FILE;
+    delete env.VIEWS_STATE_PATH;
+    delete env.VIEWS_BASELINE;
+    rmSync(dir, { recursive: true, force: true });
+    resetViewsForTests();
+  });
+
+  test('starts from the saved totals, adds a new view, and does not store the IP', () => {
+    writeFileSync(baseline(), JSON.stringify({
+      since: '2026-09-01T00:00:00.000Z',
+      total: 10,
+      views: { home: 7, 'article/kept': 4 },
+    }));
+    reloadViewsForTests();
+    expect(viewsCarried()).toBe(true);
+    expect(viewsSince()).toBe('2026-09-01T00:00:00.000Z');
+    expect(getStats('home')).toMatchObject({ views: 7, total: 10 });
+    expect(getStats('article/kept').views).toBe(4);
+    expect(recordView('home', '203.0.113.9', BROWSER)).toBe('counted');
+    flushViewsForTests();
+    const saved = JSON.parse(readFileSync(state(), 'utf8')) as { since: string; total: number; views: Record<string, number>; seen?: unknown };
+    expect(saved).toMatchObject({ since: '2026-09-01T00:00:00.000Z', total: 11, views: { home: 8, 'article/kept': 4 } });
+    expect(saved.seen).toBeUndefined();
+    expect(JSON.stringify(saved)).not.toContain('203.0.113.9');
+    reloadViewsForTests();
+    expect(getStats('home')).toMatchObject({ views: 8, total: 11 });
+    // The digest was not saved, so this visitor can count once more after a reload.
+    expect(recordView('home', '203.0.113.9', BROWSER)).toBe('counted');
+    expect(getStats('home').views).toBe(9);
+  });
+
+  test('keeps the higher snapshot and ignores a lower or corrupt file', () => {
+    writeFileSync(baseline(), JSON.stringify({ since: '2026-09-01T00:00:00.000Z', total: 10, views: { home: 7 } }));
+    writeFileSync(state(), '{"since":"2026-10-01T00:00:00.000Z","total":3,"views":{"home":1,"__proto__":99,"nope":5}}');
+    reloadViewsForTests();
+    expect(getStats('home')).toMatchObject({ views: 7, total: 10 });
+    expect(viewsSince()).toBe('2026-09-01T00:00:00.000Z');
+
+    writeFileSync(baseline(), '{');
+    writeFileSync(state(), JSON.stringify({ since: '1970-01-01T00:00:00.000Z', total: 0, views: {} }));
+    env.VIEWS_BASELINE = JSON.stringify({ since: '2026-09-26T21:04:20.986Z', total: 230, views: { home: 190 } });
+    reloadViewsForTests();
+    expect(viewsCarried()).toBe(true);
+    expect(viewsSince()).toBe('2026-09-26T21:04:20.986Z');
+    expect(getStats('home')).toMatchObject({ views: 190, total: 230 });
+  });
+});
+
+describe('views since title', () => {
+  test('names the carry when totals were loaded', () => {
+    const when = new Date('2026-09-26T21:04:20.986Z').toUTCString();
+    expect(viewsSinceTitle('2026-09-26T21:04:20.986Z', true)).toBe(`Counted since ${when}. Totals are kept when the site is redeployed`);
+    expect(viewsSinceTitle('2026-09-26T21:04:20.986Z', false)).toBe(`Counted since ${when}; resets when the site restarts`);
   });
 });
 

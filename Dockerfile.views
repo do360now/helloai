@@ -1,0 +1,6 @@
+# Layer the view-count snapshot onto an image that is already built.
+# The long Next build stays before the snapshot, so the totals are as
+# close to the push as a file in the image can be.
+ARG BASE=do360now/helloai-web:latest
+FROM ${BASE}
+COPY --chown=nextjs:nodejs data/views-baseline.json /app/views-baseline.json

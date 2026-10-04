@@ -205,6 +205,9 @@ fi
 step "Docker image $AFTER"
 run "make build_helloai_image"
 
+step "Stamp live view counts onto the image"
+run "make stamp_views"
+
 step "Push do360now/helloai-web:$AFTER and :latest"
 run "make push_helloai_image"
 
@@ -212,6 +215,8 @@ run "make push_helloai_image"
 # az_deploy also runs `az webapp log tail` (blocks until Ctrl+C).
 # Roll out with set-tag + restart only.
 if (( ! SKIP_AZURE )); then
+  step "Azure persistent storage for view counts"
+  run "make ensure_views_volume"
   step "Azure set tag + restart"
   run "make az_set_tag"
   run "make az_restart"

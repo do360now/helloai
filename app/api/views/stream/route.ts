@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { dailyIpDigest } from '@/lib/api-metrics';
 import { getClientIp } from '@/lib/client-ip';
 import { classifyUserAgent } from '@/lib/ua-class';
-import { getStats, isKnownSlug, subscribe, viewsSince } from '@/lib/views-store';
+import { getStats, isKnownSlug, subscribe, viewsCarried, viewsSince } from '@/lib/views-store';
 
 export const dynamic = 'force-dynamic';
 
@@ -39,7 +39,7 @@ export async function GET(req: NextRequest) {
     slug,
     presence,
     owner,
-    send: (stats) => write(`event: stats\ndata: ${JSON.stringify({ ...stats, since: viewsSince() })}\n\n`),
+    send: (stats) => write(`event: stats\ndata: ${JSON.stringify({ ...stats, since: viewsSince(), carried: viewsCarried() })}\n\n`),
   });
   if (!unsubscribe) return NextResponse.json({ error: 'too many streams' }, { status: 503, headers: { 'Retry-After': '30' } });
 
@@ -72,7 +72,7 @@ export async function GET(req: NextRequest) {
       lifetime = setTimeout(cleanup, MAX_LIFETIME_MS);
       req.signal.addEventListener('abort', cleanup);
       write('retry: 1000\n\n');
-      write(`event: stats\ndata: ${JSON.stringify({ ...getStats(slug), since: viewsSince() })}\n\n`);
+      write(`event: stats\ndata: ${JSON.stringify({ ...getStats(slug), since: viewsSince(), carried: viewsCarried() })}\n\n`);
     },
     cancel: cleanup,
   });

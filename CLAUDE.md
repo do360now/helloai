@@ -32,8 +32,9 @@ A Next.js 16 site for "Hello, AI" — an unbiased, curated directory comparing f
 | `make bump_version` | Bump patch version in Makefile (**always run SEPARATELY** before any build that consumes VERSION) |
 | `make build_helloai_app` | Production Next.js build (injects NEXT_PUBLIC_APP_VERSION) |
 | `make build_helloai_image` | Build Docker image (passes --build-arg APP_VERSION; tags :VERSION and :latest) |
+| `make stamp_views` | Read live view totals and layer them onto the image just built (before push) |
 | `make push_helloai_image` | Push image to Docker Hub |
-| `make az_deploy` | Update Azure container tag and restart |
+| `make az_deploy` | Enable persistent `/home` if needed, then update Azure container tag and restart |
 | `make deploy` | Full pipeline (see weekly_update + bump + build/push/az) |
 | `make weekly_update` | Run deterministic leaderboard/Elo refresh only (article generation handled by `/weekly-update` skill / Grok + article-writer) |
 
@@ -92,9 +93,9 @@ All endpoints are public, no auth. Browser CORS restricted to helloai.com origin
 | `GET /api/openapi.json` | — | Full OpenAPI 3.0 spec |
 | `GET /.well-known/ai-plugin.json` | — | Agent discovery manifest |
 
-Site-internal, not part of the agent API: `POST/GET /api/views` and `GET /api/views/stream` back the live viewing/views counters (`lib/views-store.ts`). They are in-process (single instance; counts reset on every deploy or restart, so they are never "all-time"), count one view per salted IP digest per UTC day (browser UAs only), and bypass the `/api` request log, rate limit and `usage.by_path` in `proxy.ts`.
+Site-internal, not part of the agent API: `POST/GET /api/views` and `GET /api/views/stream` back the live viewing/views counters (`lib/views-store.ts`). They run in one process and count one view per salted IP digest per UTC day (browser UAs only). `make stamp_views` (`scripts/snapshot_views.py`) records the aggregate totals into `data/views-baseline.json` and layers that file into the image before push; the new process adds new views on top of the higher of that snapshot and `VIEWS_STATE_PATH` (`/home/helloai/views.json` in the image). The digests themselves are not written. Totals survive a restart between deploys only when App Service persistent `/home` is on (`make ensure_views_volume`, `WEBSITES_ENABLE_APP_SERVICE_STORAGE=true`). The routes bypass the `/api` request log, rate limit and `usage.by_path` in `proxy.ts`.
 
-**Post-deploy check for the counters** (`TRUSTED_PROXY_HOPS`, default 1, is unverified on App Service; a wrong value returns the wrong IP, not `unknown`): with a browser User-Agent, (1) `POST /api/views {"slug":"home"}` from machine A: `views` +1; (2) again from A: no change; (3) from a second network (e.g. phone on cellular): +1; (4) from A with a spoofed `X-Forwarded-For: 1.2.3.4`: no change. A single-machine test passes even when the hops are wrong. Fix `TRUSTED_PROXY_HOPS` before announcing the feature; see `docs/review/client-ip-and-rate-limit.md` step 0.
+**Post-deploy check for the counters** (`TRUSTED_PROXY_HOPS`, default 1, is unverified on App Service; a wrong value returns the wrong IP, not `unknown`): with a browser User-Agent, (1) `POST /api/views {"slug":"home"}` from machine A: `views` +1; (2) again from A: no change; (3) from a second network (e.g. phone on cellular): +1; (4) from A with a spoofed `X-Forwarded-For: 1.2.3.4`: no change. A single-machine test passes even when the hops are wrong. Fix `TRUSTED_PROXY_HOPS` before announcing the feature; see `docs/review/client-ip-and-rate-limit.md` step 0. After the new version is live, `GET /api/views?slug=home` `total` should be at least the total `stamp_views` printed, not zero.
 
 ### /api/recommend examples
 ```

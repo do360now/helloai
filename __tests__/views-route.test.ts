@@ -24,7 +24,9 @@ test('POST rejects unknown slugs and bad bodies', async () => {
 test('GET by slug and by batch', async () => {
   await post({ slug: 'home' });
   const one = await GET(new NextRequest('http://localhost/api/views?slug=home'));
-  expect((await one.json()).views).toBe(1);
+  const body = await one.json();
+  expect(body.views).toBe(1);
+  expect(body.carried).toBe(false);
   const many = await GET(new NextRequest('http://localhost/api/views?slugs=home,bogus'));
   expect((await many.json()).stats).toEqual({ home: 1 });
   expect((await GET(new NextRequest('http://localhost/api/views?slug=bogus'))).status).toBe(404);

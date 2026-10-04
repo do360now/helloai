@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import { viewsSinceTitle } from '@/lib/views-since';
 
 interface Stats {
   views: number;
@@ -47,7 +48,7 @@ function fetchViews(slug: string): Promise<number | null> {
 
 // One stream per tab, opened by the header counter. The article page reads the same events
 // (they carry per-slug views and viewing) instead of opening a second connection.
-let siteStats: (Stats & { slug: string; since?: string }) | null = null;
+let siteStats: (Stats & { slug: string; since?: string; carried?: boolean }) | null = null;
 const siteListeners = new Set<() => void>();
 function setSiteStats(next: typeof siteStats) {
   siteStats = next;
@@ -159,7 +160,7 @@ export default function LiveCounter({
   const live = variant === 'site' ? site : site?.slug === slug ? site : null;
   const viewing = variant === 'site' ? live?.viewing_total : live?.viewing;
   const views = variant === 'site' ? live?.total : live?.views;
-  const since = live?.since ? `Counted since ${new Date(live.since).toUTCString()}; resets when the site restarts` : undefined;
+  const since = live?.since ? viewsSinceTitle(live.since, live.carried === true) : undefined;
   return (
     <span
       className={`live-counter live-counter-${variant}`}

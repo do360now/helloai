@@ -1,0 +1,16 @@
+{
+  "since": "2026-09-26T21:04:20.986Z",
+  "total": 230,
+  "views": {
+    "article/gpt-6-astra-takes-webdev-elo-gate-holds": 3,
+    "article/gpt-6-astra-text-elo-lands-two-week-clock": 6,
+    "article/grok-4-6-ships-after-helloai-drop": 5,
+    "article/grok-bot-cloud-teammate-local-cli": 6,
+    "article/opus-5-5-cuts-price-grok-4-7-same-rate": 4,
+    "articles": 21,
+    "home": 190,
+    "model/fable": 6,
+    "model/gemini": 2,
+    "model/muse": 4
+  }
+}

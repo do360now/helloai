@@ -30,6 +30,19 @@ build_helloai_app:
 build_helloai_image:
 	docker build --network=host --build-arg APP_VERSION=$(VERSION) -t $(DOCKER_IMAGE):$(VERSION) -t $(DOCKER_IMAGE):latest .
 
+# Read the live counters and layer them onto the image just built.
+# Run after build_helloai_image and before push. A failed read leaves
+# data/views-baseline.json as it was and stops the deploy.
+stamp_views:
+	python3 scripts/snapshot_views.py
+	docker build -f Dockerfile.views --build-arg BASE=$(DOCKER_IMAGE):$(VERSION) -t $(DOCKER_IMAGE):$(VERSION) -t $(DOCKER_IMAGE):latest .
+
+# Persistent /home so totals written between deploys survive a restart.
+# No-op when the setting is already on. The first time, Azure restarts
+# the container that is live now; run this before az_set_tag.
+ensure_views_volume:
+	AZURE_APP='$(AZURE_APP)' AZURE_RG='$(AZURE_RG)' ./scripts/ensure_views_volume.sh
+
 # ─── Push ─────────────────────────────────────────────────
 push_helloai_image:
 	docker push $(DOCKER_IMAGE):$(VERSION)
@@ -56,7 +69,10 @@ az_logs:
 		--name $(AZURE_APP) \
 		--resource-group $(AZURE_RG)
 
-az_deploy: az_set_tag az_restart
+az_deploy:
+	$(MAKE) ensure_views_volume
+	$(MAKE) az_set_tag
+	$(MAKE) az_restart
 	@echo "✅ Azure updated to $(DOCKER_IMAGE):$(VERSION)"
 	@echo "   Tailing logs (Ctrl+C to stop)..."
 	az webapp log tail --name $(AZURE_APP) --resource-group $(AZURE_RG)
@@ -66,7 +82,11 @@ deploy:
 	./verify-all-agents.sh
 	$(MAKE) weekly_update
 	$(MAKE) bump_version
-	$(MAKE) build_helloai_app build_helloai_image push_helloai_image az_deploy
+	$(MAKE) build_helloai_app
+	$(MAKE) build_helloai_image
+	$(MAKE) stamp_views
+	$(MAKE) push_helloai_image
+	$(MAKE) az_deploy
 
 # ─── Open AI Stacks (Ollama / Fireconnect) ─────────────────
 # Launch open-weight agent stacks for real-world testing.
