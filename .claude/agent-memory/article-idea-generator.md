@@ -1,6 +1,26 @@
 # Article Idea Generator — Cross-Session Memory
 
 ## Last Run
+- Date: 2026-10-04 (weekly update — rank-1 brief written this cycle)
+
+## News landscape this week (2026-10-04)
+- Arena text board is **Oct 2** (8,626,731 votes). Tracked moves are small: Muse 1495→**1494**, Qwen 1481→**1482**. Opus 5.5 stays **1504±9 / 4552**. Grok 4.7 stays **1442±8 / 6405**.
+- First-party event: the 2026-10-04 worktree cup. Opus 5.5 6.5, Grok 4.7 6, GPT-6 Astra 5.5. Fixed hidden suites tied rounds 2 and 3. Rank-1 article written from the supplied brief. Source pack is `docs/briefs/worktree-cup-2026-10-04/`.
+- Astra Oct 2 text **1477±7 / 9156**, a third point after Sep 13 and Sep 30. Cap stays six (owner, 2026-10-01). Do not write another admission piece unless the owner drops someone.
+- Gemini 4 Argon still Preliminary **1525±9 / 4932**, not the catalog API. GPT-6.1 Sol has a first text row: gpt-6.1-sol-max **1483±11 / 3071**.
+
+## Brief Queue (reconciled 2026-10-04) — rank 1 written
+1. **head-to-head-agent-cup-peer-tests-beat-fixed-suites** (Discovery) — WRITTEN this cycle from `docs/briefs/worktree-cup-2026-10-04.json`. Disclose that Opus compiled the pack and Grok wrote the article.
+2. **gpt-6-astra-third-snapshot-cap-holds** — held. Repeats Sep 18 and Sep 30. Owner hold stands.
+3. **oct-2-board-one-point-drift** — not an article. Muse and Qwen moved one point. Folded into the data update.
+4. **gemini-4-argon-second-snapshot-still-preliminary** — write when the flag drops and a public API exists.
+5. **gpt-6-1-sol-first-text-row** — write when a second text snapshot exists. 3,071 votes and ±11 is a debut sample.
+
+**CARRY-FORWARD / STILL HELD:**
+- **gemini-3.5-pro** — still not the catalog flagship. Argon is the Google watch, and it is not GA.
+- **best-model-for-reasoning-right-now** — HOLD. Gemini 3.1 Pro remains the reasoning row.
+
+## Previous run
 - Date: 2026-09-30 (weekly update — rank-1 brief written this cycle)
 
 ## News landscape this week (2026-09-30)

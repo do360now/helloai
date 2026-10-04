@@ -1,0 +1,12 @@
+--- setter-private/ref/semver_as_hashed.py.bak	2026-10-04 15:12:09.094002750 +0200
++++ setter-private/ref/semver.py	2026-10-04 15:12:09.105124746 +0200
+@@ -1,5 +1,9 @@
+ """Semantic Versioning 2.0.0 precedence helpers (reference)."""
+ import re
++import sys
++
++if hasattr(sys, "set_int_max_str_digits"):
++    sys.set_int_max_str_digits(0)  # PACKET: no length limit on integers
+ 
+ _NUM = r"(?:0|[1-9][0-9]*)"
+ _PRE_ID = r"(?:0|[1-9][0-9]*|[0-9]*[a-zA-Z-][0-9a-zA-Z-]*)"

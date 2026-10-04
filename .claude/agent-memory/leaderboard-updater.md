@@ -1,6 +1,50 @@
 # leaderboard-updater agent memory
 
-## Last run: 2026-09-30 weekly (Grok) — Sep 30 text board; Opus 5.5 and Grok 4.7 get their own Elo
+## Last run: 2026-10-04 weekly (Grok) — Oct 2 text board; cap stays six
+
+### Applied
+- **Text board moved** from Sep 30 to **Oct 2** (8,626,731 votes, 413 models). Scrapers still skipped (stale). Numbers are hand-set from the arena.ai text page with full `elo_source`. `checked_date` is 2026-10-04. `snapshot_date` is 2026-10-02.
+- **claude**: Elo stays **1504**. Interval ±10 → **±9**, votes 3932 → **4552** (`claude-opus-5.5-high`).
+- **fable**: Elo stays **1501**. Interval ±7 → **±6**, votes 11241 → **11800** (`claude-fable-5.1-max`).
+- **muse**: 1495±6 / 11698 → **1494±6 / 12343** (`muse-spark-1.3-max`).
+- **gemini**: Elo stays **1487±3**. Votes 121225 → **121806**.
+- **qwen**: 1481±5 / 22809 → **1482±5 / 23353** (`qwen3.8-max`).
+- **grok**: Elo stays **1442±8**. Votes 5675 → **6405**. Desc vote count updated. WebDev 1636 / 3062 was not re-checked.
+- **Open-weight**: qwen27b 1439 → **1438** (`qwen3.8-27b` 1438±5 / 18462). qwen30ba3b 1327 → **1326** (`qwen3-30b-a3b` 1326±5 / 26037). gemma 1453, mistral 1356, gptoss20b 1318 unchanged. qwen14b (`qwen3-14b`) still absent.
+- **Catalog** exit 0. **Cluster** exit 0, no drift vs the **2026-07-15** table. **Claims** exit 0 before the prose vote-count edit; claim text for Grok's vote count was updated in the same change and left unverified. Did not set `checked_at`.
+- **Overall insight** date September 30 → October 2. Leader unchanged (Opus 5.5, 1504). Coding insight WebDev numbers were not refreshed.
+
+### Verified model states
+**Frontier (Elo desc, text overall Oct 2, all own scores):**
+- **claude**: Claude Opus 5.5 — $4/$20, 1M, **1504** (claude-opus-5.5-high 1504±9 / 4552).
+- **fable**: Claude Fable 5.1 — $10/$50, 1M, **1501** (claude-fable-5.1-max 1501±6 / 11800).
+- **muse**: Muse Spark 1.3 — $1.25/$4.25, 1M, **1494** (muse-spark-1.3-max 1494±6 / 12343).
+- **gemini**: Gemini 3.1 Pro — $2/$12 ≤200k, 1M, **1487** (gemini-3.1-pro-preview 1487±3 / 121806).
+- **qwen**: Qwen3.8-Max — $2/$6, 1M, **1482** (qwen3.8-max 1482±5 / 23353).
+- **grok**: Grok 4.7 — $2/$6, 500K, **1442** (grok-4.7-xhigh 1442±8 / 6405). Predecessor on the same board: grok-4.6-high **1454±5 / 23680**.
+
+**Open-weight:** gemma 1453, qwen27b 1438, mistral 1356, qwen30ba3b 1326, gptoss20b 1318, qwen14b 1300 (unmatched).
+
+### Not admitted
+- **gpt-6-astra**: Oct 2 text **1477±7 / 9156** (rank 29). Prior points this site recorded: Sep 30 **1476±7 / 8565**, Sep 13 **1480±12 / 2693**. Still clears the text gate. **Not admitted.** Owner on 2026-10-01 kept the cap at six and said not to admit Astra or GLM-5.3-max.
+- **glm-5.3-max**: Oct 2 text **1478±6 / 17857**. Same hold.
+- **gemini-4-argon**: Oct 2 text rank 1 **1525±9 Preliminary / 4932**. Second snapshot after Sep 30, still Preliminary. Catalog guard still tracks Gemini 3.1 Pro. **REJECT** (no public API as the recommended model).
+- **gpt-6.1-sol**: now on the text board as gpt-6.1-sol-max **1483±11 / 3071**. First snapshot, thin sample. **REJECT** (two-snapshot bar). API was already $2/$10.
+- Cluster leftovers unchanged. Last-integrated bench date remains **2026-07-15**.
+
+### Needs human review / pending
+- **gpt-6-astra** and **glm-5.3-max**: both still clear the text gate. The 2026-10-01 decision stands: do not drop Grok 4.7 for either unless the owner asks again.
+- **gemini-4-argon**: revisit when the Preliminary flag is gone and a public API is the catalog model.
+- **gpt-6.1-sol**: revisit on a second text snapshot with a thicker sample.
+- Arena price column still disagrees with catalogs (Gemini 3.1 Pro shown as $1/$6). Card prices were not taken from that column.
+- Code Arena WebDev figures in desc and the Coding insight are still the Sep 30 numbers.
+
+### Notes
+- No frontier model is on a borrowed score. Cap stays at six.
+- Opus 5.5 and Fable 5.1 are 3 points apart (1504 vs 1501). Intervals overlap (±9 and ±6).
+- Article this cycle is the 2026-10-04 worktree cup, not an admission piece.
+
+## Previous run: 2026-09-30 weekly (Grok) — Sep 30 text board; Opus 5.5 and Grok 4.7 get their own Elo
 
 ### Applied
 - **Text board moved** from Sep 13 to **Sep 30** (8,602,501 votes, 410 models). Scrapers still skipped (`--skip-fetch`); numbers are hand-set from the arena.ai page with full `elo_source`.

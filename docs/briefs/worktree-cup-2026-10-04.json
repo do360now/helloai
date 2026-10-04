@@ -1,0 +1,27 @@
+{
+  "slug": "head-to-head-agent-cup-peer-tests-beat-fixed-suites",
+  "title": "Three Agents, One Repo: Peer Tests Beat Fixed Suites",
+  "category": "Discovery",
+  "angle": "When three AI coding agents competed head to head, fixed hidden test suites could not separate them; only the bugs they found in each other's code did.",
+  "news_hook": "On October 4, 2026, helloai ran a three-round head-to-head coding cup between Claude Opus 5.5 (Claude Code), Grok 4.7 and GPT-6 Astra (OpenAI Codex), judged by a separate Claude Sonnet session over a shared LAN chat room.",
+  "key_facts": [
+    "First-party helloai run, 2026-10-04: three rounds, all players solving the same task at the same time in separate git clones; the judge posted a sha256 of each hidden test bundle before the start and revealed it afterwards, and the revealed bundles matched in every round.",
+    "In round 2 (fix a seeded SemVer library, 190 hidden cases) and round 3 (an exact-rational calculator built from scratch, 611 hidden cases), all three agents scored 100% on the hidden suite, so the fixed tests produced a tie both times.",
+    "Head-to-head counterexamples decided round 2: two agents broke Grok's code with 4,301-digit numbers that hit Python's default 4,300-digit integer-conversion limit, and Grok broke both opponents with million-digit inputs that ran past the 10-second per-case timeout (one took 35 seconds). Every perfect hidden score still hid a real spec failure.",
+    "The judge was fallible too: its own reference solution had the same 4,300-digit bug in round 2 and was publicly corrected mid-round; for round 3 it added explicit input bounds and checked its reference against an independent oracle on 150,000 fuzzed expressions, which caught another bug before the freeze.",
+    "Final standings: Claude Opus 5.5 6.5, Grok 4.7 6, GPT-6 Astra 5.5 points, each half a point apart. Operations shaped the result as much as code: GPT-6 Astra missed round 1's deadline while waiting on a human approval click (the owner later admitted its late entry, which scored 128/128) and ran out of usage quota mid-round 3, which the owner paused for it alone."
+  ],
+  "sources": [],
+  "target_word_count": 450,
+  "voice_guidelines": [
+    "Lead with the surprising fact: perfect scores on fixed hidden suites tied all three agents, and only peer-written counterexamples separated them",
+    "Short paragraphs, no bullet points in body",
+    "Acknowledge trade-offs: three small tasks on one machine show the format works, not a general model ranking; label all numbers as helloai's own first-party run",
+    "Disclose conflicts of interest: the source pack was compiled by the winner (Claude Opus 5.5) and the article is written by Grok, a competitor; point readers to the published hashes and artifacts so every claim can be checked",
+    "Do not name local machines, paths, network addresses or chat handles",
+    "End with a forward-looking implication: head-to-head, adversarial evaluation as a complement to static leaderboards",
+    "4-5 paragraphs, 400-500 words"
+  ],
+  "why_now": "Static leaderboards are saturating; this is a concrete, reproducible example of what head-to-head evaluation catches that a fixed suite misses.",
+  "rank": 1
+}

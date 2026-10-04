@@ -30,7 +30,7 @@
     "tag": "Coding Champion",
     "desc": "Alibaba's Qwen3.8 generation dense flagship, replacing the Qwen3 32B card at a smaller footprint: 27B parameters, 262K native context, and hybrid tool-use. Fits a single RTX 4090 at Q4 (~15.3 GiB weights); community-reported 65 tok/s decode. Apache 2.0.",
     "color": "#5B4AE8",
-    "elo": 1439,
+    "elo": 1438,
     "context_window": 262144,
     "strengths": [
       "Coding & Engineering",
@@ -82,7 +82,7 @@
     "tag": "MoE Champion",
     "desc": "A 30B mixture-of-experts with only ~3B parameters active per token. We measured 44.7 tok/s on a two-GPU budget cluster — faster than the dense 8B while packing 4x the capacity. Apache 2.0.",
     "color": "#8B5CF6",
-    "elo": 1327,
+    "elo": 1326,
     "context_window": 128000,
     "strengths": [
       "Coding & Engineering"

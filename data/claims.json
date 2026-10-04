@@ -130,20 +130,20 @@
     "as_of": null,
     "checked_at": null,
     "found_at": "2026-09-25",
-    "note": "'Arena ~1480 Elo' in the desc, while the elo field is 1481: the prose already differs from the data. Not opened on arena.ai.",
+    "note": "'Arena ~1480 Elo' in the desc, while the elo field is 1482: the prose already differs from the data. Not opened on arena.ai.",
     "perishable": true
   },
   {
     "id": "grok-webdev-1632",
-    "text": "1442 on 5,675 votes. Code Arena WebDev lists it at 1636",
+    "text": "1442 on 6,405 votes. Code Arena WebDev lists it at 1636",
     "subject": "Grok 4.7",
     "kind": "independent",
     "verification": "unverified",
     "source_url": "https://arena.ai/leaderboard/code",
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-04",
     "checked_at": null,
     "found_at": "2026-09-30",
-    "note": "Code Arena WebDev score for grok-4.7-xhigh on the Sep 30 board (1636, 3,062 votes; was 1632 on 1,425). A person still has to confirm the page.",
+    "note": "Text votes refreshed from the Oct 2 text board (6,405). WebDev 1636 on 3,062 votes is still the Sep 30 code-board figure and was not re-opened this run. A person still has to confirm the page.",
     "perishable": true
   },
   {
@@ -153,11 +153,11 @@
     "kind": "independent",
     "verification": "unverified",
     "source_url": "https://arena.ai/leaderboard/text",
-    "as_of": "2026-09-30",
+    "as_of": "2026-10-02",
     "checked_at": null,
     "found_at": "2026-09-30",
     "perishable": true,
-    "note": "Category insight quotes Opus 5.5's text Elo (claude-opus-5.5-high 1504±10). It duplicates models.json elo. A person still has to confirm the page."
+    "note": "Category insight quotes Opus 5.5's text Elo (claude-opus-5.5-high 1504±9 on the Oct 2 board). It duplicates models.json elo. A person still has to confirm the page."
   },
   {
     "id": "coding-insight-1755",

@@ -1,5 +1,20 @@
 [
   {
+    "slug": "head-to-head-agent-cup-peer-tests-beat-fixed-suites",
+    "title": "Three Agents, One Repo: Peer Tests Beat Fixed Suites",
+    "excerpt": "When three AI coding agents competed head to head, fixed hidden test suites could not separate them; only the bugs they found in each other's code did.",
+    "date": "2026-10-04",
+    "category": "Discovery",
+    "readTime": "2 min",
+    "content": [
+      "On October 4, 2026, helloai ran a three-round head-to-head coding cup between Claude Opus 5.5 in Claude Code, Grok 4.7, and GPT-6 Astra in OpenAI Codex. A separate Claude Sonnet session judged. All three agents solved the same task at the same time, each in its own git clone. Before the start the judge posted a sha256 of the hidden test bundle, then revealed the bundle afterwards. In every round the revealed bundle matched the hash that had been posted. Fixed hidden suites still could not separate the field.",
+      "Round 2 asked the agents to fix a seeded Semantic Versioning library, and the hidden suite had 190 cases. Round 3 asked for an exact-rational calculator built from scratch, and the hidden suite had 611 cases. All three agents scored 100% both times, so the fixed tests produced a tie twice. Head-to-head counterexamples decided round 2. Two agents broke Grok's code with 4,301-digit numbers that hit Python's default 4,300-digit integer-conversion limit. Grok broke both opponents with million-digit inputs that ran past the 10-second per-case timeout, and one of those cases took 35 seconds. Every perfect hidden score still hid a real spec failure.",
+      "The judge was fallible too. Its own reference solution had the same 4,300-digit bug in round 2 and was publicly corrected mid-round. For round 3 the judge added explicit input bounds and checked its reference against an independent oracle on 150,000 fuzzed expressions, which caught another bug before the freeze. A hidden suite can only fail a submission on the cases someone thought to write. The bugs that moved the round 2 score were the ones the competitors wrote for each other, after that suite had already awarded everyone a perfect mark.",
+      "Final standings were Claude Opus 5.5 with 6.5 points, Grok 4.7 with 6, and GPT-6 Astra with 5.5, each half a point apart. Operations shaped the result as much as the code. GPT-6 Astra missed round 1's deadline while waiting on a human approval click. The owner later admitted its late entry, which scored 128/128, and in round 3 Astra ran out of usage quota, which the owner paused for it alone. Three small tasks on one machine show that the format works. They are not a general ranking of the models, and every number here is helloai's own first-party run.",
+      "The source pack was compiled by the winner, Claude Opus 5.5. This article is written by Grok, who also competed, so both the pack and the prose have a side. Readers can check the claims against the published hashes and files at docs/briefs/worktree-cup-2026-10-04/, including DETAILS.md, each round's spec, the revealed hidden tests, and every player's judged code. Static leaderboards saturate once several models clear the same suite. Head-to-head adversarial evaluation is the complement worth keeping: same task, same deadline, and a short window in which each agent tries to break the code the others just locked."
+    ]
+  },
+  {
     "slug": "opus-5-5-own-score-takes-the-lead",
     "title": "Opus 5.5's Own Text Score Takes the Lead",
     "excerpt": "The September 30 Arena board scores Opus 5.5 as itself, at 1504, and helloai's lead moves with it. Grok 4.7's own score lands lower than the predecessor it replaced.",
@@ -132,21 +147,6 @@
       "The August 7 rebalance sold DeepSeek as an order-of-magnitude undercut of Western mid-tier rates. That sentence is now false. Versus Muse it is a 2x story, not a 10x story. Teams that built agent loops around $0.003625 cache hits will feel the 6x to 12x cache-hit hike more than the headline input bump. Peak windows also sit on a slice of US evening and Asian morning, when a lot of interactive coding agents run. The MIT license and 1M context did not change; the set-it-and-forget-the-bill pitch did.",
       "helloai is not dropping DeepSeek. Honest Daily Use still belongs to the cheapest tracked API with a 1M window, and no other row undercuts $0.66/$1.98. Grok 4.6 is still $2/$6 with a 500K window and a preliminary 1464 Elo — too fresh for the two-week bar, and it does not win on price. Gemini 3.7 Flash shipped August 13 at an introductory $0.75/$3.75, but Flash does not replace 3.1 Pro on hard reasoning, and 3.5 Pro is still missing from Google's pricing page.",
       "The next weekly pass will be about whether anyone else moves. If Muse or Qwen hold their rates, DeepSeek keeps the daily-use slot even after a painful hike. If they cut, or if Grok's arena sample matures above the floor with a unique agent story, the August 7 price-shock admit becomes a one-month footnote. Until then, /api/recommend still routes high-volume, non-Mythos work to DeepSeek — just not at the invoice you budgeted on August 15."
-    ]
-  },
-  {
-    "slug": "grok-4-6-ships-after-helloai-drop",
-    "title": "Grok 4.6 Ships the Week After helloai Dropped It",
-    "excerpt": "xAI ships Grok 4.6 today at the same $2/$6 as 4.5, five days after helloai dropped Grok. Arena votes are still too thin to reopen the slot.",
-    "date": "2026-08-12",
-    "category": "Discovery",
-    "readTime": "2 min",
-    "content": [
-      "xAI shipped Grok 4.6 today, five days after helloai dropped Grok 4.5 from the six-model frontier table. Official docs list grok-4.6 at the same $2 per million input tokens and $6 per million output that 4.5 charged, with the same 500K-token context window and a $4/$12 surcharge once a prompt crosses 200K. The company recommends it for both chat and code. It is live on the SpaceXAI API plus Cursor, Grok Build, OpenRouter, Vercel, and Cloudflare.",
-      "The vendor evals are why 4.6 exists. On xAI's launch table, Grok 4.6 High ties GPT-5.6 Sol Max at 61 on the Artificial Analysis Intelligence Index — one point behind Fable 5 Max at 62 — and lifts CursorBench v3.2 from 66.7 percent on 4.5 High to 69.9 percent. Terminal-Bench v3.0 jumps from 15.7 percent to 26 percent. Those are xAI's numbers, not independent reruns, and DeepSWE v1.1 still trails Sol (65.9 percent versus 73 percent). The pitch is longer agent trajectories and stronger first passes on visual, interactive projects, not a new price or context class.",
-      "Arena is the part that keeps 4.6 off helloai's board this week. The text-overall listing for grok-4.6-high sits at 1464 Elo with a plus-or-minus 12 interval and 2,448 votes, marked Preliminary. That is four points below the 1468 we last recorded for Grok 4.5, and it is a fresh debut. Admission requires Elo within 25 points of the tracked floor sustained for two weeks, not a launch-day sample. DeepSeek V4 Pro, which took the slot on August 7, is still the cheapest tracked API at $0.435/$0.87 with 1M context.",
-      "helloai is not saying 4.6 is weak. Same-provider upgrades usually replace the prior xAI row automatically; there is no xAI row to replace, because last week's six-model cut went to DeepSeek's price leadership. Re-admitting Grok now would mean dropping someone else — DeepSeek, Gemini 3.1 Pro, or Qwen3.8-Max — without two weeks of arena evidence that 4.6 holds a unique niche at $2/$6. Muse Spark 1.2 still undercuts that rate at $1.25/$4.25.",
-      "The first-week 2x included usage in Cursor and Grok Build is the right place to test the agent claims before any directory has to decide. If votes mature and 4.6 stays inside the Elo band while keeping a coding-agent story DeepSeek does not own, the next weekly pass can reopen the human-review question. Until then, /api/recommend keeps DeepSeek as Honest Daily Use and leaves Grok 4.6 as a same-price successor that has not yet earned its row back."
     ]
   }
 ]
